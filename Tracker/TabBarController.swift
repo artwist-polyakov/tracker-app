@@ -8,12 +8,28 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
+        let borderView = UIView()
+        borderView.backgroundColor = UIColor(named: "TrackerGray")
+        borderView.frame = CGRect(x: 0, y: 0, width: self.tabBar.frame.width, height: 1)
+        // Добавляем вьюшку границы к Tab Bar
+        self.tabBar.addSubview(borderView)
+        
+        self.tabBar.barTintColor = UIColor(named: "TrackerWhite")
+
         let statsViewController = StatsViewController()
         let trackersViewController = TrackersViewController()
 
+        
+        self.tabBar.tintColor = UIColor(named: "TrackerBlue")
+
+        
+        self.tabBar.unselectedItemTintColor = UIColor(named: "TrackerGray")
+
+        
+        
         // присваиваем вью контроллерам иконки для таб бара
         statsViewController.tabBarItem = UITabBarItem(
             title: "Статистика",
@@ -29,5 +45,8 @@ final class TabBarController: UITabBarController {
         
         // указываем с какими вью контроллерами связан таб бар
         self.viewControllers = [trackersViewController, statsViewController]
+        
+        self.selectedIndex = 0
+
     }
 }

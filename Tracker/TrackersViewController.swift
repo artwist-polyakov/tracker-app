@@ -23,8 +23,8 @@ class TrackersViewController: UIViewController {
     
     
     override func viewDidLoad() {
-        sleep(10)
         super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "TrackerWhite")
         // Do any additional setup after loading the view.
     }
 }
