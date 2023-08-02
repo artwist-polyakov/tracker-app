@@ -19,6 +19,8 @@ final class TabBarController: UITabBarController {
         
         let statsViewController = StatsViewController()
         let trackersViewController = TrackersViewController()
+        let trackersNavigationController = UINavigationController(rootViewController: trackersViewController)
+
 
         
         self.tabBar.tintColor = UIColor(named: "TrackerBlue")
@@ -42,7 +44,7 @@ final class TabBarController: UITabBarController {
         )
         
         // указываем с какими вью контроллерами связан таб бар
-        self.viewControllers = [trackersViewController, statsViewController]
+        self.viewControllers = [trackersNavigationController, statsViewController]
         
         self.selectedIndex = 0
 
