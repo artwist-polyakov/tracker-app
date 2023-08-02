@@ -17,8 +17,6 @@ final class TabBarController: UITabBarController {
         // Добавляем вьюшку границы к Tab Bar
         self.tabBar.addSubview(borderView)
         
-        self.tabBar.barTintColor = UIColor(named: "TrackerWhite")
-
         let statsViewController = StatsViewController()
         let trackersViewController = TrackersViewController()
 

@@ -14,7 +14,6 @@
 		AFCA55A42A7AB01A00D9A851 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */; };
 		AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A52A7AB02400D9A851 /* TabBarController.swift */; };
 		AFCA55A82A7AB02C00D9A851 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A72A7AB02C00D9A851 /* TrackersViewController.swift */; };
-		AFCA55AA2A7AB0ED00D9A851 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AFCA55A92A7AB0ED00D9A851 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 		AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		AFCA55A52A7AB02400D9A851 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		AFCA55A72A7AB02C00D9A851 /* TrackersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
-		AFCA55A92A7AB0ED00D9A851 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +66,6 @@
 				AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */,
 				AFCA55A52A7AB02400D9A851 /* TabBarController.swift */,
 				AFCA55A72A7AB02C00D9A851 /* TrackersViewController.swift */,
-				AFCA55A92A7AB0ED00D9A851 /* Main.storyboard */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -131,7 +128,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AFCA55AA2A7AB0ED00D9A851 /* Main.storyboard in Resources */,
 				AF93324C2A72B59400BA0DB8 /* LaunchScreen.storyboard in Resources */,
 				AF9332492A72B59400BA0DB8 /* Assets.xcassets in Resources */,
 			);
@@ -292,7 +288,6 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortraitUpsideDown;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
@@ -324,7 +319,6 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortraitUpsideDown;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
