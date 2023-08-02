@@ -13,6 +13,8 @@
 		AF9332472A72B59300BA0DB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF9332452A72B59300BA0DB8 /* Main.storyboard */; };
 		AF9332492A72B59400BA0DB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF9332482A72B59400BA0DB8 /* Assets.xcassets */; };
 		AF93324C2A72B59400BA0DB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF93324A2A72B59400BA0DB8 /* LaunchScreen.storyboard */; };
+		AFCA559C2A7A9E0E00D9A851 /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AFCA559A2A7A9E0E00D9A851 /* YS Display-Medium.ttf */; };
+		AFCA559D2A7A9E0E00D9A851 /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AFCA559B2A7A9E0E00D9A851 /* YS Display-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		AF9332482A72B59400BA0DB8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AF93324B2A72B59400BA0DB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AF93324D2A72B59400BA0DB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AFCA559A2A7A9E0E00D9A851 /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Medium.ttf"; sourceTree = "<group>"; };
+		AFCA559B2A7A9E0E00D9A851 /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,8 +67,18 @@
 				AF9332482A72B59400BA0DB8 /* Assets.xcassets */,
 				AF93324A2A72B59400BA0DB8 /* LaunchScreen.storyboard */,
 				AF93324D2A72B59400BA0DB8 /* Info.plist */,
+				AFCA559E2A7A9E1200D9A851 /* Resources */,
 			);
 			path = Tracker;
+			sourceTree = "<group>";
+		};
+		AFCA559E2A7A9E1200D9A851 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AFCA559B2A7A9E0E00D9A851 /* YS Display-Bold.ttf */,
+				AFCA559A2A7A9E0E00D9A851 /* YS Display-Medium.ttf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,6 +140,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF93324C2A72B59400BA0DB8 /* LaunchScreen.storyboard in Resources */,
+				AFCA559C2A7A9E0E00D9A851 /* YS Display-Medium.ttf in Resources */,
+				AFCA559D2A7A9E0E00D9A851 /* YS Display-Bold.ttf in Resources */,
 				AF9332492A72B59400BA0DB8 /* Assets.xcassets in Resources */,
 				AF9332472A72B59300BA0DB8 /* Main.storyboard in Resources */,
 			);
