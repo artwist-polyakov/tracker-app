@@ -7,23 +7,15 @@
 
 import UIKit
 
-class TrackersViewController: UIViewController, UITextFieldDelegate {
+class TrackersViewController: UIViewController {
     
-    let addBarButtonItem: UIBarButtonItem = {
-            let button = UIButton(type: .custom)
-            button.setImage(UIImage(named: "Add"), for: .normal)
-        
-        button.addTarget(TrackersViewController.self, action: #selector(addButtonTapped), for: .touchUpInside)
-            let barButtonItem = UIBarButtonItem(customView: button)
-            return barButtonItem
-        
-        }()
+    var addBarButtonItem: UIBarButtonItem?
 
-        let datePicker: UIDatePicker = {
-            let picker = UIDatePicker()
-            picker.preferredDatePickerStyle = .compact
-            picker.datePickerMode = .date
-            return picker
+    let datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.preferredDatePickerStyle = .compact
+        picker.datePickerMode = .date
+        return picker
         }()
     
     let titleLabel: UILabel = {
@@ -68,6 +60,7 @@ class TrackersViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "TrackerWhite")
+        setupButtons()
         navigationItem.leftBarButtonItem = addBarButtonItem
         searchField.delegate = self
         let datePickerItem = UIBarButtonItem(customView: datePicker)
@@ -106,8 +99,26 @@ class TrackersViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func addButtonTapped() {
-            // Действие при нажатии на кнопку "+"
+            print("Добавляю трекер")
         }
+    
+    func setupButtons() {
+        addBarButtonItem = {
+            let button = UIButton(type: .custom)
+            button.setImage(UIImage(named: "Add"), for: .normal)
+        
+        button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+            let barButtonItem = UIBarButtonItem(customView: button)
+            return barButtonItem
+        
+        }()
+    }
 
 }
 
+extension TrackersViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.text = ""
+        textField.textColor = UIColor(named: "TrackerBlack")
+    }
+}
