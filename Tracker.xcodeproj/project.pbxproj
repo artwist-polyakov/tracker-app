@@ -19,6 +19,8 @@
 		AFCA55B02A7C17A300D9A851 /* TrackersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55AF2A7C17A300D9A851 /* TrackersFactory.swift */; };
 		AFCA55B22A7C187900D9A851 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55B12A7C187900D9A851 /* Tracker.swift */; };
 		AFCA55BB2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55BA2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift */; };
+		AFCA55BD2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55BC2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift */; };
+		AFCA55BF2A7C36AF00D9A851 /* Mappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55BE2A7C36AF00D9A851 /* Mappers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		AFCA55AF2A7C17A300D9A851 /* TrackersFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersFactory.swift; sourceTree = "<group>"; };
 		AFCA55B12A7C187900D9A851 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		AFCA55BA2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionsPresenter.swift; sourceTree = "<group>"; };
+		AFCA55BC2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewControllerProtocol.swift; sourceTree = "<group>"; };
+		AFCA55BE2A7C36AF00D9A851 /* Mappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mappers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,8 @@
 			isa = PBXGroup;
 			children = (
 				AFCA55BA2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift */,
+				AFCA55BC2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift */,
+				AFCA55BE2A7C36AF00D9A851 /* Mappers.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -197,11 +203,13 @@
 			files = (
 				AFCA55AC2A7C05C500D9A851 /* SupplementaryView.swift in Sources */,
 				AF9332402A72B59300BA0DB8 /* AppDelegate.swift in Sources */,
+				AFCA55BD2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift in Sources */,
 				AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */,
 				AFCA55BB2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift in Sources */,
 				AFCA55B22A7C187900D9A851 /* Tracker.swift in Sources */,
 				AFCA55A82A7AB02C00D9A851 /* TrackersViewController.swift in Sources */,
 				AFCA55A42A7AB01A00D9A851 /* StatsViewController.swift in Sources */,
+				AFCA55BF2A7C36AF00D9A851 /* Mappers.swift in Sources */,
 				AFCA55AE2A7C178800D9A851 /* TrackerCollectionViewCell.swift in Sources */,
 				AF9332422A72B59300BA0DB8 /* SceneDelegate.swift in Sources */,
 				AFCA55B02A7C17A300D9A851 /* TrackersFactory.swift in Sources */,

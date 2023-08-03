@@ -10,6 +10,8 @@ import UIKit
 class TrackersViewController: UIViewController {
     
     var addBarButtonItem: UIBarButtonItem?
+    var collectionView: UICollectionView!
+    var collectionPresenter: TrackersCollectionsPresenter!
 
     let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -59,7 +61,16 @@ class TrackersViewController: UIViewController {
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionPresenter = TrackersCollectionsPresenter(vc: self)
         view.backgroundColor = UIColor(named: "TrackerWhite")
+        
+        let layout = UICollectionViewFlowLayout()
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = collectionPresenter
+        collectionView.delegate = collectionPresenter
+        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
+        view.addSubview(collectionView)
+        
         setupButtons()
         navigationItem.leftBarButtonItem = addBarButtonItem
         searchField.delegate = self
@@ -96,6 +107,14 @@ class TrackersViewController: UIViewController {
             questionLabel.topAnchor.constraint(equalTo: VoidImage.bottomAnchor, constant: 8),
             questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 16),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
+        ])
     }
     
     @objc func addButtonTapped() {
@@ -120,5 +139,18 @@ extension TrackersViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = ""
         textField.textColor = UIColor(named: "TrackerBlack")
+    }
+}
+
+
+extension TrackersViewController: TrackersViewControllerProtocol {
+    func showStartingBlock() {
+        VoidImage.isHidden = false
+        questionLabel.isHidden = false
+    }
+    
+    func hideStartingBlock() {
+        VoidImage.isHidden = true
+        questionLabel.isHidden = true
     }
 }

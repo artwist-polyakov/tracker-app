@@ -9,23 +9,35 @@ import Foundation
 import UIKit
 class TrackersCollectionsPresenter: NSObject {
     let factory = TrackersFactory.shared
+    let cellIdentifier = "TrackerCollectionViewCell"
+    var viewController: TrackersViewControllerProtocol
+
+    init(vc: TrackersViewControllerProtocol) {
+        self.viewController = vc
+    }
+    
+    func quantityTernar(_ quantity: Int) {
+        quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
+    }
+    
 }
 
 extension TrackersCollectionsPresenter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return factory.trackers.count
+        let quantity = factory.trackers.count
+        quantityTernar(quantity)
+        return quantity
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCollectionViewCell", for: indexPath) as! TrackerCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
         let tracker = factory.trackers[indexPath.row]
         
-        // Configure your cell here using `tracker`
-        // Example:
-        // cell.color = tracker.color
-        // cell.title = tracker.title
-        // cell.icon = tracker.icon
-        // cell.date = tracker.date
+        cell.configure(
+            text: tracker.title,
+            emoji: "🚀",
+            sheetColor: (UIColor(named: "\(tracker.color % 18)") ?? UIColor(named: "2"))!,
+            quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count))
         
         return cell
     }
