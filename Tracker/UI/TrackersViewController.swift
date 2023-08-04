@@ -10,7 +10,7 @@ import UIKit
 class TrackersViewController: UIViewController {
     
     var addBarButtonItem: UIBarButtonItem?
-    var collectionView: UICollectionView!
+    var collectionView: UICollectionView?
     var collectionPresenter: TrackersCollectionsPresenter!
 
     let datePicker: UIDatePicker = {
@@ -66,10 +66,10 @@ class TrackersViewController: UIViewController {
         
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.dataSource = collectionPresenter
-        collectionView.delegate = collectionPresenter
-        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
-        view.addSubview(collectionView)
+        collectionView?.dataSource = collectionPresenter
+        collectionView?.delegate = collectionPresenter
+        collectionView?.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
+        view.addSubview(collectionView!)
         
         setupButtons()
         navigationItem.leftBarButtonItem = addBarButtonItem
@@ -108,12 +108,12 @@ class TrackersViewController: UIViewController {
             questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView?.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 16),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
+            collectionView!.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 16),
+            collectionView!.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            collectionView!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            collectionView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
     }
     
@@ -144,6 +144,8 @@ extension TrackersViewController: UITextFieldDelegate {
 
 
 extension TrackersViewController: TrackersViewControllerProtocol {
+
+    
     func showStartingBlock() {
         VoidImage.isHidden = false
         questionLabel.isHidden = false

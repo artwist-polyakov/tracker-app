@@ -11,6 +11,7 @@ class TrackersCollectionsPresenter: NSObject {
     let factory = TrackersFactory.shared
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
+    private var functionButtonTappedObserver: NSObjectProtocol?
 
     init(vc: TrackersViewControllerProtocol) {
         self.viewController = vc
@@ -18,6 +19,21 @@ class TrackersCollectionsPresenter: NSObject {
     
     func quantityTernar(_ quantity: Int) {
         quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
+    }
+    
+    func handleFunctionButtonTapped(at indexPath: IndexPath) {
+        if factory.trackers[indexPath.row].isDoneAt.contains(SimpleDate(date: Date())) {
+            factory.removeDay(to: indexPath.row, day: SimpleDate(date:Date())) {
+                print("Удалил день")
+            }
+        } else {
+            factory.addDay(to: indexPath.row, day: SimpleDate(date:Date())) {
+                print("Добавил день")
+            }
+        }
+        
+        viewController.collectionView?.reloadItems(at: [indexPath])
+        
     }
     
 }
@@ -35,9 +51,15 @@ extension TrackersCollectionsPresenter: UICollectionViewDataSource {
         
         cell.configure(
             text: tracker.title,
-            emoji: "🚀",
+            emoji: "❤️",
             sheetColor: (UIColor(named: "\(tracker.color % 18)") ?? UIColor(named: "2"))!,
-            quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count))
+            quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count),
+            hasMark: tracker.isDoneAt.contains(SimpleDate(date: Date()))
+            )
+        
+        cell.onFunctionButtonTapped = { [weak self] in
+                self?.handleFunctionButtonTapped(at: indexPath)
+            }
         
         return cell
     }

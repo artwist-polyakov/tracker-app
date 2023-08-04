@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 
 class TrackerCollectionViewCell: UICollectionViewCell {
+    
+    var onFunctionButtonTapped: (() -> Void)?
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "TrackerWhite")
@@ -17,12 +20,34 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     }()
 
     
-    let emojiLabel: UILabel = {
-        let label = UILabel()
-        label.text = "❤️"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.backgroundColor = .clear
-        return label
+//    let emojiLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "❤️"
+//        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+//        label.backgroundColor = .clear
+//        return label
+//    }()
+    
+    let emojiButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor(white: 1, alpha: 0)
+        button.layer.cornerRadius = 16
+        button.setTitle("❤️", for: .normal)
+        button.tintColor = UIColor.black // Замените на нужный цвет иконки.
+        
+        let backgroundView = UIView()
+            backgroundView.backgroundColor = UIColor(white: 1, alpha: 0.3)
+            backgroundView.layer.cornerRadius = 12
+            button.addSubview(backgroundView)
+            backgroundView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                backgroundView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+                backgroundView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+                backgroundView.widthAnchor.constraint(equalTo: button.widthAnchor, multiplier: 0.8),
+                backgroundView.heightAnchor.constraint(equalTo: button.heightAnchor, multiplier: 0.8)
+            ])
+        
+        return button
     }()
     
     let sheet: UIView = {
@@ -37,11 +62,12 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    let functionImage:UIImageView = {
-        let image = UIImageView()
-        image.image = UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate)
-        return image
+    let functionButton: UIButton = {
+        let button = UIButton(type: .system) // Используем .system для автоматического управления выделением и нажатием.
+        button.setImage(UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        return button
     }()
+
     
     let whiteCircle: UIView = {
         let view = UIView()
@@ -52,19 +78,20 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        emojiLabel.insertSubview(whiteCircle, at: 0)
-        whiteCircle.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            whiteCircle.centerXAnchor.constraint(equalTo: emojiLabel.centerXAnchor),
-            whiteCircle.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
-            whiteCircle.widthAnchor.constraint(equalToConstant: 24),
-            whiteCircle.heightAnchor.constraint(equalToConstant: 24),
-        ])
+//        emojiLabel.insertSubview(whiteCircle, at: 0)
+//        whiteCircle.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            whiteCircle.centerXAnchor.constraint(equalTo: emojiLabel.centerXAnchor),
+//            whiteCircle.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
+//            whiteCircle.widthAnchor.constraint(equalToConstant: 24),
+//            whiteCircle.heightAnchor.constraint(equalToConstant: 24),
+//        ])
         contentView.addSubview(sheet)
         contentView.addSubview(titleLabel)
         contentView.addSubview(quantityLabel)
-        contentView.addSubview(functionImage)
-        contentView.addSubview(emojiLabel)
+        contentView.addSubview(functionButton)
+        contentView.addSubview(emojiButton)
+        functionButton.addTarget(self, action: #selector(functionButtonTapped), for: .touchUpInside)
         
         for subview in contentView.subviews {
             subview.translatesAutoresizingMaskIntoConstraints = false
@@ -76,12 +103,12 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             sheet.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: sheet.bottomAnchor, constant: -12),
             titleLabel.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
-            emojiLabel.topAnchor.constraint(equalTo: sheet.topAnchor, constant: 12),
-            emojiLabel.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
+            emojiButton.topAnchor.constraint(equalTo: sheet.topAnchor, constant: 12),
+            emojiButton.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
             quantityLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             quantityLabel.topAnchor.constraint(equalTo: sheet.bottomAnchor, constant: 16),
-            functionImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
-            functionImage.centerYAnchor.constraint(equalTo: quantityLabel.centerYAnchor)
+            functionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            functionButton.centerYAnchor.constraint(equalTo: quantityLabel.centerYAnchor)
         ])
         
     }
@@ -93,15 +120,28 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     func configure(text: String,
                    emoji: String,
                    sheetColor: UIColor,
-                   quantityText: String) {
+                   quantityText: String,
+                   hasMark: Bool
+    ) {
         
         titleLabel.text = text
-        emojiLabel.text = emoji
+        emojiButton.setTitle(emoji, for: .normal)
         sheet.tintColor = sheetColor
         sheet.backgroundColor = sheetColor
         quantityLabel.text = quantityText
-        functionImage.tintColor = sheetColor
+        functionButton.tintColor = sheetColor
+        
+        if hasMark {
+            functionButton.setImage(UIImage(named: "Tick")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        } else {
+            functionButton.setImage(UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        }
 
+    }
+    
+    @objc
+    func functionButtonTapped() {
+        onFunctionButtonTapped?()
     }
     
 }

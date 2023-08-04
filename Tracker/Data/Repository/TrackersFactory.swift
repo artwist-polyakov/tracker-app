@@ -7,15 +7,36 @@
 
 import Foundation
 
-final class TrackersFactory {
+final class TrackersFactory: TrackersStorageProtocol {
+    
+    var trackers: [Tracker] = [Tracker(color: 1,
+                                       title: "Тестовый трекер",
+                                       icon: 1,
+                                       isDoneAt: [SimpleDate(date:Date())])]
+    
+    
+    
     static let shared = TrackersFactory()
     
-    var trackers: [Tracker] {
-        return [Tracker(color: 1,
-                       title: "Тестовый трекер",
-                       icon: 1,
-                       isDoneAt: [Date()])]
+    private init() {}
+    
+    func addDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
+        if toPosition > trackers.count {
+            print("Некорректный индекс")
+            return
+        } else {
+            trackers[toPosition].isDoneAt.insert(date)
+        }
     }
     
-    private init() {}
+    func removeDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
+        if toPosition > trackers.count {
+            print("Некорректный индекс")
+            return
+        } else {
+            trackers[toPosition].isDoneAt.remove(date)
+        }
+    }
+    
+    
 }
