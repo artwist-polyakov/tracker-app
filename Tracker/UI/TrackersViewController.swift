@@ -69,6 +69,9 @@ class TrackersViewController: UIViewController {
         collectionView?.dataSource = collectionPresenter
         collectionView?.delegate = collectionPresenter
         collectionView?.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
+        collectionView?.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+        
+        
         view.addSubview(collectionView!)
         
         setupButtons()

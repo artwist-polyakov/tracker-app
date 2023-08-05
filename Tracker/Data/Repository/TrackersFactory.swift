@@ -8,7 +8,7 @@
 import Foundation
 
 final class TrackersFactory: TrackersStorageProtocol {
-    
+    var trackerTitle: String = "Домашний тестовый уют"
     var trackers: [Tracker] = [Tracker(color: 1,
                                        title: "Тестовый трекер",
                                        icon: 1,

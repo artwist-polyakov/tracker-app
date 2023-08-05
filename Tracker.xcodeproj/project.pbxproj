@@ -77,7 +77,6 @@
 			isa = PBXGroup;
 			children = (
 				AFCA55B72A7C202000D9A851 /* Presentation */,
-				AFCA55AB2A7C05C500D9A851 /* SupplementaryView.swift */,
 				AF93323F2A72B59300BA0DB8 /* AppDelegate.swift */,
 				AF9332412A72B59300BA0DB8 /* SceneDelegate.swift */,
 				AF9332482A72B59400BA0DB8 /* Assets.xcassets */,
@@ -119,6 +118,7 @@
 		AFCA55B62A7C19BD00D9A851 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				AFCA55AB2A7C05C500D9A851 /* SupplementaryView.swift */,
 				AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */,
 				AFCA55A52A7AB02400D9A851 /* TabBarController.swift */,
 				AFCA55A72A7AB02C00D9A851 /* TrackersViewController.swift */,

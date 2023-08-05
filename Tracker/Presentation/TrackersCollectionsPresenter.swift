@@ -45,6 +45,22 @@ extension TrackersCollectionsPresenter: UICollectionViewDataSource {
         return quantity
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        var id: String
+        
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            id = "header"
+        default:
+            id = ""
+        }
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryView // 6
+        view.titleLabel.text = factory.trackerTitle
+        return view
+    }
+    
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
         let tracker = factory.trackers[indexPath.row]
@@ -81,6 +97,17 @@ extension TrackersCollectionsPresenter: UICollectionViewDelegateFlowLayout{
         }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
+        }
+    
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+            
+            let sampleLabel = UILabel()
+                sampleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+                sampleLabel.text = "Sample text"
+                sampleLabel.sizeToFit()
+                let height = sampleLabel.frame.height + 4
+                
+                return CGSize(width: collectionView.frame.width, height: height)
         }
 }
