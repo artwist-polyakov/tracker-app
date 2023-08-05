@@ -133,6 +133,8 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         
         if hasMark {
             functionButton.setImage(UIImage(named: "Tick")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        
+            
         } else {
             functionButton.setImage(UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
         }

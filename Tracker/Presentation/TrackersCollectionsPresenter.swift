@@ -12,7 +12,7 @@ class TrackersCollectionsPresenter: NSObject {
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
     private var functionButtonTappedObserver: NSObjectProtocol?
-
+    var selectedDate: Date?
     init(vc: TrackersViewControllerProtocol) {
         self.viewController = vc
     }
@@ -21,13 +21,13 @@ class TrackersCollectionsPresenter: NSObject {
         quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
     }
     
-    func handleFunctionButtonTapped(at indexPath: IndexPath) {
-        if factory.trackers[indexPath.row].isDoneAt.contains(SimpleDate(date: Date())) {
-            factory.removeDay(to: indexPath.row, day: SimpleDate(date:Date())) {
+    func handleFunctionButtonTapped(at indexPath: IndexPath, date: Date) {
+        if factory.trackers[indexPath.row].isDoneAt.contains(SimpleDate(date: date)) {
+            factory.removeDay(to: indexPath.row, day: SimpleDate(date:date)) {
                 print("Удалил день")
             }
         } else {
-            factory.addDay(to: indexPath.row, day: SimpleDate(date:Date())) {
+            factory.addDay(to: indexPath.row, day: SimpleDate(date:date)) {
                 print("Добавил день")
             }
         }
@@ -74,8 +74,8 @@ extension TrackersCollectionsPresenter: UICollectionViewDataSource {
             )
         
         cell.onFunctionButtonTapped = { [weak self] in
-                self?.handleFunctionButtonTapped(at: indexPath)
-            }
+            self?.handleFunctionButtonTapped(at: indexPath, date: self?.selectedDate ?? Date())
+        }
         
         return cell
     }

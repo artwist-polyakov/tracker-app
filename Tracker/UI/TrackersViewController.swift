@@ -62,6 +62,8 @@ class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
+        collectionPresenter.selectedDate = self.datePicker.date
+
         view.backgroundColor = UIColor(named: "TrackerWhite")
         
         let layout = UICollectionViewFlowLayout()
@@ -118,11 +120,17 @@ class TrackersViewController: UIViewController {
             collectionView!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             collectionView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
+        
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
     }
     
     @objc func addButtonTapped() {
             print("Добавляю трекер")
         }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+        collectionPresenter.selectedDate = sender.date
+    }
     
     func setupButtons() {
         addBarButtonItem = {
