@@ -12,7 +12,7 @@ class TrackersViewController: UIViewController {
     var addBarButtonItem: UIBarButtonItem?
     var collectionView: UICollectionView?
     var collectionPresenter: TrackersCollectionsPresenter!
-
+    var collectionCompanion: TrackersCollectionsCompanion?
     let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.preferredDatePickerStyle = .compact
@@ -62,14 +62,15 @@ class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
+        collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
         collectionPresenter.selectedDate = self.datePicker.date
 
         view.backgroundColor = UIColor(named: "TrackerWhite")
         
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView?.dataSource = collectionPresenter
-        collectionView?.delegate = collectionPresenter
+        collectionView?.dataSource = collectionCompanion
+        collectionView?.delegate = collectionCompanion
         collectionView?.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
         collectionView?.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         

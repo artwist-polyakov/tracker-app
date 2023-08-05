@@ -12,7 +12,7 @@ class TrackerCategory: TrackersStorageProtocol {
     var trackers: [Tracker]?
     
     func addDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
-        if toPosition > trackers?.count ?? 0 {
+        if toPosition > trackers?.count ?? -1 {
             print("Некорректный индекс")
             return
         } else {
@@ -21,13 +21,12 @@ class TrackerCategory: TrackersStorageProtocol {
     }
     
     func removeDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
-        if toPosition > trackers?.count {
+        if toPosition > trackers?.count ?? -1 {
             print("Некорректный индекс")
             return
         } else {
             trackers?[toPosition].isDoneAt.remove(date)
         }
     }
-    
-0
+
 }

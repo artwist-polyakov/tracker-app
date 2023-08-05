@@ -9,7 +9,7 @@ import Foundation
 
 final class EmptyTrackersFactory: TrackersStorageProtocol {
     var trackerTitle: String = ""
-    var trackers: [Tracker] = []
+    var trackers: [Tracker]? = []
     
     
     
@@ -18,20 +18,20 @@ final class EmptyTrackersFactory: TrackersStorageProtocol {
     private init() {}
     
     func addDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
-        if toPosition > trackers.count {
+        if toPosition > trackers?.count ?? -1 {
             print("Некорректный индекс")
             return
         } else {
-            trackers[toPosition].isDoneAt.insert(date)
+            trackers?[toPosition].isDoneAt.insert(date)
         }
     }
     
     func removeDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
-        if toPosition > trackers.count {
+        if toPosition > trackers?.count ?? -1 {
             print("Некорректный индекс")
             return
         } else {
-            trackers[toPosition].isDoneAt.remove(date)
+            trackers?[toPosition].isDoneAt.remove(date)
         }
     }
     
