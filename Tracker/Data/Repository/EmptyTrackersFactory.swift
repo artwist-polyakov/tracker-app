@@ -7,17 +7,13 @@
 
 import Foundation
 
-final class TrackersFactory: TrackersStorageProtocol {
-    var trackerTitle: String = "Домашний тестовый уют"
-    var trackers: [Tracker] = [Tracker(id: UInt(Date().timeIntervalSince1970),
-                                        color: 1,
-                                        title: "Тестовый трекер",
-                                        icon: 1,
-                                        isDoneAt: [SimpleDate(date:Date())])]
+final class EmptyTrackersFactory: TrackersStorageProtocol {
+    var trackerTitle: String = ""
+    var trackers: [Tracker] = []
     
     
     
-    static let shared = TrackersFactory()
+    static let shared = EmptyTrackersFactory()
     
     private init() {}
     

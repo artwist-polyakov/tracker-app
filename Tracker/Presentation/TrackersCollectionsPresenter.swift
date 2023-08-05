@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 class TrackersCollectionsPresenter: NSObject {
-    let factory = TrackersFactory.shared
+//    let factory = TrackersFactory.shared
+    let factory = EmptyTrackersFactory.shared
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
     private var functionButtonTappedObserver: NSObjectProtocol?

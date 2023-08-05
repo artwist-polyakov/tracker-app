@@ -7,6 +7,7 @@
 
 import Foundation
 struct Tracker {
+    let id: UInt
     let color: Int
     let title: String
     let icon: Int
