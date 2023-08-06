@@ -26,6 +26,12 @@
 		AFCA55D32A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D22A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift */; };
 		AFCA55D52A7F895500D9A851 /* TrackersRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D42A7F895500D9A851 /* TrackersRepositoryProtocol.swift */; };
 		AFCA55D72A7F96C000D9A851 /* TrackersRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */; };
+		AFCA55D92A7FE7EA00D9A851 /* DayOfWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D82A7FE7EA00D9A851 /* DayOfWeek.swift */; };
+		AFCA55DB2A7FE81800D9A851 /* TrackerTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */; };
+		AFCA55DD2A7FE8FE00D9A851 /* CreateTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */; };
+		AFCA55DF2A7FEEE300D9A851 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55DE2A7FEEE300D9A851 /* ScheduleViewController.swift */; };
+		AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */; };
+		AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +56,12 @@
 		AFCA55D22A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionsCompanion.swift; sourceTree = "<group>"; };
 		AFCA55D42A7F895500D9A851 /* TrackersRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRepositoryImpl.swift; sourceTree = "<group>"; };
+		AFCA55D82A7FE7EA00D9A851 /* DayOfWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeek.swift; sourceTree = "<group>"; };
+		AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTypeViewController.swift; sourceTree = "<group>"; };
+		AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerViewController.swift; sourceTree = "<group>"; };
+		AFCA55DE2A7FEEE300D9A851 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewController.swift; sourceTree = "<group>"; };
+		AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTypeDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +122,7 @@
 				AFCA55B12A7C187900D9A851 /* Tracker.swift */,
 				AFCA55C62A7D5BB000D9A851 /* SimpleDate.swift */,
 				AFCA55CE2A7E527500D9A851 /* TrackerCategory.swift */,
+				AFCA55D82A7FE7EA00D9A851 /* DayOfWeek.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -131,6 +144,10 @@
 				AFCA55A52A7AB02400D9A851 /* TabBarController.swift */,
 				AFCA55A72A7AB02C00D9A851 /* TrackersViewController.swift */,
 				AFCA55AD2A7C178800D9A851 /* TrackerCollectionViewCell.swift */,
+				AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */,
+				AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */,
+				AFCA55DE2A7FEEE300D9A851 /* ScheduleViewController.swift */,
+				AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -142,6 +159,7 @@
 				AFCA55BC2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift */,
 				AFCA55D02A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift */,
 				AFCA55D22A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift */,
+				AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -217,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AFCA55CF2A7E527500D9A851 /* TrackerCategory.swift in Sources */,
+				AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */,
 				AFCA55AC2A7C05C500D9A851 /* SupplementaryView.swift in Sources */,
 				AFCA55D72A7F96C000D9A851 /* TrackersRepositoryImpl.swift in Sources */,
 				AF9332402A72B59300BA0DB8 /* AppDelegate.swift in Sources */,
@@ -224,13 +243,18 @@
 				AFCA55BD2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift in Sources */,
 				AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */,
 				AFCA55BB2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift in Sources */,
+				AFCA55DB2A7FE81800D9A851 /* TrackerTypeViewController.swift in Sources */,
 				AFCA55B22A7C187900D9A851 /* Tracker.swift in Sources */,
 				AFCA55C72A7D5BB000D9A851 /* SimpleDate.swift in Sources */,
 				AFCA55A82A7AB02C00D9A851 /* TrackersViewController.swift in Sources */,
+				AFCA55DF2A7FEEE300D9A851 /* ScheduleViewController.swift in Sources */,
 				AFCA55A42A7AB01A00D9A851 /* StatsViewController.swift in Sources */,
+				AFCA55DD2A7FE8FE00D9A851 /* CreateTrackerViewController.swift in Sources */,
 				AFCA55D52A7F895500D9A851 /* TrackersRepositoryProtocol.swift in Sources */,
 				AFCA55BF2A7C36AF00D9A851 /* Mappers.swift in Sources */,
 				AFCA55AE2A7C178800D9A851 /* TrackerCollectionViewCell.swift in Sources */,
+				AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */,
+				AFCA55D92A7FE7EA00D9A851 /* DayOfWeek.swift in Sources */,
 				AF9332422A72B59300BA0DB8 /* SceneDelegate.swift in Sources */,
 				AFCA55D12A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift in Sources */,
 			);

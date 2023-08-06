@@ -13,6 +13,7 @@ class TrackersViewController: UIViewController {
     var collectionView: UICollectionView?
     var collectionPresenter: TrackersCollectionsPresenter!
     var collectionCompanion: TrackersCollectionsCompanion?
+    
     let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.preferredDatePickerStyle = .compact
@@ -126,7 +127,10 @@ class TrackersViewController: UIViewController {
     }
     
     @objc func addButtonTapped() {
-            print("Добавляю трекер")
+        let trackerTypeViewController = TrackerTypeViewController()
+        trackerTypeViewController.delegate = collectionPresenter
+        let navigationController = UINavigationController(rootViewController: trackerTypeViewController)
+        self.present(navigationController, animated: true, completion: nil)
         }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {

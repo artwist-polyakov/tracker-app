@@ -14,6 +14,14 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     var viewController: TrackersViewControllerProtocol
 
     var selectedDate: Date?
+    
+    var trackerTypeToFlush: TrackerType?
+    var trackerCategoryToFlush: TrackerCategory?
+    var trackerTitleToFlush: String?
+    var trackerIconToFlush: String?
+    var trackerSheduleToFlush: Set<String>?
+    var trackerColorToFlush: Int?
+    
     init(vc: TrackersViewControllerProtocol) {
         self.viewController = vc
     }
@@ -33,5 +41,46 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         // MARK: TODO продумать как разрешить коллизию, когда полностью исчезает коллеция
         viewController.collectionView?.reloadData()
     }
+    
+}
+
+extension TrackersCollectionsPresenter: TrackerTypeDelegate {
+    func didSelectTrackerCategory(_ category: TrackerCategory) {
+        trackerCategoryToFlush = category
+    }
+    
+    func didSelectTrackerType(_ type: TrackerType) {
+        trackerTypeToFlush = type
+    }
+    
+    func didSetTrackerTitle(_ title: String) {
+        trackerTitleToFlush = title
+    }
+    
+    func didSetTrackerIcon(_ icon: String) {
+        trackerIconToFlush = icon
+    }
+    
+    func didSetShedulleToFlush(_ shedule: Set<String>) {
+        trackerSheduleToFlush = shedule
+    }
+    
+    func didSetTrackerColorToFlush(_ color: Int) {
+        trackerColorToFlush = color
+    }
+    
+    func clearAllFlushProperties() {
+        trackerTypeToFlush = nil
+        trackerTitleToFlush = nil
+        trackerIconToFlush = nil
+        trackerSheduleToFlush = nil
+        trackerColorToFlush = nil
+    }
+    
+    func realizeAllFlushProperties() {
+        print("HA-HA-HA")
+    }
+    
+    
     
 }
