@@ -11,6 +11,6 @@ struct Tracker {
     let color: Int
     let title: String
     let icon: Int
-    var isPlannedFor: Set<SimpleDate>
+    var isPlannedFor: Set<String>
     var isDoneAt: Set<SimpleDate>
 }

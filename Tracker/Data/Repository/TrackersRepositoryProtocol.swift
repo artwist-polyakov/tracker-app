@@ -12,7 +12,7 @@ protocol TrackersRepositoryProtocol {
     func getAllCategoriesPlannedTo(date:SimpleDate) -> [TrackerCategory]
     func addNewTrackerToCategory(categoryID: UInt,
                                  trackerName: String,
-                                 plannedDate: [SimpleDate])
+                                 plannedDaysOfWeek: [String])
     func interactWithTrackerDoneForeDate(trackerId:UInt,
                                          date: SimpleDate)
     

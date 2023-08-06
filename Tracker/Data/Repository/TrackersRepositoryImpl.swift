@@ -19,7 +19,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date())]),
+                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                         )])
                         ]
@@ -28,18 +28,19 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     }
 
     func getAllCategoriesPlannedTo(date: SimpleDate) -> [TrackerCategory] {
+        let dayOfWeek = date.dayOfWeek
         return categories.filter { category in
-            category.trackers.contains(where: { $0.isPlannedFor.contains(date) })
-        }
+                category.trackers.contains(where: { $0.isPlannedFor.contains(dayOfWeek) })
+            }
     }
 
-    func addNewTrackerToCategory(categoryID: UInt, trackerName: String, plannedDate: [SimpleDate]) {
+    func addNewTrackerToCategory(categoryID: UInt, trackerName: String, plannedDaysOfWeek: [String]) {
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
             let newTracker = Tracker(id: UInt(Date().timeIntervalSince1970),
                                      color: 1, // Вы можете заменить это на другое значение или сделать параметром функции
                                      title: trackerName,
                                      icon: 1, // Аналогично color
-                                     isPlannedFor: Set(plannedDate),
+                                     isPlannedFor: Set(plannedDaysOfWeek),
                                      isDoneAt: Set<SimpleDate>())
             categories[categoryIndex].trackers.append(newTracker)
         }

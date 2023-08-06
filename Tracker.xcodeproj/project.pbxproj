@@ -106,6 +106,7 @@
 		AFCA55B42A7C19A000D9A851 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AFCA55BE2A7C36AF00D9A851 /* Mappers.swift */,
 				AFCA55B12A7C187900D9A851 /* Tracker.swift */,
 				AFCA55C62A7D5BB000D9A851 /* SimpleDate.swift */,
 				AFCA55CE2A7E527500D9A851 /* TrackerCategory.swift */,
@@ -139,7 +140,6 @@
 			children = (
 				AFCA55BA2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift */,
 				AFCA55BC2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift */,
-				AFCA55BE2A7C36AF00D9A851 /* Mappers.swift */,
 				AFCA55D02A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift */,
 				AFCA55D22A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift */,
 			);
