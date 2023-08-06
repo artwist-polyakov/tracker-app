@@ -19,17 +19,17 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isDoneAt: [SimpleDate(date: Date())])
-                        ])
-    ]
-
+                                    isPlannedFor: Set([SimpleDate(date: Date())]),
+                                    isDoneAt: Set([SimpleDate(date: Date())])
+                        )])
+                        ]
     func getAllTrackers() -> [TrackerCategory] {
         return categories
     }
 
     func getAllCategoriesPlannedTo(date: SimpleDate) -> [TrackerCategory] {
         return categories.filter { category in
-            category.trackers.contains(where: { $0.isDoneAt.contains(date) })
+            category.trackers.contains(where: { $0.isPlannedFor.contains(date) })
         }
     }
 
@@ -39,7 +39,8 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                      color: 1, // Вы можете заменить это на другое значение или сделать параметром функции
                                      title: trackerName,
                                      icon: 1, // Аналогично color
-                                     isDoneAt: Set(plannedDate))
+                                     isPlannedFor: Set(plannedDate),
+                                     isDoneAt: Set<SimpleDate>())
             categories[categoryIndex].trackers.append(newTracker)
         }
     }

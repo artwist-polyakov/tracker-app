@@ -131,6 +131,8 @@ class TrackersViewController: UIViewController {
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         collectionPresenter.selectedDate = sender.date
+        collectionCompanion?.selectedDate = sender.date
+        collectionView?.reloadData()
     }
     
     func setupButtons() {

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    let factory = TrackersFactory.shared
+    let repository = TrackersRepositoryImpl.shared
     let cellIdentifier = "TrackerCollectionViewCell"
     var delegate: TrackersCollectionsCompanionDelegate
     var selectedDate: Date?
@@ -22,25 +22,26 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let quantity = factory.trackers?.count ?? 0
-        delegate.quantityTernar(quantity)
+        let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()))[section]
+        let quantity = trackerCategory.trackers.count
         return quantity
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
-        let tracker = factory.trackers?[indexPath.row]
+        let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()))[indexPath.section]
+        let tracker = trackerCategory.trackers[indexPath.row]
         
         cell.configure(
-            text: tracker?.title ??  "",
+            text: tracker.title,
             emoji: "❤️",
-            sheetColor: (UIColor(named: "\((tracker?.color ?? 1) % 18)") ?? UIColor(named: "2"))!,
-            quantityText: Mappers.intToDaysGoneMapper(tracker?.isDoneAt.count ?? 0),
-            hasMark: tracker?.isDoneAt.contains(SimpleDate(date: Date())) ??  false
+            sheetColor: ((UIColor(named: "\((tracker.color) % 18)") ?? UIColor(named: "1"))!),
+            quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count),
+            hasMark: tracker.isDoneAt.contains(SimpleDate(date: Date()))
         )
         
         cell.onFunctionButtonTapped = { [weak self] in
-            self?.delegate.handleFunctionButtonTapped(at: indexPath.row, date: self?.selectedDate ?? Date())
+            self?.delegate.handleFunctionButtonTapped(at: indexPath.item, inSection: indexPath.section, date: self?.selectedDate ?? Date())
         }
         
         return cell
@@ -85,13 +86,21 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             id = ""
         }
         
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryView
+            
+        if kind == UICollectionView.elementKindSectionHeader {
+            let category = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()))[indexPath.section]
+            view.titleLabel.text = category.categoryTitle
+        }
         
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryView // 6
-        view.titleLabel.text = factory.categoryTitle
         return view
     }
     
-    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        let quantity = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date())).count
+        delegate.quantityTernar(quantity)
+        return repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date())).count
+    }
     
 }
     

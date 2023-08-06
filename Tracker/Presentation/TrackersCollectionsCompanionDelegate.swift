@@ -8,6 +8,6 @@
 import Foundation
 
 protocol TrackersCollectionsCompanionDelegate: AnyObject {
-    func handleFunctionButtonTapped(at indexPath: Int, date: Date)
+    func handleFunctionButtonTapped(at indexPath: Int, inSection section: Int,  date: Date)
     func quantityTernar(_ quantity: Int)
 }

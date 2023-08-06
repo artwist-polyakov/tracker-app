@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
-    let factory = TrackersFactory.shared
-//    let factory = EmptyTrackersFactory.shared
+    let repository = TrackersRepositoryImpl.shared
+
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
 
@@ -22,23 +22,16 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
     }
     
-    func handleFunctionButtonTapped(at row: Int, date: Date) {
-        print("ОШИБКА \(row): \(String(describing: factory.trackers))")
+    func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date) {
+        let trackerCategory = repository.getAllTrackers()[section]
+        let tracker = trackerCategory.trackers[item]
+
+        repository.interactWithTrackerDoneForeDate(trackerId: tracker.id, date: SimpleDate(date: date))
         
-        guard let trackers = factory.trackers?[row] else {return}
+//        viewController.collectionView?.reloadItems(at: [IndexPath(item: item, section: section)])
         
-        if trackers.isDoneAt.contains(SimpleDate(date: date)) {
-            factory.removeDay(to: row, day: SimpleDate(date:date)) {
-                print("Удалил день")
-            }
-        } else {
-            factory.addDay(to: row, day: SimpleDate(date:date)) {
-                print("Добавил день")
-            }
-        }
-        
-        viewController.collectionView?.reloadItems(at: [IndexPath(index: row)])
-        
+        // MARK: TODO продумать как разрешить коллизию, когда полностью исчезает коллеция
+        viewController.collectionView?.reloadData()
     }
     
 }
