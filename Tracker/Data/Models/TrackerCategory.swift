@@ -7,9 +7,14 @@
 
 import Foundation
 class TrackerCategory: TrackersStorageProtocol {
-    
-    var trackerTitle: String = ""
+    let id: UInt
+    var categoryTitle: String = ""
     var trackers: [Tracker]?
+    
+    init(id: UInt, categoryTitle: String) {
+        self.id = id
+        self.categoryTitle = categoryTitle
+    }
     
     func addDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
         if toPosition > trackers?.count ?? -1 {

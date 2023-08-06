@@ -8,7 +8,7 @@
 import Foundation
 
 final class EmptyTrackersFactory: TrackersStorageProtocol {
-    var trackerTitle: String = ""
+    var categoryTitle: String = ""
     var trackers: [Tracker]? = []
     
     

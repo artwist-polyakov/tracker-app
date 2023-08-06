@@ -73,5 +73,25 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         
         return CGSize(width: collectionView.frame.width, height: height)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        var id: String
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            id = "header"
+        case UICollectionView.elementKindSectionFooter:
+            id = "footer"
+        default:
+            id = ""
+        }
+        
+        
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryView // 6
+        view.titleLabel.text = factory.categoryTitle
+        return view
+    }
+    
+    
+    
 }
     

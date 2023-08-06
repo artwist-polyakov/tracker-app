@@ -8,10 +8,10 @@
 import Foundation
 
 final class TrackersFactory: TrackersStorageProtocol {
-    var trackerTitle: String = "Домашний тестовый уют"
+    var categoryTitle: String = "Домашний тестовый уют"
     var trackers: [Tracker]? = [Tracker(id: UInt(Date().timeIntervalSince1970),
                                         color: 1,
-                                        title: "Тестовый трекер",
+                                        title: "Тестовый трекер 123",
                                         icon: 1,
                                         isDoneAt: [SimpleDate(date:Date())])]
     
