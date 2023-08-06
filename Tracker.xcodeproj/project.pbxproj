@@ -30,6 +30,7 @@
 		AFCA55D12A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D02A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift */; };
 		AFCA55D32A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D22A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift */; };
 		AFCA55D52A7F895500D9A851 /* TrackersRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D42A7F895500D9A851 /* TrackersRepositoryProtocol.swift */; };
+		AFCA55D72A7F96C000D9A851 /* TrackersRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		AFCA55D02A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionsCompanionDelegate.swift; sourceTree = "<group>"; };
 		AFCA55D22A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionsCompanion.swift; sourceTree = "<group>"; };
 		AFCA55D42A7F895500D9A851 /* TrackersRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRepositoryProtocol.swift; sourceTree = "<group>"; };
+		AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRepositoryImpl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				AFCA55C82A7E47AF00D9A851 /* EmptyTrackersFactory.swift */,
 				AFCA55CA2A7E487F00D9A851 /* TrackersStorage.swift */,
 				AFCA55CC2A7E4D1400D9A851 /* MainTrackersStorage.swift */,
+				AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 			files = (
 				AFCA55CF2A7E527500D9A851 /* TrackerCategory.swift in Sources */,
 				AFCA55AC2A7C05C500D9A851 /* SupplementaryView.swift in Sources */,
+				AFCA55D72A7F96C000D9A851 /* TrackersRepositoryImpl.swift in Sources */,
 				AF9332402A72B59300BA0DB8 /* AppDelegate.swift in Sources */,
 				AFCA55D32A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift in Sources */,
 				AFCA55BD2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift in Sources */,

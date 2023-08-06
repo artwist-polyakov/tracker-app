@@ -6,32 +6,14 @@
 //
 
 import Foundation
-class TrackerCategory: TrackersStorageProtocol {
+class TrackerCategory {
     let id: UInt
-    var categoryTitle: String = ""
-    var trackers: [Tracker]?
+    var categoryTitle: String
+    var trackers: [Tracker]
     
-    init(id: UInt, categoryTitle: String) {
+    init(id: UInt, categoryTitle: String, trackers: [Tracker] = []) {
         self.id = id
         self.categoryTitle = categoryTitle
+        self.trackers = trackers
     }
-    
-    func addDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
-        if toPosition > trackers?.count ?? -1 {
-            print("Некорректный индекс")
-            return
-        } else {
-            trackers?[toPosition].isDoneAt.insert(date)
-        }
-    }
-    
-    func removeDay(to toPosition: Int, day date: SimpleDate, _ completion: () -> ()) {
-        if toPosition > trackers?.count ?? -1 {
-            print("Некорректный индекс")
-            return
-        } else {
-            trackers?[toPosition].isDoneAt.remove(date)
-        }
-    }
-
 }
