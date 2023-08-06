@@ -26,7 +26,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         let trackerCategory = repository.getAllTrackers()[section]
         let tracker = trackerCategory.trackers[item]
 
-        repository.interactWithTrackerDoneForeDate(trackerId: tracker.id, date: SimpleDate(date: date))
+        repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))
         
 //        viewController.collectionView?.reloadItems(at: [IndexPath(item: item, section: section)])
         

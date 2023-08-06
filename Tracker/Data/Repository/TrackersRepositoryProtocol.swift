@@ -7,13 +7,16 @@
 
 import Foundation
 protocol TrackersRepositoryProtocol {
+    
     func addNewCategory(name:String)
     func getAllTrackers() -> [TrackerCategory]
     func getAllCategoriesPlannedTo(date:SimpleDate) -> [TrackerCategory]
-    func addNewTrackerToCategory(categoryID: UInt,
+    func addNewTrackerToCategory(color: Int,
+                                 categoryID: UInt,
                                  trackerName: String,
+                                 icon: Int,
                                  plannedDaysOfWeek: [String])
-    func interactWithTrackerDoneForeDate(trackerId:UInt,
+    func interactWithTrackerDoneForDate(trackerId:UInt,
                                          date: SimpleDate)
     
 }

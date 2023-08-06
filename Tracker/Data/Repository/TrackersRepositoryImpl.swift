@@ -34,19 +34,19 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
             }
     }
 
-    func addNewTrackerToCategory(categoryID: UInt, trackerName: String, plannedDaysOfWeek: [String]) {
+    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: [String]) {
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
             let newTracker = Tracker(id: UInt(Date().timeIntervalSince1970),
-                                     color: 1, // Вы можете заменить это на другое значение или сделать параметром функции
+                                     color: 1, // MARK: когда будем выбирать цвета, надо проставлять
                                      title: trackerName,
-                                     icon: 1, // Аналогично color
+                                     icon: 1, // MARK: когда будем выбирать цвета, надо проставлять
                                      isPlannedFor: Set(plannedDaysOfWeek),
                                      isDoneAt: Set<SimpleDate>())
             categories[categoryIndex].trackers.append(newTracker)
         }
     }
 
-    func interactWithTrackerDoneForeDate(trackerId: UInt, date: SimpleDate) {
+    func interactWithTrackerDoneForDate(trackerId: UInt, date: SimpleDate) {
         for (categoryIndex, category) in categories.enumerated() {
             if let trackerIndex = category.trackers.firstIndex(where: { $0.id == trackerId }) {
                 let isDoneAt = categories[categoryIndex].trackers[trackerIndex].isDoneAt
