@@ -298,7 +298,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
         case 0:
             return menuItems.count
         case 1, 2:
-            return 1 // по одной ячейке для каждой коллекции
+            return 18 // по одной 18 для каждой коллекции
         default:
             return 0
         }
