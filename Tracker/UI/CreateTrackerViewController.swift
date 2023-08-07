@@ -125,10 +125,7 @@ class CreateTrackerViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            trackerNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            trackerNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             trackerNameField.heightAnchor.constraint(equalToConstant: 75),
-            trackerNameField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
             trackerNameField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             trackerNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             trackerNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
