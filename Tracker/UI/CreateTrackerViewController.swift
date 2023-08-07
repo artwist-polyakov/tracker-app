@@ -104,7 +104,7 @@ class CreateTrackerViewController: UIViewController {
         colorCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ColorCell")
         
         menuItems = [
-                    MenuItem(title: "Выбрать категорию", subtitle: "", action: handleSelectCategory),
+                    MenuItem(title: "Выбрать категорию", subtitle: "Важное", action: handleSelectCategory),
                     MenuItem(title: "Создать расписание", subtitle: "", action: handleCreateSchedule)
                 ]
                 
@@ -157,7 +157,9 @@ class CreateTrackerViewController: UIViewController {
 
         menuTableView.backgroundColor = UIColor(named: "TrackerBackground")
         menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         menuTableView.translatesAutoresizingMaskIntoConstraints = false
+        menuTableView.separatorStyle = .none
         NSLayoutConstraint.activate([
             menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),

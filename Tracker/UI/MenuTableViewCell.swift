@@ -71,8 +71,7 @@ class MenuTableViewCell: UITableViewCell {
            subtitleLabel.bottomAnchor.constraint(equalTo: labelsContainer.bottomAnchor),
            
            chevronImageView.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
-           chevronImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
-
+           chevronImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
            ])
         
         NSLayoutConstraint.activate([
