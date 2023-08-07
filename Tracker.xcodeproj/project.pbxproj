@@ -32,6 +32,8 @@
 		AFCA55DF2A7FEEE300D9A851 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55DE2A7FEEE300D9A851 /* ScheduleViewController.swift */; };
 		AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */; };
 		AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */; };
+		AFCA55E52A8135BF00D9A851 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E42A8135BF00D9A851 /* MenuItem.swift */; };
+		AFCA55E72A81364100D9A851 /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +64,8 @@
 		AFCA55DE2A7FEEE300D9A851 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewController.swift; sourceTree = "<group>"; };
 		AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTypeDelegate.swift; sourceTree = "<group>"; };
+		AFCA55E42A8135BF00D9A851 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
+		AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +152,8 @@
 				AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */,
 				AFCA55DE2A7FEEE300D9A851 /* ScheduleViewController.swift */,
 				AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */,
+				AFCA55E42A8135BF00D9A851 /* MenuItem.swift */,
+				AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -255,8 +261,10 @@
 				AFCA55AE2A7C178800D9A851 /* TrackerCollectionViewCell.swift in Sources */,
 				AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */,
 				AFCA55D92A7FE7EA00D9A851 /* DayOfWeek.swift in Sources */,
+				AFCA55E52A8135BF00D9A851 /* MenuItem.swift in Sources */,
 				AF9332422A72B59300BA0DB8 /* SceneDelegate.swift in Sources */,
 				AFCA55D12A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift in Sources */,
+				AFCA55E72A81364100D9A851 /* MenuTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

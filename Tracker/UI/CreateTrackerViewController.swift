@@ -29,11 +29,25 @@ class CreateTrackerViewController: UIViewController {
         return label
     }()
     
+    let warningLabel: UILabel = {
+            let label = UILabel()
+            label.text = "Ограничение 38 символов"
+            label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            label.textColor = UIColor(named: "TrackerRed")
+            label.textAlignment = .center
+            label.isHidden = true
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+    
     let trackerNameField = UITextField()
-    let selectCategoryButton = UIButton(type: .system)
-    let createScheduleButton = UIButton(type: .system)
+
     let iconCollectionView: UICollectionView
     let colorCollectionView: UICollectionView
+    
+    let menuTableView = UITableView()
+    var menuItems: [MenuItem] = []
+    
     
     // Данные для коллекции иконок и цветов
     let icons: [String] = ["🙂", "🤩", "😍", "🥳", "😎", "😴", "😤", "😡", "🥺", "🤔", "🤨", "🙃", "😇", "😂", "🤣", "😅", "😆", "😁"] // Можно добавить или изменить иконки
@@ -56,8 +70,10 @@ class CreateTrackerViewController: UIViewController {
         self.navigationItem.hidesBackButton = true
         setupUI()
         layoutUI()
+        menuTableView.reloadData()
     }
     
+    // MARK: - UI Setup
     private func setupUI() {
         // Настройка UITextField
         trackerNameField.placeholder = "Имя трекера"
@@ -75,14 +91,7 @@ class CreateTrackerViewController: UIViewController {
         
         
         titleLabel.textAlignment = .center
-        
-        // Настройка кнопки выбора категории
-        selectCategoryButton.setTitle("Выбрать категорию", for: .normal)
-        selectCategoryButton.addTarget(self, action: #selector(handleSelectCategory), for: .touchUpInside)
-        
-        // Настройка кнопки создания расписания
-        createScheduleButton.setTitle("Создать расписание", for: .normal)
-        createScheduleButton.addTarget(self, action: #selector(handleCreateSchedule), for: .touchUpInside)
+
         
         // Настройка коллекции иконок
         iconCollectionView.dataSource = self
@@ -93,19 +102,31 @@ class CreateTrackerViewController: UIViewController {
         colorCollectionView.dataSource = self
         colorCollectionView.delegate = self
         colorCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ColorCell")
+        
+        menuItems = [
+                    MenuItem(title: "Выбрать категорию", subtitle: "", action: handleSelectCategory),
+                    MenuItem(title: "Создать расписание", subtitle: "", action: handleCreateSchedule)
+                ]
+                
+        menuTableView.dataSource = self
+        menuTableView.delegate = self
+        menuTableView.isScrollEnabled = false
+        menuTableView.layer.cornerRadius = 16
+        menuTableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "MenuCell")
+        view.addSubview(menuTableView)
+        
     }
     
+    // MARK: - Layout
     private func layoutUI() {
         
         view.addSubview(titleLabel)
         view.addSubview(trackerNameField)
-        view.addSubview(selectCategoryButton)
-        view.addSubview(createScheduleButton)
+        view.addSubview(warningLabel)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         trackerNameField.translatesAutoresizingMaskIntoConstraints = false
-        selectCategoryButton.translatesAutoresizingMaskIntoConstraints = false
-        createScheduleButton.translatesAutoresizingMaskIntoConstraints = false
+
         trackerNameField.layer.cornerRadius = 16
         trackerNameField.clipsToBounds = true
         trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
@@ -129,51 +150,20 @@ class CreateTrackerViewController: UIViewController {
             trackerNameField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             trackerNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             trackerNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            warningLabel.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 8),
+            warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 
-            selectCategoryButton.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
-            selectCategoryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            selectCategoryButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -10),
-
-            createScheduleButton.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
-            createScheduleButton.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 10),
-            createScheduleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
-    }
-    
-    @objc private func handleSelectCategory() {
-        // Переход к экрану выбора категории
-    }
-    
-    @objc private func handleCreateSchedule() {
-        // Переход к экрану создания расписания
-    }
-    
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        if textField.text?.isEmpty == false {
-                textField.textColor = UIColor(named: "TrackerBlack")
-                textField.rightViewMode = .always
-        } else {
-            textField.textColor = UIColor(named: "TrackerGray")
-            textField.rightViewMode = .never
-        }
-    }
-    
-    @objc func clearTextField() {
-        trackerNameField.text = ""
-        textFieldDidChange(trackerNameField)
-    }
-    
-    private func configureForSelectedType() {
-        guard let type = selectedTrackerType else { return }
-        
-        switch type {
-        case .habit:
-            createScheduleButton.isEnabled = true
-            titleLabel.text = "Новая привычка"
-        case .irregularEvent:
-            createScheduleButton.isEnabled = false
-            titleLabel.text = "Новое нерегулярное событие"
-        }
+
+        menuTableView.backgroundColor = UIColor(named: "TrackerBackground")
+        menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        menuTableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
+            menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            menuTableView.heightAnchor.constraint(equalToConstant: MenuTableViewCell.cellHeight * CGFloat(menuItems.count))
+        ])
     }
     
     private func configureForLocale() {
@@ -199,6 +189,47 @@ class CreateTrackerViewController: UIViewController {
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
         }
     }
+    
+    // MARK: - Actions
+    private func handleSelectCategory() {
+        // Переход к экрану выбора категории
+    }
+    
+    private func handleCreateSchedule() {
+        // Переход к экрану создания расписания
+    }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        if textField.text?.isEmpty == false {
+            textField.textColor = UIColor(named: "TrackerBlack")
+            textField.rightViewMode = .always
+            warningLabel.isHidden = textField.text?.count ?? 0 <= 38
+        } else {
+            textField.textColor = UIColor(named: "TrackerGray")
+            textField.rightViewMode = .never
+            warningLabel.isHidden = true
+        }
+    }
+    
+    @objc func clearTextField() {
+        trackerNameField.text = ""
+        textFieldDidChange(trackerNameField)
+    }
+    
+    private func configureForSelectedType() {
+        guard let type = selectedTrackerType else { return }
+        
+        switch type {
+        case .habit:
+//            createScheduleButton.isEnabled = true
+            titleLabel.text = "Новая привычка"
+        case .irregularEvent:
+//            createScheduleButton.isEnabled = false
+            titleLabel.text = "Новое нерегулярное событие"
+        }
+    }
+    
+    
 
 }
 
@@ -237,3 +268,50 @@ extension CreateTrackerViewController: UICollectionViewDataSource, UICollectionV
         }
     }
 }
+
+extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return menuItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! MenuTableViewCell
+        let menuItem = menuItems[indexPath.row]
+        cell.titleLabel.text = menuItem.title
+        
+        if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
+            cell.isUserInteractionEnabled = false
+            cell.titleLabel.textColor = .gray
+        } else {
+            cell.isUserInteractionEnabled = true
+            cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
+        }
+        
+        cell.subtitleLabel.text = menuItem.subtitle
+        if menuItem.subtitle.isEmpty {
+            cell.subtitleLabel.isHidden = true
+        } else {
+            cell.subtitleLabel.isHidden = false
+        }
+        
+        if indexPath.row == menuItems.count - 1 {
+            cell.separatorView.isHidden = true
+        } else {
+            cell.separatorView.isHidden = false
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
+            return
+        }
+        menuItems[indexPath.row].action()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return MenuTableViewCell.cellHeight
+        }
+}
+
