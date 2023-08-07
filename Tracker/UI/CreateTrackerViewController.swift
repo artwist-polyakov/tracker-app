@@ -8,11 +8,8 @@
 import Foundation
 import UIKit
 class CreateTrackerViewController: UIViewController {
-    
     weak var delegate: TrackerTypeDelegate?
-    
     var clearButton = UIButton()
-    
     var selectedTrackerType: TrackerType? {
         didSet {
             configureForSelectedType()
@@ -41,18 +38,12 @@ class CreateTrackerViewController: UIViewController {
         }()
     
     let trackerNameField = UITextField()
-
-    let iconCollectionView: UICollectionView
-    let colorCollectionView: UICollectionView
-    
+    var iconCollectionView: UICollectionView
+    var colorCollectionView: UICollectionView
     let menuTableView = UITableView()
     var menuItems: [MenuItem] = []
-    
-    
-    // Данные для коллекции иконок и цветов
     let icons: [String] = ["🙂", "🤩", "😍", "🥳", "😎", "😴", "😤", "😡", "🥺", "🤔", "🤨", "🙃", "😇", "😂", "🤣", "😅", "😆", "😁"] // Можно добавить или изменить иконки
     let colors: [UIColor] = (1...18).compactMap { UIColor(named: "\($0)") }
-    
     init() {
         let layout = UICollectionViewFlowLayout()
         iconCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -68,6 +59,7 @@ class CreateTrackerViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationItem.hidesBackButton = true
+        
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -89,20 +81,28 @@ class CreateTrackerViewController: UIViewController {
                 trackerNameField.rightViewMode = .whileEditing
             }
         
-        
         titleLabel.textAlignment = .center
-
+        
+        iconCollectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
+        colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
         
         // Настройка коллекции иконок
         iconCollectionView.dataSource = self
         iconCollectionView.delegate = self
-        iconCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "IconCell")
-        
+        iconCollectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
+        iconCollectionView.backgroundColor = .lightGray
         // Настройка коллекции цветов
         colorCollectionView.dataSource = self
         colorCollectionView.delegate = self
-        colorCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "ColorCell")
         
+        iconCollectionView.reloadData()
+        colorCollectionView.reloadData()
+        
+        colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
+        iconCollectionView.isScrollEnabled = false
+        colorCollectionView.isScrollEnabled = false
+        iconCollectionView.frame.size.width = view.bounds.width
+        colorCollectionView.frame.size.width = view.bounds.width
         menuItems = [
                     MenuItem(title: "Выбрать категорию", subtitle: "Важное", action: handleSelectCategory),
                     MenuItem(title: "Создать расписание", subtitle: "", action: handleCreateSchedule)
@@ -113,8 +113,10 @@ class CreateTrackerViewController: UIViewController {
         menuTableView.isScrollEnabled = false
         menuTableView.layer.cornerRadius = 16
         menuTableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "MenuCell")
+        menuTableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: "CollectionCell")
         view.addSubview(menuTableView)
-        
+//        view.addSubview(iconCollectionView)
+//        iconCollectionView.frame = CGRect(x: 0, y: 100, width: view.bounds.width, height: 200)
     }
     
     // MARK: - Layout
@@ -136,9 +138,11 @@ class CreateTrackerViewController: UIViewController {
         clearButton.setImage(UIImage(named: "Cross"), for: .normal)
         clearButton.addTarget(self, action: #selector(clearTextField), for: .touchUpInside)
         trackerNameField.rightView = clearButton
-
-
         configureForLocale()
+        
+        iconCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
+        colorCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
+
         
         NSLayoutConstraint.activate([
             
@@ -164,7 +168,10 @@ class CreateTrackerViewController: UIViewController {
             menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            menuTableView.heightAnchor.constraint(equalToConstant: MenuTableViewCell.cellHeight * CGFloat(menuItems.count))
+            menuTableView.heightAnchor.constraint(equalToConstant: MenuTableViewCell.cellHeight * CGFloat(menuItems.count)),
+            
+
+
         ])
     }
     
@@ -230,8 +237,6 @@ class CreateTrackerViewController: UIViewController {
             titleLabel.text = "Новое нерегулярное событие"
         }
     }
-    
-    
 
 }
 
@@ -246,21 +251,37 @@ extension CreateTrackerViewController: UICollectionViewDataSource, UICollectionV
         return 0
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! SupplementaryView
+            
+            if collectionView == iconCollectionView {
+                header.titleLabel.text = "Emoji"
+            } else if collectionView == colorCollectionView {
+                header.titleLabel.text = "Цвет"
+            }
+            
+            return header
+        default:
+            assert(false, "Invalid element type")
+        }
+    }
+
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == iconCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IconCell", for: indexPath)
-            let label = UILabel(frame: cell.bounds)
-            label.text = icons[indexPath.row]
-            label.textAlignment = .center
-            cell.contentView.addSubview(label)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IconCell", for: indexPath) as! IconCell
+            cell.label.text = icons[indexPath.row]
             return cell
         } else if collectionView == colorCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as! ColorCell
             cell.backgroundColor = colors[indexPath.row]
             return cell
         }
         return UICollectionViewCell()
     }
+
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == iconCollectionView {
@@ -273,36 +294,75 @@ extension CreateTrackerViewController: UICollectionViewDataSource, UICollectionV
 
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItems.count
+        switch section {
+        case 0:
+            return menuItems.count
+        case 1, 2:
+            return 1 // по одной ячейке для каждой коллекции
+        default:
+            return 0
+        }
+    }
+
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 1 {
+            return 204 // высота для iconCollectionView
+        } else if section == 2 {
+            return 204 // высота для colorCollectionView
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! MenuTableViewCell
-        let menuItem = menuItems[indexPath.row]
-        cell.titleLabel.text = menuItem.title
-        
-        if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
-            cell.isUserInteractionEnabled = false
-            cell.titleLabel.textColor = .gray
-        } else {
-            cell.isUserInteractionEnabled = true
-            cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
-        }
-        
-        cell.subtitleLabel.text = menuItem.subtitle
-        if menuItem.subtitle.isEmpty {
-            cell.subtitleLabel.isHidden = true
-        } else {
-            cell.subtitleLabel.isHidden = false
-        }
-        
-        if indexPath.row == menuItems.count - 1 {
-            cell.separatorView.isHidden = true
-        } else {
-            cell.separatorView.isHidden = false
-        }
-        
-        return cell
+        switch indexPath.section{
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! MenuTableViewCell
+            let menuItem = menuItems[indexPath.row]
+            cell.titleLabel.text = menuItem.title
+            
+            if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
+                cell.isUserInteractionEnabled = false
+                cell.titleLabel.textColor = .gray
+            } else {
+                cell.isUserInteractionEnabled = true
+                cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
+            }
+            
+            cell.subtitleLabel.text = menuItem.subtitle
+            if menuItem.subtitle.isEmpty {
+                cell.subtitleLabel.isHidden = true
+            } else {
+                cell.subtitleLabel.isHidden = false
+            }
+            
+            if indexPath.row == menuItems.count - 1 {
+                cell.separatorView.isHidden = true
+            } else {
+                cell.separatorView.isHidden = false
+            }
+            
+            return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionCell", for: indexPath) as! CollectionTableViewCell
+            cell.collectionView = iconCollectionView
+            cell.collectionView.dataSource = self
+            cell.collectionView.delegate = self
+            cell.collectionView.reloadData()
+            return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionCell", for: indexPath) as! CollectionTableViewCell
+            cell.collectionView = colorCollectionView
+            cell.collectionView.reloadData()
+            return cell
+
+            default:
+                return UITableViewCell()
+            }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -313,7 +373,32 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return MenuTableViewCell.cellHeight
+        switch indexPath.section {
+        case 0:
+            return MenuTableViewCell.cellHeight
+        case 1, 2:
+            return 204 // высота для коллекций
+        default:
+            return 0
         }
+    }
 }
 
+extension CreateTrackerViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.size.width, height: 30)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if collectionView == iconCollectionView {
+            return CGSize(width: 50, height: 50)
+        } else if collectionView == colorCollectionView {
+            return CGSize(width: 50, height: 50)
+        }
+        return CGSize(width: 50, height: 50)
+    }
+
+    
+    
+}
