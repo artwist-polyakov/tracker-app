@@ -101,8 +101,7 @@ class CreateTrackerViewController: UIViewController {
         menuTableView.register(IconCollectionViewCell.self, forCellReuseIdentifier: "IconCollectionViewCell")
         menuTableView.register(ColorCollectionViewCell.self, forCellReuseIdentifier: "ColorCollectionViewCell")
         view.addSubview(menuTableView)
-        menuTableView.rowHeight = UITableView.automaticDimension
-        menuTableView.estimatedRowHeight = 100
+
     }
     
     // MARK: - Layout
@@ -154,7 +153,7 @@ class CreateTrackerViewController: UIViewController {
             menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            menuTableView.heightAnchor.constraint(equalToConstant: MenuTableViewCell.cellHeight * CGFloat(menuItems.count)),
+            menuTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
             
 
 
