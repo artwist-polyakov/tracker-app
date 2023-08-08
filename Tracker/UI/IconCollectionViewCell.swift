@@ -23,9 +23,10 @@ class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICol
         collectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
 
         contentView.addSubview(collectionView)
-
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -68,6 +69,17 @@ class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICol
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedEmoji = icons[indexPath.row]
         delegate?.didSetTrackerIcon(selectedEmoji)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! SupplementaryView
+            headerView.titleLabel.text = "Emoji"
+            return headerView
+        default:
+            return UICollectionReusableView()
+        }
     }
     
 }

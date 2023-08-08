@@ -45,6 +45,14 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
+    func giveMeSelectedDays() -> Set<String> {
+        return trackerSheduleToFlush ?? Set<String>()
+    }
+    
+    func giveMeSelectedCategory() -> TrackerCategory {
+        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
+    }
+    
     func didSelectTrackerCategory(_ category: TrackerCategory) {
         trackerCategoryToFlush = category
     }
