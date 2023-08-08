@@ -8,6 +8,25 @@
 import UIKit
 class ColorCell: UICollectionViewCell {
     
+    var isSelectedColor: Bool = false {
+        didSet {
+            if isSelectedColor {
+                contentView.layer.cornerRadius = 8
+                contentView.layer.borderWidth = 3
+                contentView.layer.borderColor = colorView.backgroundColor?.withAlphaComponent(0.3).cgColor
+            } else {
+                contentView.layer.cornerRadius = 0
+                contentView.layer.borderWidth = 0
+            }
+        }
+    }
+    
+    let colorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -19,8 +38,14 @@ class ColorCell: UICollectionViewCell {
     }
     
     private func setupView() {
-        contentView.backgroundColor = .brown
-        // Здесь можно добавить дополнительную настройку, если она будет нужна в будущем
-        // На данный момент, в основном, мы будем устанавливать цвет фона, так что дополнительная настройка не требуется.
+        contentView.addSubview(colorView)
+
+        NSLayoutConstraint.activate([
+            colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            colorView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 4/5),
+            colorView.heightAnchor.constraint(equalTo: colorView.widthAnchor)
+        ])
+        colorView.layer.cornerRadius = 6
     }
 }

@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 class CreateTrackerViewController: UIViewController {
     weak var delegate: TrackerTypeDelegate?
+
     var clearButton = UIButton()
     var selectedTrackerType: TrackerType? {
         didSet {
@@ -27,14 +28,14 @@ class CreateTrackerViewController: UIViewController {
     }()
     
     let warningLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Ограничение 38 символов"
-            label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-            label.textColor = UIColor(named: "TrackerRed")
-            label.textAlignment = .center
-            label.isHidden = true
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
+        let label = UILabel()
+        label.text = "Ограничение 38 символов"
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.textColor = UIColor(named: "TrackerRed")
+        label.textAlignment = .center
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
         }()
     
     let trackerNameField = UITextField()
@@ -275,9 +276,11 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "IconCollectionViewCell", for: indexPath) as! IconCollectionViewCell
+            cell.delegate = self.delegate
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCollectionViewCell", for: indexPath) as! ColorCollectionViewCell
+            cell.delegate = self.delegate
             return cell
 
             default:
