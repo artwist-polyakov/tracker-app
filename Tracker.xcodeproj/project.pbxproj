@@ -37,6 +37,8 @@
 		AFCA55E92A81575C00D9A851 /* IconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E82A81575C00D9A851 /* IconCell.swift */; };
 		AFCA55EB2A8157DB00D9A851 /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55EA2A8157DB00D9A851 /* ColorCell.swift */; };
 		AFCA55ED2A815B1900D9A851 /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55EC2A815B1900D9A851 /* CollectionTableViewCell.swift */; };
+		AFCA55EF2A8235BA00D9A851 /* IconCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55EE2A8235BA00D9A851 /* IconCollectionViewCell.swift */; };
+		AFCA55F12A8235F600D9A851 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +74,8 @@
 		AFCA55E82A81575C00D9A851 /* IconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCell.swift; sourceTree = "<group>"; };
 		AFCA55EA2A8157DB00D9A851 /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
 		AFCA55EC2A815B1900D9A851 /* CollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionTableViewCell.swift; sourceTree = "<group>"; };
+		AFCA55EE2A8235BA00D9A851 /* IconCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCollectionViewCell.swift; sourceTree = "<group>"; };
+		AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +167,8 @@
 				AFCA55E82A81575C00D9A851 /* IconCell.swift */,
 				AFCA55EA2A8157DB00D9A851 /* ColorCell.swift */,
 				AFCA55EC2A815B1900D9A851 /* CollectionTableViewCell.swift */,
+				AFCA55EE2A8235BA00D9A851 /* IconCollectionViewCell.swift */,
+				AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -249,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFCA55F12A8235F600D9A851 /* ColorCollectionViewCell.swift in Sources */,
 				AFCA55CF2A7E527500D9A851 /* TrackerCategory.swift in Sources */,
 				AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */,
 				AFCA55AC2A7C05C500D9A851 /* SupplementaryView.swift in Sources */,
@@ -273,6 +280,7 @@
 				AFCA55EB2A8157DB00D9A851 /* ColorCell.swift in Sources */,
 				AFCA55E92A81575C00D9A851 /* IconCell.swift in Sources */,
 				AFCA55D92A7FE7EA00D9A851 /* DayOfWeek.swift in Sources */,
+				AFCA55EF2A8235BA00D9A851 /* IconCollectionViewCell.swift in Sources */,
 				AFCA55E52A8135BF00D9A851 /* MenuItem.swift in Sources */,
 				AF9332422A72B59300BA0DB8 /* SceneDelegate.swift in Sources */,
 				AFCA55D12A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift in Sources */,
