@@ -15,12 +15,47 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 
     var selectedDate: Date?
     
-    var trackerTypeToFlush: TrackerType?
-    var trackerCategoryToFlush: TrackerCategory?
-    var trackerTitleToFlush: String?
-    var trackerIconToFlush: String?
-    var trackerSheduleToFlush: Set<String>?
-    var trackerColorToFlush: Int?
+    var trackerTypeToFlush: TrackerType = .notSet {
+        didSet {
+            print("TrackerTypeToFlush: \(trackerTypeToFlush)")
+        }
+    }
+        
+    var trackerCategoryToFlush: UInt? {
+        didSet {
+            guard let category = trackerCategoryToFlush
+            else {print ("TrackerCategoryToFlush: Пусто") ; return}
+            print("TrackerCategoryToFlush: \(category)")
+        }
+    }
+    var trackerTitleToFlush: String? {
+        didSet {
+            guard let title = trackerTitleToFlush
+            else {print ("trackerTitleToFlush: Пусто") ; return}
+            print("trackerTitleToFlush: \(title)")
+        }
+    }
+    var trackerIconToFlush: String? {
+        didSet {
+            guard let icon = trackerIconToFlush
+            else {print ("trackerIconToFlush: Пусто") ; return}
+            print("trackerIconToFlush: \(icon)")
+        }
+    }
+    var trackerSheduleToFlush: Set<String>? {
+        didSet {
+            guard let shedule = trackerSheduleToFlush
+            else {print ("trackerSheduleToFlush: Пусто") ; return}
+            print("trackerSheduleToFlush: \(shedule)")
+        }
+    }
+    var trackerColorToFlush: Int? {
+        didSet {
+            guard let color = trackerColorToFlush
+            else {print ("trackerColorToFlush: Пусто") ; return}
+            print("trackerColorToFlush: \(color)")
+        }
+    }
     
     init(vc: TrackersViewControllerProtocol) {
         self.viewController = vc
@@ -45,7 +80,16 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
-    func didSelectTrackerCategory(_ category: TrackerCategory) {
+    func giveMeSelectedDays() -> Set<String> {
+        return trackerSheduleToFlush ?? Set<String>()
+    }
+    
+    func giveMeSelectedCategory() -> TrackerCategory {
+//        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
+        return repository.getAllTrackers()[0]
+    }
+    
+    func didSelectTrackerCategory(_ category: UInt) {
         trackerCategoryToFlush = category
     }
     
@@ -70,7 +114,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func clearAllFlushProperties() {
-        trackerTypeToFlush = nil
+        trackerTypeToFlush = .notSet
         trackerTitleToFlush = nil
         trackerIconToFlush = nil
         trackerSheduleToFlush = nil

@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 class CreateTrackerViewController: UIViewController {
     weak var delegate: TrackerTypeDelegate?
+
     var clearButton = UIButton()
     var selectedTrackerType: TrackerType? {
         didSet {
@@ -27,14 +28,14 @@ class CreateTrackerViewController: UIViewController {
     }()
     
     let warningLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Ограничение 38 символов"
-            label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-            label.textColor = UIColor(named: "TrackerRed")
-            label.textAlignment = .center
-            label.isHidden = true
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
+        let label = UILabel()
+        label.text = "Ограничение 38 символов"
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.textColor = UIColor(named: "TrackerRed")
+        label.textAlignment = .center
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
         }()
     
     let trackerNameField = UITextField()
@@ -89,20 +90,20 @@ class CreateTrackerViewController: UIViewController {
 
         colorCollectionView.frame.size.width = view.bounds.width
         menuItems = [
-                    MenuItem(title: "Выбрать категорию", subtitle: "Важное", action: handleSelectCategory),
-                    MenuItem(title: "Создать расписание", subtitle: "", action: handleCreateSchedule)
+            MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
+            MenuItem(title: "Создать расписание", subtitle: "", action: handleCreateSchedule)
                 ]
                 
         menuTableView.dataSource = self
         menuTableView.delegate = self
         menuTableView.isScrollEnabled = false
-        menuTableView.layer.cornerRadius = 16
+//        menuTableView.layer.cornerRadius = 16
         menuTableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "MenuCell")
         menuTableView.register(IconCollectionViewCell.self, forCellReuseIdentifier: "IconCollectionViewCell")
         menuTableView.register(ColorCollectionViewCell.self, forCellReuseIdentifier: "ColorCollectionViewCell")
+        menuTableView.isScrollEnabled = true
         view.addSubview(menuTableView)
-        menuTableView.rowHeight = UITableView.automaticDimension
-        menuTableView.estimatedRowHeight = 100
+
     }
     
     // MARK: - Layout
@@ -145,7 +146,7 @@ class CreateTrackerViewController: UIViewController {
 
         ])
 
-        menuTableView.backgroundColor = UIColor(named: "TrackerBackground")
+        menuTableView.backgroundColor = UIColor(named: "TrackerWhite")
         menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         menuTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -154,7 +155,7 @@ class CreateTrackerViewController: UIViewController {
             menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            menuTableView.heightAnchor.constraint(equalToConstant: MenuTableViewCell.cellHeight * CGFloat(menuItems.count)),
+            menuTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
             
 
 
@@ -198,7 +199,12 @@ class CreateTrackerViewController: UIViewController {
         if textField.text?.isEmpty == false {
             textField.textColor = UIColor(named: "TrackerBlack")
             textField.rightViewMode = .always
-            warningLabel.isHidden = textField.text?.count ?? 0 <= 38
+            if textField.text?.count ?? 0 <= 38 {
+                warningLabel.isHidden = true
+                delegate?.didSetTrackerTitle(textField.text ?? "")
+            } else {
+                warningLabel.isHidden = false
+            }
         } else {
             textField.textColor = UIColor(named: "TrackerGray")
             textField.rightViewMode = .never
@@ -221,6 +227,9 @@ class CreateTrackerViewController: UIViewController {
         case .irregularEvent:
 //            createScheduleButton.isEnabled = false
             titleLabel.text = "Новое нерегулярное событие"
+        case .notSet:
+            titleLabel.text = "Неизвестный лейбл"
+        
         }
     }
 
@@ -251,7 +260,8 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! MenuTableViewCell
             let menuItem = menuItems[indexPath.row]
             cell.titleLabel.text = menuItem.title
-            
+            cell.backgroundColor = UIColor(named: "TrackerBackground")
+            cell.layer.cornerRadius = 16
             if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
                 cell.isUserInteractionEnabled = false
                 cell.titleLabel.textColor = .gray
@@ -272,13 +282,15 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             } else {
                 cell.separatorView.isHidden = false
             }
-            
+            roundCornersForCell(cell, in: tableView, at: indexPath)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "IconCollectionViewCell", for: indexPath) as! IconCollectionViewCell
+            cell.delegate = self.delegate
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCollectionViewCell", for: indexPath) as! ColorCollectionViewCell
+            cell.delegate = self.delegate
             return cell
 
             default:
@@ -302,6 +314,34 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             return 204 // высота для коллекций
         default:
             return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section > 0 { // Добавьте отступ после первой секции
+            return 32
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView() // Возвращает пустое представление
+    }
+    
+    func roundCornersForCell(_ cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {
+        cell.layer.cornerRadius = 0 // reset corner radius
+        cell.clipsToBounds = false
+        
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        if indexPath.row == 0 && totalRows == 1 {
+            // Если в секции всего одна ячейка
+            cell.layer.cornerRadius = 16
+        } else if indexPath.row == 0 {
+            // Если это первая ячейка
+            cell.roundCorners([.topLeft, .topRight], radius: 16)
+        } else if indexPath.row == totalRows - 1 {
+            // Если это последняя ячейка
+            cell.roundCorners([.bottomLeft, .bottomRight], radius: 16)
         }
     }
     

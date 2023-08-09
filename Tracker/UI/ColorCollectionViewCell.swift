@@ -7,7 +7,7 @@
 
 import UIKit
 class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
+    weak var delegate: TrackerTypeDelegate?
     var collectionView: UICollectionView!
     let colors: [UIColor] = (1...18).compactMap { UIColor(named: "\($0)") }
 
@@ -19,7 +19,7 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
         collectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
         collectionView.dataSource = self
         collectionView.delegate = self
-
+        collectionView.allowsMultipleSelection = false
         contentView.addSubview(collectionView)
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -29,6 +29,7 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
+        collectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
     }
 
     required init?(coder: NSCoder) {
@@ -41,7 +42,8 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as! ColorCell
-        cell.backgroundColor = colors[indexPath.row]
+        cell.backgroundColor = .clear
+        cell.colorView.backgroundColor = colors[indexPath.row]
         return cell
     }
     
@@ -51,6 +53,30 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 50)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
+            cell.isSelectedColor = true
+            delegate?.didSetTrackerColorToFlush(indexPath.row)
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
+            cell.isSelectedColor = false
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! SupplementaryView
+            headerView.titleLabel.text = "Цвет"
+            return headerView
+        default:
+            return UICollectionReusableView()
+        }
     }
     
 }

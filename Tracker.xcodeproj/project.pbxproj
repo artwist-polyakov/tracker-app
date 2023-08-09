@@ -36,9 +36,9 @@
 		AFCA55E72A81364100D9A851 /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */; };
 		AFCA55E92A81575C00D9A851 /* IconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E82A81575C00D9A851 /* IconCell.swift */; };
 		AFCA55EB2A8157DB00D9A851 /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55EA2A8157DB00D9A851 /* ColorCell.swift */; };
-		AFCA55ED2A815B1900D9A851 /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55EC2A815B1900D9A851 /* CollectionTableViewCell.swift */; };
 		AFCA55EF2A8235BA00D9A851 /* IconCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55EE2A8235BA00D9A851 /* IconCollectionViewCell.swift */; };
 		AFCA55F12A8235F600D9A851 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */; };
+		AFEDE0492A827A70002D8CE6 /* extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEDE0482A827A70002D8CE6 /* extension+UIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,9 +73,9 @@
 		AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
 		AFCA55E82A81575C00D9A851 /* IconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCell.swift; sourceTree = "<group>"; };
 		AFCA55EA2A8157DB00D9A851 /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
-		AFCA55EC2A815B1900D9A851 /* CollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionTableViewCell.swift; sourceTree = "<group>"; };
 		AFCA55EE2A8235BA00D9A851 /* IconCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCollectionViewCell.swift; sourceTree = "<group>"; };
 		AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
+		AFEDE0482A827A70002D8CE6 /* extension+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "extension+UIView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,9 +166,9 @@
 				AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */,
 				AFCA55E82A81575C00D9A851 /* IconCell.swift */,
 				AFCA55EA2A8157DB00D9A851 /* ColorCell.swift */,
-				AFCA55EC2A815B1900D9A851 /* CollectionTableViewCell.swift */,
 				AFCA55EE2A8235BA00D9A851 /* IconCollectionViewCell.swift */,
 				AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */,
+				AFEDE0482A827A70002D8CE6 /* extension+UIView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -259,9 +259,9 @@
 				AFCA55CF2A7E527500D9A851 /* TrackerCategory.swift in Sources */,
 				AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */,
 				AFCA55AC2A7C05C500D9A851 /* SupplementaryView.swift in Sources */,
-				AFCA55ED2A815B1900D9A851 /* CollectionTableViewCell.swift in Sources */,
 				AFCA55D72A7F96C000D9A851 /* TrackersRepositoryImpl.swift in Sources */,
 				AF9332402A72B59300BA0DB8 /* AppDelegate.swift in Sources */,
+				AFEDE0492A827A70002D8CE6 /* extension+UIView.swift in Sources */,
 				AFCA55D32A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift in Sources */,
 				AFCA55BD2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift in Sources */,
 				AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */,

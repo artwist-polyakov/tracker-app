@@ -34,7 +34,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         
         cell.configure(
             text: tracker.title,
-            emoji: "❤️",
+            emoji: Mappers.intToIconMapper(tracker.icon) ,
             sheetColor: ((UIColor(named: "\((tracker.color) % 18)") ?? UIColor(named: "1"))!),
             quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count),
             hasMark: tracker.isDoneAt.contains(SimpleDate(date: Date()))
@@ -43,6 +43,8 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         cell.onFunctionButtonTapped = { [weak self] in
             self?.delegate.handleFunctionButtonTapped(at: indexPath.item, inSection: indexPath.section, date: self?.selectedDate ?? Date())
         }
+        
+        print("setOfdays = \(tracker.isPlannedFor)")
         
         return cell
     }

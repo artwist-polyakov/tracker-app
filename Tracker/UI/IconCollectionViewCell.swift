@@ -8,20 +8,25 @@
 import UIKit
 
 class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    weak var delegate: TrackerTypeDelegate?
 
+    let numberOfColumns: CGFloat = 6
     var collectionView: UICollectionView!
-    let icons: [String] = ["🙂", "🤩", "😍", "🥳", "😎", "😴", "😤", "😡", "🥺", "🤔", "🤨", "🙃", "😇", "😂", "🤣", "😅", "😆", "😁"]
+    let icons: [String] =  (1...18).compactMap { Mappers.intToIconMapper($0) }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
 
         contentView.addSubview(collectionView)
-        collectionView.backgroundColor = .lightGray
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -46,6 +51,7 @@ class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICol
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IconCell", for: indexPath) as! IconCell
+        cell.cellWidth = floor((collectionView.frame.width - (numberOfColumns - 1)) / numberOfColumns)
         cell.label.text = icons[indexPath.row]
         return cell
     }
@@ -53,9 +59,27 @@ class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICol
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.bounds.size.width, height: 30)
     }
+
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 20, height: 20)
+        let widthPerItem = floor((collectionView.frame.width - (numberOfColumns - 1)) / numberOfColumns)
+        return CGSize(width: widthPerItem, height: widthPerItem)
+        }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedEmoji = icons[indexPath.row]
+        delegate?.didSetTrackerIcon(selectedEmoji)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! SupplementaryView
+            headerView.titleLabel.text = "Emoji"
+            return headerView
+        default:
+            return UICollectionReusableView()
+        }
     }
     
 }

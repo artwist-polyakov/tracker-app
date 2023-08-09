@@ -8,6 +8,7 @@
 import UIKit
 class CollectionTableViewCell: UITableViewCell {
 
+
     var collectionView: UICollectionView!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -16,7 +17,7 @@ class CollectionTableViewCell: UITableViewCell {
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         contentView.addSubview(collectionView)
-        collectionView.backgroundColor = .brown
+
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
