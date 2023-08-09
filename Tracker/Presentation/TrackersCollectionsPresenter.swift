@@ -132,12 +132,20 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func realizeAllFlushProperties() {
+        if trackerSheduleToFlush == nil {
+            trackerSheduleToFlush = Set()
+        }
+        
+        
+        print("realizeAllFlushProperties \(trackerCategoryToFlush), \(trackerTitleToFlush), \(trackerIconToFlush), \(trackerSheduleToFlush), \(trackerColorToFlush), \(trackerCategoryToFlush)")
         guard let trackerTitle = trackerTitleToFlush,
               let trackerIcon = trackerIconToFlush,
               let trackerShedule = trackerSheduleToFlush,
               let trackerColor = trackerColorToFlush,
               let trackseCategory = trackerCategoryToFlush
-        else {return }
+        else {
+            print("Не все данные готовы")
+            return }
         
         print("Записываю \(trackerTitle), \(trackerIcon), \(trackerShedule), \(trackerColor), \(trackseCategory)")
         repository.addNewTrackerToCategory(

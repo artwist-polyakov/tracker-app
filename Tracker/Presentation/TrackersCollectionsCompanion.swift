@@ -37,7 +37,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             emoji: Mappers.intToIconMapper(tracker.icon) ,
             sheetColor: ((UIColor(named: "\((tracker.color) % 18)") ?? UIColor(named: "1"))!),
             quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count),
-            hasMark: tracker.isDoneAt.contains(SimpleDate(date: Date()))
+            hasMark: tracker.isDoneAt.contains(SimpleDate(date:selectedDate ?? Date()))
         )
         
         cell.onFunctionButtonTapped = { [weak self] in
