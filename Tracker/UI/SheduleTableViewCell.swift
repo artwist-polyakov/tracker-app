@@ -14,10 +14,10 @@ class SheduleTableViewCell: UITableViewCell {
     let subtitleLabel = UILabel()
     let separatorView = UIView()
     let switchControl: UISwitch = {
-            let switcher = UISwitch()
-            switcher.translatesAutoresizingMaskIntoConstraints = false
-            return switcher
-        }()
+        let switcher = UISwitch()
+        switcher.translatesAutoresizingMaskIntoConstraints = false
+        return switcher
+    }()
     
     var completionTurnOff: ((String) -> Void)?
     var completionTurnOn: ((String) -> Void)?
@@ -49,15 +49,15 @@ class SheduleTableViewCell: UITableViewCell {
         // Добавление titleLabel и subtitleLabel в контейнер
         labelsContainer.addSubview(titleLabel)
         labelsContainer.addSubview(subtitleLabel)
-
+        
         self.backgroundColor = UIColor(white: 1, alpha: 0)
-
+        
         addSubview(switchControl)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         switchControl.translatesAutoresizingMaskIntoConstraints = false
-
+        
         separatorView.backgroundColor = UIColor(named: "TrackerGray")
         addSubview(separatorView)
         separatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -67,25 +67,25 @@ class SheduleTableViewCell: UITableViewCell {
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             separatorView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
+        
         NSLayoutConstraint.activate([
-           titleLabel.topAnchor.constraint(equalTo: labelsContainer.topAnchor),
-           titleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
-           titleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
-           
-           subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
-           subtitleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
-           subtitleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
-           subtitleLabel.bottomAnchor.constraint(equalTo: labelsContainer.bottomAnchor),
-           
-           switchControl.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
-           switchControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
-           ])
+            titleLabel.topAnchor.constraint(equalTo: labelsContainer.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
+            subtitleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
+            subtitleLabel.bottomAnchor.constraint(equalTo: labelsContainer.bottomAnchor),
+            
+            switchControl.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
+            switchControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+        ])
         
         NSLayoutConstraint.activate([
             labelsContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            ])
+        ])
         
         addSubview(switchControl)
         NSLayoutConstraint.activate([
@@ -100,14 +100,14 @@ class SheduleTableViewCell: UITableViewCell {
     }
     
     @objc func switchValueChanged(_ sender: UISwitch) {
-            if sender.isOn {
-                guard let targetDay = targetDay else { return }
-                completionTurnOn?(targetDay)
-            } else {
-                guard let targetDay = targetDay else { return }
-                completionTurnOff?(targetDay)
-            }
+        if sender.isOn {
+            guard let targetDay = targetDay else { return }
+            completionTurnOn?(targetDay)
+        } else {
+            guard let targetDay = targetDay else { return }
+            completionTurnOff?(targetDay)
         }
-
+    }
+    
 }
 

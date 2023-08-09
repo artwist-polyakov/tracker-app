@@ -10,7 +10,7 @@ import Foundation
 struct DayOfWeek {
     let name: String
     let isOn: Bool
-
+    
     static var localDays: [DayOfWeek] {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.current

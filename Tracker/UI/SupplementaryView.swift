@@ -24,7 +24,7 @@ class SupplementaryView: UICollectionReusableView {
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 12),
             titleLabel.topAnchor.constraint(equalTo: topAnchor),
-          
+            
         ])
     }
     

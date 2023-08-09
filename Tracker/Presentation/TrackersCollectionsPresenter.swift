@@ -12,10 +12,10 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     static let DidReadyNotification = Notification.Name(rawValue: "ready")
     static let DidNotReadyNotification = Notification.Name(rawValue: "not ready")
     let repository = TrackersRepositoryImpl.shared
-
+    
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
-
+    
     var selectedDate: Date?
     
     var trackerTypeToFlush: TrackerType = .notSet {
@@ -24,7 +24,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             print("TrackerTypeToFlush: \(trackerTypeToFlush)")
         }
     }
-        
+    
     var trackerCategoryToFlush: UInt? {
         didSet {
             notifyObservers()
@@ -77,10 +77,10 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date) {
         let trackerCategory = repository.getAllTrackers()[section]
         let tracker = trackerCategory.trackers[item]
-
+        
         repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))
         
-//        viewController.collectionView?.reloadItems(at: [IndexPath(item: item, section: section)])
+        //        viewController.collectionView?.reloadItems(at: [IndexPath(item: item, section: section)])
         
         // MARK: TODO продумать как разрешить коллизию, когда полностью исчезает коллеция
         viewController.collectionView?.reloadData()
@@ -94,7 +94,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func giveMeSelectedCategory() -> TrackerCategory {
-//        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
+        //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
         return repository.getAllTrackers()[0]
     }
     
@@ -157,8 +157,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         
         clearAllFlushProperties()
         viewController.collectionView?.reloadData()
-    
-    
+        
+        
     }
     
     func isReadyToFlush() -> Bool {
@@ -176,15 +176,15 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         if isReadyToFlush() {
             print("Уведомление отправлено что данные готовы")
             NotificationCenter.default.post(
-                                    name: TrackersCollectionsPresenter.DidReadyNotification,
-                                    object: self,
-                                    userInfo: ["GO": true ])
+                name: TrackersCollectionsPresenter.DidReadyNotification,
+                object: self,
+                userInfo: ["GO": true ])
         } else {
             print("Уведомление отправлено что данные не готовы")
             NotificationCenter.default.post(
-                                    name: TrackersCollectionsPresenter.DidNotReadyNotification,
-                                    object: self,
-                                    userInfo: ["GO": false ])
+                name: TrackersCollectionsPresenter.DidNotReadyNotification,
+                object: self,
+                userInfo: ["GO": false ])
         }
     }
     

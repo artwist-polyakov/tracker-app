@@ -43,13 +43,13 @@ class MenuTableViewCell: UITableViewCell {
         labelsContainer.addSubview(subtitleLabel)
         chevronImageView.tintColor = UIColor(named: "TrackerGray")
         self.backgroundColor = UIColor(white: 1, alpha: 0)
-
+        
         addSubview(chevronImageView)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         separatorView.backgroundColor = UIColor(named: "TrackerGray")
         addSubview(separatorView)
         separatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,27 +59,27 @@ class MenuTableViewCell: UITableViewCell {
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             separatorView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
+        
         NSLayoutConstraint.activate([
-           titleLabel.topAnchor.constraint(equalTo: labelsContainer.topAnchor),
-           titleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
-           titleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
-           
-           subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
-           subtitleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
-           subtitleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
-           subtitleLabel.bottomAnchor.constraint(equalTo: labelsContainer.bottomAnchor),
-           
-           chevronImageView.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
-           chevronImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
-           ])
+            titleLabel.topAnchor.constraint(equalTo: labelsContainer.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
+            subtitleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
+            subtitleLabel.bottomAnchor.constraint(equalTo: labelsContainer.bottomAnchor),
+            
+            chevronImageView.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
+            chevronImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+        ])
         
         NSLayoutConstraint.activate([
             labelsContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            ])
-
+        ])
+        
     }
-
+    
 }
 

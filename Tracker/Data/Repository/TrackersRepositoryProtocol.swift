@@ -17,6 +17,6 @@ protocol TrackersRepositoryProtocol {
                                  icon: Int,
                                  plannedDaysOfWeek: Set<String>)
     func interactWithTrackerDoneForDate(trackerId:UInt,
-                                         date: SimpleDate)
+                                        date: SimpleDate)
     
 }

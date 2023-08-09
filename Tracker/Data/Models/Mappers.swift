@@ -18,12 +18,12 @@ struct Mappers {
         } else {
             result += " дней"
         }
-            return result
+        return result
     }
     
     static func intToIconMapper(_ number:Int) -> String {
         let icons = ["🙂","😻","🌺","🐶","❤️","😱","😇","😡","🥶",
-                 "🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝","😪"]
+                     "🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝","😪"]
         return icons[number % 18]
     }
     
@@ -64,21 +64,21 @@ struct Mappers {
             return "Каждый день"
         }
         let short_names = ["понедельник":"Пн",
-                       "вторник":"Вт",
-                       "среда":"Ср",
-                       "четверг":"Чт",
-                       "пятница":"Пт",
-                       "суббота":"Сб",
-                       "воскресенье":"Вс"]
+                           "вторник":"Вт",
+                           "среда":"Ср",
+                           "четверг":"Чт",
+                           "пятница":"Пт",
+                           "суббота":"Сб",
+                           "воскресенье":"Вс"]
         
         let sortedWeekdays = weekdays.sorted {
             return giveMeAllWeekdaysNames()[$0.lowercased()]! < giveMeAllWeekdaysNames()[$1.lowercased()]!
-            }
-            
+        }
+        
         let sortedShortNames = sortedWeekdays.map { short_names[$0.lowercased()]! }
         
         return sortedShortNames.joined(separator: ", ")
-
+        
     }
     
     

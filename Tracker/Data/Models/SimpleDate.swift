@@ -11,13 +11,13 @@ struct SimpleDate: Hashable {
     let year: Int
     let month: Int
     let day: Int
-
+    
     var dayOfWeek: String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale.current
-            dateFormatter.dateFormat = "EEEE"
-            return dateFormatter.string(from: self.date)
-        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: self.date)
+    }
     
     init(date: Date) {
         let calendar = Calendar.current
@@ -26,7 +26,7 @@ struct SimpleDate: Hashable {
         month = components.month!
         day = components.day!
     }
-
+    
     var date: Date {
         var components = DateComponents()
         components.year = year

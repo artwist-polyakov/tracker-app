@@ -20,7 +20,7 @@ class TrackerTypeViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -50,7 +50,7 @@ class TrackerTypeViewController: UIViewController {
         irregularEventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         irregularEventButton.addTarget(self, action: #selector(handleIrregularEventButton), for: .touchUpInside)
     }
-
+    
     
     private func layoutButtons() {
         self.view.addSubview(buttonsContainer)
@@ -82,7 +82,7 @@ class TrackerTypeViewController: UIViewController {
             irregularEventButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
-
+    
     
     @objc private func handleHabitButton() {
         delegate?.didSelectTrackerType(.habit)

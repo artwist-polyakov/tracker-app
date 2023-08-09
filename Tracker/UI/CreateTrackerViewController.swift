@@ -277,7 +277,6 @@ class CreateTrackerViewController: UIViewController {
     @objc func clearTextField() {
         trackerNameField.text = ""
         textFieldDidChange(trackerNameField)
-//        checkCreateButtonReady()
     }
     
     @objc func cancelButtonTapped() {
@@ -294,10 +293,8 @@ class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
-//            createScheduleButton.isEnabled = true
             titleLabel.text = "Новая привычка"
         case .irregularEvent:
-//            createScheduleButton.isEnabled = false
             titleLabel.text = "Новое нерегулярное событие"
         case .notSet:
             titleLabel.text = "Неизвестный лейбл"
@@ -390,7 +387,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section > 0 { // Добавьте отступ после первой секции
+        if section > 0 {
             return 32
         }
         return 0

@@ -52,12 +52,12 @@ class ScheduleViewController: UIViewController {
         self.navigationItem.hidesBackButton = true
         
         completionTurnOff = { [weak self] it in
-                    self?.daysChecked.remove(it)
-                }
+            self?.daysChecked.remove(it)
+        }
         
         completionTurnOn = { [weak self] it in
-                    self?.daysChecked.insert(it)
-                }
+            self?.daysChecked.insert(it)
+        }
         
         
         
@@ -125,7 +125,7 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
             cell.separatorView.isHidden = false
         }
         roundCornersForCell(cell, in: tableView, at: indexPath)
-
+        
         if daysChecked.contains(content[indexPath.row]) {
             cell.switchControl.isOn = true
         } else {
@@ -153,8 +153,8 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return SheduleTableViewCell.cellHeight
-        }
+        return SheduleTableViewCell.cellHeight
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? SheduleTableViewCell {

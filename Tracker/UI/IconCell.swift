@@ -23,7 +23,7 @@ class IconCell: UICollectionViewCell {
             label.font = UIFont.systemFont(ofSize: fontSize, weight: .regular)
         }
     }
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -42,11 +42,11 @@ class IconCell: UICollectionViewCell {
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-           
-//            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//            label.topAnchor.constraint(equalTo: contentView.topAnchor),
-//            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            
+            //            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            //            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            //            label.topAnchor.constraint(equalTo: contentView.topAnchor),
+            //            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     

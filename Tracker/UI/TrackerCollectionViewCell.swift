@@ -18,15 +18,15 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
     }()
-
     
-//    let emojiLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "❤️"
-//        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-//        label.backgroundColor = .clear
-//        return label
-//    }()
+    
+    //    let emojiLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.text = "❤️"
+    //        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+    //        label.backgroundColor = .clear
+    //        return label
+    //    }()
     
     let emojiButton: UIButton = {
         let button = UIButton(type: .system)
@@ -36,16 +36,16 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         button.tintColor = UIColor.black // Замените на нужный цвет иконки.
         
         let backgroundView = UIView()
-            backgroundView.backgroundColor = UIColor(white: 1, alpha: 0.3)
-            backgroundView.layer.cornerRadius = 12
-            button.addSubview(backgroundView)
-            backgroundView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                backgroundView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
-                backgroundView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
-                backgroundView.widthAnchor.constraint(equalTo: button.widthAnchor, multiplier: 0.8),
-                backgroundView.heightAnchor.constraint(equalTo: button.heightAnchor, multiplier: 0.8)
-            ])
+        backgroundView.backgroundColor = UIColor(white: 1, alpha: 0.3)
+        backgroundView.layer.cornerRadius = 12
+        button.addSubview(backgroundView)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+            backgroundView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            backgroundView.widthAnchor.constraint(equalTo: button.widthAnchor, multiplier: 0.8),
+            backgroundView.heightAnchor.constraint(equalTo: button.heightAnchor, multiplier: 0.8)
+        ])
         
         return button
     }()
@@ -67,7 +67,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         button.setImage(UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
         return button
     }()
-
+    
     
     let whiteCircle: UIView = {
         let view = UIView()
@@ -78,14 +78,14 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        emojiLabel.insertSubview(whiteCircle, at: 0)
-//        whiteCircle.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            whiteCircle.centerXAnchor.constraint(equalTo: emojiLabel.centerXAnchor),
-//            whiteCircle.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
-//            whiteCircle.widthAnchor.constraint(equalToConstant: 24),
-//            whiteCircle.heightAnchor.constraint(equalToConstant: 24),
-//        ])
+        //        emojiLabel.insertSubview(whiteCircle, at: 0)
+        //        whiteCircle.translatesAutoresizingMaskIntoConstraints = false
+        //        NSLayoutConstraint.activate([
+        //            whiteCircle.centerXAnchor.constraint(equalTo: emojiLabel.centerXAnchor),
+        //            whiteCircle.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
+        //            whiteCircle.widthAnchor.constraint(equalToConstant: 24),
+        //            whiteCircle.heightAnchor.constraint(equalToConstant: 24),
+        //        ])
         contentView.addSubview(sheet)
         contentView.addSubview(titleLabel)
         contentView.addSubview(quantityLabel)
@@ -133,12 +133,12 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         
         if hasMark {
             functionButton.setImage(UIImage(named: "Tick")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        
+            
             
         } else {
             functionButton.setImage(UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
         }
-
+        
     }
     
     @objc

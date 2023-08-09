@@ -10,10 +10,10 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
     weak var delegate: TrackerTypeDelegate?
     var collectionView: UICollectionView!
     let colors: [UIColor] = (1...18).compactMap { UIColor(named: "\($0)") }
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+        
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
@@ -31,15 +31,15 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
         ])
         collectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return colors.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as! ColorCell
         cell.backgroundColor = .clear
@@ -61,7 +61,7 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
             delegate?.didSetTrackerColorToFlush(indexPath.row)
         }
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
             cell.isSelectedColor = false

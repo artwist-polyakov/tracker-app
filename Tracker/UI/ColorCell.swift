@@ -29,7 +29,7 @@ class ColorCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        
         setupView()
     }
     
@@ -39,7 +39,7 @@ class ColorCell: UICollectionViewCell {
     
     private func setupView() {
         contentView.addSubview(colorView)
-
+        
         NSLayoutConstraint.activate([
             colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),

@@ -9,7 +9,7 @@ import Foundation
 final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
     static let shared = TrackersRepositoryImpl()
-
+    
     // Изначальное наполнение данными
     private var categories: [TrackerCategory] = [
         TrackerCategory(id: UInt(Date().timeIntervalSince1970),
@@ -21,26 +21,26 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                     icon: 1,
                                     isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
-                        ),
+                                   ),
                             Tracker(id: 1+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
                                     isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
-                        ),
+                                   ),
                             Tracker(id: 2+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
                                     isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
-                        )])
-                        ]
+                                   )])
+    ]
     func getAllTrackers() -> [TrackerCategory] {
         return categories
     }
-
+    
     func getAllCategoriesPlannedTo(date: SimpleDate) -> [TrackerCategory] {
         let dayOfWeek = date.dayOfWeek
         let filteredCategories = categories.compactMap { category -> TrackerCategory? in
@@ -58,7 +58,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         }
         return filteredCategories
     }
-
+    
     func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: Set<String>) {
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
             let newTracker = Tracker(id: UInt(Date().timeIntervalSince1970),
@@ -70,7 +70,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
             categories[categoryIndex].trackers.append(newTracker)
         }
     }
-
+    
     func interactWithTrackerDoneForDate(trackerId: UInt, date: SimpleDate) {
         for (categoryIndex, category) in categories.enumerated() {
             if let trackerIndex = category.trackers.firstIndex(where: { $0.id == trackerId }) {
@@ -83,7 +83,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
             }
         }
     }
-
+    
     func addNewCategory(name: String) {
         let newCategory = TrackerCategory(id: UInt(Date().timeIntervalSince1970),
                                           categoryTitle: name)

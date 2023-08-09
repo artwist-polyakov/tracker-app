@@ -90,7 +90,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         }
         
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryView
-            
+        
         if kind == UICollectionView.elementKindSectionHeader {
             let category = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()))[indexPath.section]
             view.titleLabel.text = category.categoryTitle
@@ -106,4 +106,4 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     }
     
 }
-    
+
