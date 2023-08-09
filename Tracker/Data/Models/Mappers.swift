@@ -38,6 +38,22 @@ struct Mappers {
     }
     
     static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
-        return ""
+        
+        let short_names = ["понедельник":"Пн",
+                       "вторник":"Вт",
+                       "среда":"Ср",
+                       "четверг":"Чт",
+                       "пятница":"Пт",
+                       "суббота":"Сб",
+                       "воскресенье":"Вс"]
+        
+        let sortedWeekdays = weekdays.sorted {
+                giveMeAllWeekdaysNames()[$0]! < giveMeAllWeekdaysNames()[$1]!
+            }
+            
+        let sortedShortNames = sortedWeekdays.map { short_names[$0]! }
+        
+        return sortedShortNames.joined(separator: ", ")
+
     }
 }
