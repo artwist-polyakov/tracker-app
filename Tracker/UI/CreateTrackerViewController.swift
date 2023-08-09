@@ -11,6 +11,8 @@ class CreateTrackerViewController: UIViewController {
     weak var delegate: TrackerTypeDelegate?
 
     var clearButton = UIButton()
+    let cancelButton = UIButton()
+    let createButton = UIButton()
     var selectedTrackerType: TrackerType? {
         didSet {
             configureForSelectedType()
@@ -103,6 +105,25 @@ class CreateTrackerViewController: UIViewController {
         menuTableView.register(ColorCollectionViewCell.self, forCellReuseIdentifier: "ColorCollectionViewCell")
         menuTableView.isScrollEnabled = true
         view.addSubview(menuTableView)
+        
+        // Настройка cancelButton
+        cancelButton.backgroundColor = .white
+        cancelButton.layer.borderColor = UIColor(named: "TrackerRed")?.cgColor
+        cancelButton.layer.borderWidth = 1
+        cancelButton.setTitle("Отмена", for: .normal)
+        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        cancelButton.setTitleColor(UIColor(named: "TrackerRed"), for: .normal)
+        cancelButton.layer.cornerRadius = 16
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        view.addSubview(cancelButton)
+        
+        createButton.setTitle("Создать", for: .normal)
+        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        createButton.backgroundColor = UIColor(named: "TrackerBlack")
+        createButton.setTitleColor(.white, for: .normal)
+        createButton.layer.cornerRadius = 16
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        view.addSubview(createButton)
 
     }
     
@@ -126,6 +147,21 @@ class CreateTrackerViewController: UIViewController {
         clearButton.addTarget(self, action: #selector(clearTextField), for: .touchUpInside)
         trackerNameField.rightView = clearButton
         configureForLocale()
+        
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        createButton.translatesAutoresizingMaskIntoConstraints = false
+            
+        NSLayoutConstraint.activate([
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            cancelButton.heightAnchor.constraint(equalToConstant: 60),
+            cancelButton.trailingAnchor.constraint(equalTo: createButton.leadingAnchor, constant: -8), // отступ между кнопками
+            
+            createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            createButton.heightAnchor.constraint(equalToConstant: 60),
+            createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
+        ])
         
         iconCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         colorCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
@@ -155,7 +191,7 @@ class CreateTrackerViewController: UIViewController {
             menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            menuTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+            menuTableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16)
             
 
 
@@ -216,6 +252,17 @@ class CreateTrackerViewController: UIViewController {
         trackerNameField.text = ""
         textFieldDidChange(trackerNameField)
     }
+    
+    @objc func cancelButtonTapped() {
+        delegate?.clearAllFlushProperties()
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func createButtonTapped() {
+        delegate?.realizeAllFlushProperties()
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     
     private func configureForSelectedType() {
         guard let type = selectedTrackerType else { return }
