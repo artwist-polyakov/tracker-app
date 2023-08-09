@@ -65,7 +65,6 @@ class TrackersViewController: UIViewController {
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
         collectionPresenter.selectedDate = self.datePicker.date
-
         view.backgroundColor = UIColor(named: "TrackerWhite")
         
         let layout = UICollectionViewFlowLayout()
@@ -136,6 +135,7 @@ class TrackersViewController: UIViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         collectionPresenter.selectedDate = sender.date
         collectionCompanion?.selectedDate = sender.date
+        print("Новая дата: \(sender.date)")
         collectionView?.reloadData()
     }
     
