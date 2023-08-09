@@ -54,6 +54,7 @@ class CreateTrackerViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkCreateButtonReady() 
         self.view.backgroundColor = .white
         self.navigationItem.hidesBackButton = true
         delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory().id)!)
@@ -69,7 +70,8 @@ class CreateTrackerViewController: UIViewController {
                 ) { [weak self] _ in
                     guard let self = self
                     else { return }
-                    self.createButton.isEnabled = self.trackerNameField.text?.count ?? 0 > 0
+                    print("ПОЛУЧИЛ УВЕДОМЛЕНИЕ ЧТО ДАННЫЕ ГОТОВЫ")
+                    checkCreateButtonReady()
                 }
         
         didDataNotCollected = NotificationCenter.default.addObserver(
@@ -79,7 +81,8 @@ class CreateTrackerViewController: UIViewController {
                 ) { [weak self] _ in
                     guard let self = self
                     else { return }
-                    self.createButton.isEnabled = false
+                    print("ПОЛУЧИЛ УВЕДОМЛЕНИЕ ЧТО ДАННЫЕ НЕ ГОТОВЫ")
+                    checkCreateButtonReady()
                 }
         
     }
@@ -136,7 +139,6 @@ class CreateTrackerViewController: UIViewController {
         createButton.setTitleColor(.white, for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        createButton.isEnabled = false
         view.addSubview(createButton)
     }
     
@@ -220,7 +222,7 @@ class CreateTrackerViewController: UIViewController {
     }
     
     func checkCreateButtonReady() {
-        if (delegate?.isReadyToFlush() ?? false) && (warningLabel.isHidden) {
+        if (warningLabel.isHidden) && (delegate?.isReadyToFlush() ?? false) {
             createButton.isEnabled = true
             createButton.backgroundColor = UIColor(named: "TrackerBlack")
         } else {
@@ -270,13 +272,12 @@ class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .never
             warningLabel.isHidden = true
         }
-        checkCreateButtonReady()
     }
     
     @objc func clearTextField() {
         trackerNameField.text = ""
         textFieldDidChange(trackerNameField)
-        checkCreateButtonReady()
+//        checkCreateButtonReady()
     }
     
     @objc func cancelButtonTapped() {

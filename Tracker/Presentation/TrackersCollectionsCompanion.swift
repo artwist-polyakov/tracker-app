@@ -31,7 +31,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
         let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()))[indexPath.section]
         let tracker = trackerCategory.trackers[indexPath.row]
-        
+        print("collectionView устанавливает трекер \(tracker)")
         cell.configure(
             text: tracker.title,
             emoji: Mappers.intToIconMapper(tracker.icon) ,

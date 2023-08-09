@@ -10,7 +10,7 @@ import UIKit
 class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
     static let DidReadyNotification = Notification.Name(rawValue: "ready")
-    static let DidNotReadyNotification = Notification.Name(rawValue: "ready")
+    static let DidNotReadyNotification = Notification.Name(rawValue: "not ready")
     let repository = TrackersRepositoryImpl.shared
 
     let cellIdentifier = "TrackerCollectionViewCell"
