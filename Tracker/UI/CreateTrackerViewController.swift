@@ -1,10 +1,3 @@
-//
-//  CreateTrackerViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 06.08.2023.
-//
-
 import Foundation
 import UIKit
 class CreateTrackerViewController: UIViewController {
@@ -13,7 +6,7 @@ class CreateTrackerViewController: UIViewController {
     var clearButton = UIButton()
     let cancelButton = UIButton()
     let createButton = UIButton()
-    
+    let shedule: Set<String> = []
     var selectedTrackerType: TrackerType? {
         didSet {
             configureForSelectedType()
@@ -91,13 +84,12 @@ class CreateTrackerViewController: UIViewController {
         colorCollectionView.frame.size.width = view.bounds.width
         menuItems = [
             MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
-            MenuItem(title: "Создать расписание", subtitle: "", action: handleCreateSchedule)
+            MenuItem(title: "Создать расписание", subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
                 ]
                 
         menuTableView.dataSource = self
         menuTableView.delegate = self
         menuTableView.isScrollEnabled = false
-//        menuTableView.layer.cornerRadius = 16
         menuTableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "MenuCell")
         menuTableView.register(IconCollectionViewCell.self, forCellReuseIdentifier: "IconCollectionViewCell")
         menuTableView.register(ColorCollectionViewCell.self, forCellReuseIdentifier: "ColorCollectionViewCell")
@@ -215,14 +207,25 @@ class CreateTrackerViewController: UIViewController {
         }
     }
     
+    func changeSheduleMenuSubtitle(_ newTitle:String){
+        menuTableView.cellForRow(at: IndexPath(row: 1, section: 0))?.detailTextLabel?.text = newTitle
+        menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+    }
+    
     // MARK: - Actions
     private func handleSelectCategory() {
         // Переход к экрану выбора категории
     }
     
     private func handleCreateSchedule() {
-        // Переход к экрану создания расписания
+        let scheduleVC = ScheduleViewController()
+        scheduleVC.content = Mappers.giveMeAllWeekdaysNames().map { $0.key.localizedCapitalized }
+        scheduleVC.completionDone = {
+            self.delegate?.didSetShedulleToFlush(self.shedule)
+        }
+        self.navigationController?.pushViewController(scheduleVC, animated: true)
     }
+
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         if textField.text?.isEmpty == false {
@@ -274,6 +277,7 @@ class CreateTrackerViewController: UIViewController {
 
 }
 
+// MARK: UITableViewDataSource, UITableViewDelegate
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("вызван numberOfRowsInSection для \(section)")

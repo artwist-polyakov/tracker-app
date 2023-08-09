@@ -2,55 +2,137 @@
 //  ScheduleViewController.swift
 //  Tracker
 //
-//  Created by Александр Поляков on 06.08.2023.
+//  Created by Александр Поляков on 09.08.2023.
 //
 
-import Foundation
 import UIKit
 
-class ScheduleViewController: UITableViewController {
+class ScheduleViewController: UIViewController {
     
-    var daysOfWeek: [String] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale.current
-        return dateFormatter.weekdaySymbols
-    }
+    // MARK: - Properties
+    var completionTurnOff: (() -> Void)?
+    var completionTurnOn: (() -> Void)?
+    var completionDone: (() -> Void)?
+    var content: [String] = []
     
-    var selectedDays: Set<String> = []
-
+    // Элементы UI
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Расписание"
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.textColor = UIColor(named: "TrackerBlack")
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let doneButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Готово", for: .normal)
+        button.backgroundColor = UIColor(named: "TrackerBlack")
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.layer.cornerRadius = 16
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let tableView: UITableView = {
+        let tv = UITableView()
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DayCell")
-        title = "Расписание"
-    }
-
-    // MARK: - Table view data source
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return daysOfWeek.count
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DayCell", for: indexPath)
-        cell.textLabel?.text = daysOfWeek[indexPath.row]
+        self.view.backgroundColor = .white
+        self.navigationItem.hidesBackButton = true
+        setupUI()
+        layoutUI()
         
-        let switchView = UISwitch(frame: .zero)
-        switchView.tag = indexPath.row
-        switchView.isOn = selectedDays.contains(daysOfWeek[indexPath.row])
-        switchView.addTarget(self, action: #selector(handleSwitchChange(_:)), for: .valueChanged)
-        cell.accessoryView = switchView
-
-        return cell
+        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(SheduleTableViewCell.self, forCellReuseIdentifier: "MenuCell")
     }
-
-    @objc func handleSwitchChange(_ sender: UISwitch) {
-        let day = daysOfWeek[sender.tag]
-        if sender.isOn {
-            selectedDays.insert(day)
-        } else {
-            selectedDays.remove(day)
-        }
+    
+    // MARK: - UI Setup
+    private func setupUI() {
+        view.addSubview(titleLabel)
+        view.addSubview(doneButton)
+        view.addSubview(tableView)
+    }
+    
+    // MARK: - Layout
+    private func layoutUI() {
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            tableView.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: -38)
+        ])
+    }
+    
+    // MARK: - Actions
+    @objc func doneButtonTapped() {
+        completionDone?()
+        navigationController?.popViewController(animated: true)
     }
 }
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
+extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return content.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! SheduleTableViewCell
+        cell.titleLabel.text = content[indexPath.row]
+        cell.backgroundColor = UIColor(named: "TrackerBackground")
+        cell.layer.cornerRadius = 16
+        cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
+        
+        if indexPath.row == content.count - 1 {
+            cell.separatorView.isHidden = true
+        } else {
+            cell.separatorView.isHidden = false
+        }
+        roundCornersForCell(cell, in: tableView, at: indexPath)
+        
+        return cell
+    }
+    
+    func roundCornersForCell(_ cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {
+        cell.layer.cornerRadius = 0 // reset corner radius
+        cell.clipsToBounds = false
+        
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        
+        if indexPath.row == 0 && totalRows == 1 {
+            // Если в секции всего одна ячейка
+            cell.layer.cornerRadius = 16
+        } else if indexPath.row == 0 {
+            // Если это первая ячейка
+            cell.roundCorners([.topLeft, .topRight], radius: 16)
+        } else if indexPath.row == totalRows - 1 {
+            // Если это последняя ячейка
+            cell.roundCorners([.bottomLeft, .bottomRight], radius: 16)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return SheduleTableViewCell.cellHeight
+        }
+    
+}
+
 
