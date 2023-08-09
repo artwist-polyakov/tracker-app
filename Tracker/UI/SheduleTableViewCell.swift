@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class SheduleTableViewCell: UITableViewCell {
-    
+    var targetDay: String?
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()
     let separatorView = UIView()
@@ -19,8 +19,8 @@ class SheduleTableViewCell: UITableViewCell {
             return switcher
         }()
     
-    var completionTurnOff: (() -> Void)?
-    var completionTurnOn: (() -> Void)?
+    var completionTurnOff: ((String) -> Void)?
+    var completionTurnOn: ((String) -> Void)?
     
     static let cellHeight: CGFloat = 75
     private var titleCenterYConstraint: NSLayoutConstraint?
@@ -86,15 +86,26 @@ class SheduleTableViewCell: UITableViewCell {
             labelsContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
             labelsContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             ])
+        
+        addSubview(switchControl)
+        NSLayoutConstraint.activate([
+            switchControl.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
+            switchControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)])
         switchControl.addTarget(self, action: #selector(switchValueChanged), for: .valueChanged)
-
+        switchControl.isUserInteractionEnabled = true
+        
+        titleLabel.isUserInteractionEnabled = false
+        subtitleLabel.isUserInteractionEnabled = false
+        separatorView.isUserInteractionEnabled = false
     }
     
     @objc func switchValueChanged(_ sender: UISwitch) {
             if sender.isOn {
-                completionTurnOn?()
+                guard let targetDay = targetDay else { return }
+                completionTurnOn?(targetDay)
             } else {
-                completionTurnOff?()
+                guard let targetDay = targetDay else { return }
+                completionTurnOff?(targetDay)
             }
         }
 

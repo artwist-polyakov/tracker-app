@@ -8,6 +8,9 @@
 import Foundation
 import UIKit
 class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
+    
+    static let DidReadyNotification = Notification.Name(rawValue: "ready")
+    static let DidNotReadyNotification = Notification.Name(rawValue: "ready")
     let repository = TrackersRepositoryImpl.shared
 
     let cellIdentifier = "TrackerCollectionViewCell"
@@ -17,12 +20,14 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
     var trackerTypeToFlush: TrackerType = .notSet {
         didSet {
+            notifyObservers()
             print("TrackerTypeToFlush: \(trackerTypeToFlush)")
         }
     }
         
     var trackerCategoryToFlush: UInt? {
         didSet {
+            notifyObservers()
             guard let category = trackerCategoryToFlush
             else {print ("TrackerCategoryToFlush: Пусто") ; return}
             print("TrackerCategoryToFlush: \(category)")
@@ -30,6 +35,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     var trackerTitleToFlush: String? {
         didSet {
+            notifyObservers()
             guard let title = trackerTitleToFlush
             else {print ("trackerTitleToFlush: Пусто") ; return}
             print("trackerTitleToFlush: \(title)")
@@ -37,13 +43,15 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     var trackerIconToFlush: String? {
         didSet {
+            notifyObservers()
             guard let icon = trackerIconToFlush
             else {print ("trackerIconToFlush: Пусто") ; return}
             print("trackerIconToFlush: \(icon)")
         }
     }
-    var trackerSheduleToFlush: Set<String>? {
+    var trackerSheduleToFlush: Set<String>? = Set() {
         didSet {
+            notifyObservers()
             guard let shedule = trackerSheduleToFlush
             else {print ("trackerSheduleToFlush: Пусто") ; return}
             print("trackerSheduleToFlush: \(shedule)")
@@ -51,6 +59,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     var trackerColorToFlush: Int? {
         didSet {
+            notifyObservers()
             guard let color = trackerColorToFlush
             else {print ("trackerColorToFlush: Пусто") ; return}
             print("trackerColorToFlush: \(color)")
@@ -106,7 +115,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func didSetShedulleToFlush(_ shedule: Set<String>) {
-        trackerSheduleToFlush = shedule
+        trackerSheduleToFlush = Set()
+        shedule.forEach { trackerSheduleToFlush?.insert($0.lowercased()) }
     }
     
     func didSetTrackerColorToFlush(_ color: Int) {
@@ -122,13 +132,45 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func realizeAllFlushProperties() {
-        print("HA-HA-HA")
+        guard let trackerTitle = trackerTitleToFlush,
+              let trackerIcon = trackerIconToFlush,
+              let trackerShedule = trackerSheduleToFlush,
+              let trackerColor = trackerColorToFlush,
+              let trackseCategory = trackerCategoryToFlush
+        else {return }
+        
+        print("Записываю \(trackerTitle), \(trackerIcon), \(trackerShedule), \(trackerColor), \(trackseCategory)")
+        repository.addNewTrackerToCategory(
+            color: trackerColor,
+            categoryID: trackseCategory,
+            trackerName: trackerTitle,
+            icon: Mappers.iconToIntMapper(trackerIcon),
+            plannedDaysOfWeek: trackerShedule)
+        
+        clearAllFlushProperties()
+    
     }
     
     func isReadyToFlush() -> Bool {
         return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != nil && trackerColorToFlush != nil
     }
     
+    
+    private func notifyObservers(){
+        if isReadyToFlush() {
+            print("Уведомление отправлено что данные готовы")
+            NotificationCenter.default.post(
+                                    name: TrackersCollectionsPresenter.DidReadyNotification,
+                                    object: self,
+                                    userInfo: ["GO": true ])
+        } else {
+            print("Уведомление отправлено что данные не готовы")
+            NotificationCenter.default.post(
+                                    name: TrackersCollectionsPresenter.DidNotReadyNotification,
+                                    object: self,
+                                    userInfo: ["GO": false ])
+        }
+    }
     
     
 }

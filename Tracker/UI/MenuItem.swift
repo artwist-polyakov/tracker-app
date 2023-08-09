@@ -9,6 +9,6 @@ import Foundation
 
 struct MenuItem {
         let title: String
-        let subtitle: String
+        var subtitle: String
         let action: () -> Void
     }

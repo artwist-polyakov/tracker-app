@@ -34,12 +34,12 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
             }
     }
 
-    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: [String]) {
+    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: Set<String>) {
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
             let newTracker = Tracker(id: UInt(Date().timeIntervalSince1970),
-                                     color: 1, // MARK: когда будем выбирать цвета, надо проставлять
+                                     color: color, // MARK: когда будем выбирать цвета, надо проставлять
                                      title: trackerName,
-                                     icon: 1, // MARK: когда будем выбирать цвета, надо проставлять
+                                     icon: icon, // MARK: когда будем выбирать цвета, надо проставлять
                                      isPlannedFor: Set(plannedDaysOfWeek),
                                      isDoneAt: Set<SimpleDate>())
             categories[categoryIndex].trackers.append(newTracker)

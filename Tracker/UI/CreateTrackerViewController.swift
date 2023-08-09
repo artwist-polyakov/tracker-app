@@ -1,12 +1,13 @@
 import Foundation
 import UIKit
 class CreateTrackerViewController: UIViewController {
-    
+    private var didDataCollected: NSObjectProtocol?
+    private var didDataNotCollected: NSObjectProtocol?
     weak var delegate: TrackerTypeDelegate?
     var clearButton = UIButton()
     let cancelButton = UIButton()
     let createButton = UIButton()
-    let shedule: Set<String> = []
+    var shedule: Set<String> = []
     var selectedTrackerType: TrackerType? {
         didSet {
             configureForSelectedType()
@@ -60,6 +61,27 @@ class CreateTrackerViewController: UIViewController {
         layoutUI()
         menuTableView.reloadData()
         self.view.layoutIfNeeded()
+        
+        didDataCollected = NotificationCenter.default.addObserver(
+                    forName: TrackersCollectionsPresenter.DidReadyNotification,
+                    object: nil,
+                    queue: .main
+                ) { [weak self] _ in
+                    guard let self = self
+                    else { return }
+                    self.createButton.isEnabled = self.trackerNameField.text?.count ?? 0 > 0
+                }
+        
+        didDataNotCollected = NotificationCenter.default.addObserver(
+                    forName: TrackersCollectionsPresenter.DidNotReadyNotification,
+                    object: nil,
+                    queue: .main
+                ) { [weak self] _ in
+                    guard let self = self
+                    else { return }
+                    self.createButton.isEnabled = false
+                }
+        
     }
 
     // MARK: - UI Setup
@@ -208,7 +230,6 @@ class CreateTrackerViewController: UIViewController {
     }
     
     func changeSheduleMenuSubtitle(_ newTitle:String){
-        menuTableView.cellForRow(at: IndexPath(row: 1, section: 0))?.detailTextLabel?.text = newTitle
         menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
     }
     
@@ -219,9 +240,16 @@ class CreateTrackerViewController: UIViewController {
     
     private func handleCreateSchedule() {
         let scheduleVC = ScheduleViewController()
-        scheduleVC.content = Mappers.giveMeAllWeekdaysNames().map { $0.key.localizedCapitalized }
+        scheduleVC.daysChecked = self.shedule
+        let weekdaysDictionary = Mappers.giveMeAllWeekdaysNames()
+        scheduleVC.content = weekdaysDictionary.keys.map { $0.localizedCapitalized }
+        scheduleVC.content.sort(by: { weekdaysDictionary[$0.lowercased()]! < weekdaysDictionary[$1.lowercased()]! })
         scheduleVC.completionDone = {
-            self.delegate?.didSetShedulleToFlush(self.shedule)
+            self.delegate?.didSetShedulleToFlush(scheduleVC.daysChecked)
+            self.shedule = scheduleVC.daysChecked
+            let newSubtitle = Mappers.sortedStringOfSetWeekdays(self.shedule)
+            self.menuItems[1].subtitle = newSubtitle
+            self.changeSheduleMenuSubtitle(newSubtitle)
         }
         self.navigationController?.pushViewController(scheduleVC, animated: true)
     }

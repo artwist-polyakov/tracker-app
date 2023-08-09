@@ -8,12 +8,15 @@
 import UIKit
 
 class ScheduleViewController: UIViewController {
-    
+    var daysChecked: Set<String> = []
     // MARK: - Properties
-    var completionTurnOff: (() -> Void)?
-    var completionTurnOn: (() -> Void)?
+    var completionTurnOff: ((String) -> Void)?
+    var completionTurnOn: ((String) -> Void)?
     var completionDone: (() -> Void)?
     var content: [String] = []
+    
+    
+    
     
     // Элементы UI
     let titleLabel: UILabel = {
@@ -47,6 +50,18 @@ class ScheduleViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationItem.hidesBackButton = true
+        
+        completionTurnOff = { [weak self] it in
+                    self?.daysChecked.remove(it)
+                }
+        
+        completionTurnOn = { [weak self] it in
+                    self?.daysChecked.insert(it)
+                }
+        
+        
+        
+        
         setupUI()
         layoutUI()
         
@@ -72,7 +87,7 @@ class ScheduleViewController: UIViewController {
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
+            doneButton.heightAnchor.constraint(equalToConstant: 60),
             tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -100,14 +115,22 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         cell.backgroundColor = UIColor(named: "TrackerBackground")
         cell.layer.cornerRadius = 16
         cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
+        cell.completionTurnOff = self.completionTurnOff
+        cell.targetDay = content[indexPath.row]
         
+        cell.completionTurnOn = self.completionTurnOn
         if indexPath.row == content.count - 1 {
             cell.separatorView.isHidden = true
         } else {
             cell.separatorView.isHidden = false
         }
         roundCornersForCell(cell, in: tableView, at: indexPath)
-        
+
+        if daysChecked.contains(content[indexPath.row]) {
+            cell.switchControl.isOn = true
+        } else {
+            cell.switchControl.isOn = false
+        }
         return cell
     }
     
@@ -132,6 +155,14 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return SheduleTableViewCell.cellHeight
         }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? SheduleTableViewCell {
+            cell.switchControl.isOn.toggle()
+            cell.switchValueChanged(cell.switchControl)
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
 }
 

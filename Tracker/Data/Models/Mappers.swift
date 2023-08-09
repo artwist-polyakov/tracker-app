@@ -27,6 +27,28 @@ struct Mappers {
         return icons[number % 18]
     }
     
+    static func iconToIntMapper(_ icon:String) -> Int {
+        let icons = ["🙂":0,
+                     "😻":1,
+                     "🌺":2,
+                     "🐶":3,
+                     "❤️":4,
+                     "😱":5,
+                     "😇":6,
+                     "😡":7,
+                     "🥶":8,
+                     "🤔":9,
+                     "🙌":10,
+                     "🍔":11,
+                     "🥦":12,
+                     "🏓":13,
+                     "🥇":14,
+                     "🎸":15,
+                     "🏝":16,
+                     "😪":17]
+        return icons[icon] ?? 0
+    }
+    
     static func giveMeAllWeekdaysNames() -> [String:Int] {
         return ["понедельник":1,
                 "вторник":2,
@@ -38,7 +60,9 @@ struct Mappers {
     }
     
     static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
-        
+        if weekdays.count == 7 {
+            return "Каждый день"
+        }
         let short_names = ["понедельник":"Пн",
                        "вторник":"Вт",
                        "среда":"Ср",
@@ -48,12 +72,14 @@ struct Mappers {
                        "воскресенье":"Вс"]
         
         let sortedWeekdays = weekdays.sorted {
-                giveMeAllWeekdaysNames()[$0]! < giveMeAllWeekdaysNames()[$1]!
+            return giveMeAllWeekdaysNames()[$0.lowercased()]! < giveMeAllWeekdaysNames()[$1.lowercased()]!
             }
             
-        let sortedShortNames = sortedWeekdays.map { short_names[$0]! }
+        let sortedShortNames = sortedWeekdays.map { short_names[$0.lowercased()]! }
         
         return sortedShortNames.joined(separator: ", ")
 
     }
+    
+    
 }
