@@ -148,11 +148,19 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
             plannedDaysOfWeek: trackerShedule)
         
         clearAllFlushProperties()
+        viewController.collectionView?.reloadData()
+    
     
     }
     
     func isReadyToFlush() -> Bool {
-        return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != nil && trackerColorToFlush != nil
+        if trackerTypeToFlush == .notSet {
+            return false
+        } else if trackerTypeToFlush == .irregularEvent {
+            return trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerColorToFlush != nil
+        } else {
+            return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != nil && trackerColorToFlush != nil
+        }
     }
     
     

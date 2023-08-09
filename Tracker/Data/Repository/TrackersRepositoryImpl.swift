@@ -30,8 +30,8 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     func getAllCategoriesPlannedTo(date: SimpleDate) -> [TrackerCategory] {
         let dayOfWeek = date.dayOfWeek
         return categories.filter { category in
-                category.trackers.contains(where: { $0.isPlannedFor.contains(dayOfWeek) })
-            }
+            category.trackers.contains(where: { $0.isPlannedFor.contains(dayOfWeek) || $0.isPlannedFor.isEmpty })
+        }
     }
 
     func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: Set<String>) {
