@@ -17,6 +17,7 @@ protocol TrackerTypeDelegate: AnyObject {
     func realizeAllFlushProperties()
     func giveMeSelectedCategory() -> TrackerCategory
     func giveMeSelectedDays() -> Set<String>
+    func isReadyToFlush() -> Bool
 }
 
 enum TrackerType {

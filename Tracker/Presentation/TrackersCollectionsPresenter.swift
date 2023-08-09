@@ -125,6 +125,10 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         print("HA-HA-HA")
     }
     
+    func isReadyToFlush() -> Bool {
+        return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != nil && trackerColorToFlush != nil
+    }
+    
     
     
 }

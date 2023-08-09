@@ -8,11 +8,12 @@
 import Foundation
 import UIKit
 class CreateTrackerViewController: UIViewController {
+    
     weak var delegate: TrackerTypeDelegate?
-
     var clearButton = UIButton()
     let cancelButton = UIButton()
     let createButton = UIButton()
+    
     var selectedTrackerType: TrackerType? {
         didSet {
             configureForSelectedType()
@@ -56,18 +57,18 @@ class CreateTrackerViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationItem.hidesBackButton = true
-        
+        delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory().id)!)
         setupUI()
         layoutUI()
         menuTableView.reloadData()
         self.view.layoutIfNeeded()
-        print(menuTableView.numberOfSections)
     }
-    
+
     // MARK: - UI Setup
     private func setupUI() {
         // Настройка UITextField
@@ -85,11 +86,8 @@ class CreateTrackerViewController: UIViewController {
             }
         
         titleLabel.textAlignment = .center
-        
         iconCollectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
         colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
-        
-
         colorCollectionView.frame.size.width = view.bounds.width
         menuItems = [
             MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
@@ -117,37 +115,34 @@ class CreateTrackerViewController: UIViewController {
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         view.addSubview(cancelButton)
         
+        // Настройка createButton
         createButton.setTitle("Создать", for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        createButton.backgroundColor = UIColor(named: "TrackerBlack")
+        createButton.backgroundColor = UIColor(named: "TrackerGray")
         createButton.setTitleColor(.white, for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        createButton.isEnabled = false
         view.addSubview(createButton)
-
     }
     
     // MARK: - Layout
     private func layoutUI() {
-        
         view.addSubview(titleLabel)
         view.addSubview(trackerNameField)
         view.addSubview(warningLabel)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         trackerNameField.translatesAutoresizingMaskIntoConstraints = false
-
         trackerNameField.layer.cornerRadius = 16
         trackerNameField.clipsToBounds = true
         trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
 
-        
-        
         clearButton.setImage(UIImage(named: "Cross"), for: .normal)
         clearButton.addTarget(self, action: #selector(clearTextField), for: .touchUpInside)
         trackerNameField.rightView = clearButton
         configureForLocale()
-        
+    
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         createButton.translatesAutoresizingMaskIntoConstraints = false
             
@@ -155,8 +150,7 @@ class CreateTrackerViewController: UIViewController {
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            cancelButton.trailingAnchor.constraint(equalTo: createButton.leadingAnchor, constant: -8), // отступ между кнопками
-            
+            cancelButton.trailingAnchor.constraint(equalTo: createButton.leadingAnchor, constant: -8),
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             createButton.heightAnchor.constraint(equalToConstant: 60),
@@ -165,21 +159,16 @@ class CreateTrackerViewController: UIViewController {
         
         iconCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         colorCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-
         
         NSLayoutConstraint.activate([
-            
-            
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
             trackerNameField.heightAnchor.constraint(equalToConstant: 75),
             trackerNameField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             trackerNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             trackerNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             warningLabel.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 8),
             warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-
         ])
 
         menuTableView.backgroundColor = UIColor(named: "TrackerWhite")
@@ -187,14 +176,12 @@ class CreateTrackerViewController: UIViewController {
         menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         menuTableView.translatesAutoresizingMaskIntoConstraints = false
         menuTableView.separatorStyle = .none
+        
         NSLayoutConstraint.activate([
             menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             menuTableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16)
-            
-
-
         ])
     }
     
@@ -207,8 +194,6 @@ class CreateTrackerViewController: UIViewController {
             trackerNameField.leftViewMode = .never
             trackerNameField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
             trackerNameField.rightViewMode = .always
-            
-            // отступ для clearButton
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         } else {
             trackerNameField.textAlignment = .left
@@ -216,9 +201,17 @@ class CreateTrackerViewController: UIViewController {
             trackerNameField.rightViewMode = .never
             trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
             trackerNameField.leftViewMode = .always
-
-            // отступ для clearButton
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
+        }
+    }
+    
+    func checkCreateButtonReady() {
+        if (delegate?.isReadyToFlush() ?? false) && (warningLabel.isHidden) {
+            createButton.isEnabled = true
+            createButton.backgroundColor = UIColor(named: "TrackerBlack")
+        } else {
+            createButton.isEnabled = false
+            createButton.backgroundColor = UIColor(named: "TrackerGray")
         }
     }
     
@@ -246,11 +239,13 @@ class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .never
             warningLabel.isHidden = true
         }
+        checkCreateButtonReady()
     }
     
     @objc func clearTextField() {
         trackerNameField.text = ""
         textFieldDidChange(trackerNameField)
+        checkCreateButtonReady()
     }
     
     @objc func cancelButtonTapped() {
@@ -263,10 +258,8 @@ class CreateTrackerViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    
     private func configureForSelectedType() {
         guard let type = selectedTrackerType else { return }
-        
         switch type {
         case .habit:
 //            createScheduleButton.isEnabled = true
@@ -276,7 +269,6 @@ class CreateTrackerViewController: UIViewController {
             titleLabel.text = "Новое нерегулярное событие"
         case .notSet:
             titleLabel.text = "Неизвестный лейбл"
-        
         }
     }
 
