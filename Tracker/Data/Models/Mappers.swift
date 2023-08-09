@@ -20,4 +20,10 @@ struct Mappers {
         }
             return result
     }
+    
+    static func intToIconMapper(_ number:Int) -> String {
+        let icons = ["🙂","😻","🌺","🐶","❤️","😱","😇","😡","🥶",
+                 "🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝","😪"]
+        return icons[number % 18]
+    }
 }

@@ -64,4 +64,5 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                           categoryTitle: name)
         categories.append(newCategory)
     }
+    
 }

@@ -91,7 +91,7 @@ class CreateTrackerViewController: UIViewController {
         colorCollectionView.frame.size.width = view.bounds.width
         menuItems = [
             MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
-            MenuItem(title: "Создать расписание", subtitle: delegate, action: handleCreateSchedule)
+            MenuItem(title: "Создать расписание", subtitle: "", action: handleCreateSchedule)
                 ]
                 
         menuTableView.dataSource = self
@@ -199,7 +199,12 @@ class CreateTrackerViewController: UIViewController {
         if textField.text?.isEmpty == false {
             textField.textColor = UIColor(named: "TrackerBlack")
             textField.rightViewMode = .always
-            warningLabel.isHidden = textField.text?.count ?? 0 <= 38
+            if textField.text?.count ?? 0 <= 38 {
+                warningLabel.isHidden = true
+                delegate?.didSetTrackerTitle(textField.text ?? "")
+            } else {
+                warningLabel.isHidden = false
+            }
         } else {
             textField.textColor = UIColor(named: "TrackerGray")
             textField.rightViewMode = .never
@@ -222,6 +227,9 @@ class CreateTrackerViewController: UIViewController {
         case .irregularEvent:
 //            createScheduleButton.isEnabled = false
             titleLabel.text = "Новое нерегулярное событие"
+        case .notSet:
+            titleLabel.text = "Неизвестный лейбл"
+        
         }
     }
 
