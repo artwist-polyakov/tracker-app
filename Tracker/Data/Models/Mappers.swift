@@ -26,4 +26,18 @@ struct Mappers {
                  "🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝","😪"]
         return icons[number % 18]
     }
+    
+    static func giveMeAllWeekdaysNames() -> [String:Int] {
+        return ["понедельник":1,
+                "вторник":2,
+                "среда":3,
+                "четверг":4,
+                "пятница":5,
+                "суббота":6,
+                "воскресенье":7]
+    }
+    
+    static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
+        return ""
+    }
 }
