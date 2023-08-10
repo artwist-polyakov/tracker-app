@@ -51,7 +51,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
             let filteredTrackers = category.trackers.filter { tracker in
                 let matchesDateCondition = tracker.isPlannedFor.contains(dayOfWeek) || tracker.isPlannedFor.isEmpty
                 if let titleFilter = titleFilter, !titleFilter.isEmpty {
-                    return matchesDateCondition && tracker.title.contains(titleFilter)
+                    return matchesDateCondition && tracker.title.localizedCaseInsensitiveContains(titleFilter)
                 } else {
                     return matchesDateCondition
                 }
