@@ -20,7 +20,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                     title: "Тестовый трекер 123",
                                     icon: 1,
                                     isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
-                                    isDoneAt: Set([SimpleDate(date: Date())])
+                                    isDoneAt: Set()
                                    ),
                             Tracker(id: 1+UInt(Date().timeIntervalSince1970),
                                     color: 1,
