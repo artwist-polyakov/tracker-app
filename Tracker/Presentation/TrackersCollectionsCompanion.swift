@@ -43,7 +43,14 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         )
         
         cell.onFunctionButtonTapped = { [weak self] in
-            self?.delegate.handleFunctionButtonTapped(at: indexPath.item, inSection: indexPath.section, date: self?.selectedDate ?? Date())
+            let selectdate = self?.selectedDate ?? Date()
+            let text = self?.typedText ?? ""
+            if selectdate <= Date() {
+                self?.delegate.handleFunctionButtonTapped(at: indexPath.item, inSection: indexPath.section, date: selectdate, text: text)
+                
+            } else {
+                self?.viewController.showFutureDateAlert()
+            }
         }
         
         print("setOfdays = \(tracker.isPlannedFor)")

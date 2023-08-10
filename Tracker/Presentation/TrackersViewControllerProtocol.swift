@@ -13,4 +13,5 @@ protocol TrackersViewControllerProtocol {
     
     func showStartingBlock()
     func hideStartingBlock()
+    func showFutureDateAlert()
 }

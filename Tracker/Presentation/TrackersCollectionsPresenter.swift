@@ -74,8 +74,8 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
     }
     
-    func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date) {
-        let trackerCategory = repository.getAllTrackers()[section]
+    func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date, text: String) {
+        let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date:date), titleFilter: text)[section]
         let tracker = trackerCategory.trackers[item]
         
         repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))

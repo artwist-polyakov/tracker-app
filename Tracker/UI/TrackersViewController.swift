@@ -157,6 +157,12 @@ class TrackersViewController: UIViewController {
         }()
     }
     
+    func showFutureDateAlert() {
+        let alertPresenter = AlertPresenter()
+        let alert = AlertModel(title: "Не лги!", message: "Нельзя отметить выполненным трекер из будущего", primaryButtonText: "Простите!", primaryButtonCompletion: {})
+        alertPresenter.show(in: self, model:alert)
+    }
+    
 }
 
 extension TrackersViewController: UITextFieldDelegate {

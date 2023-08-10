@@ -10,6 +10,8 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
     static let shared = TrackersRepositoryImpl()
     
+    private init() {}
+    
     // Изначальное наполнение данными
     private var categories: [TrackerCategory] = [
         TrackerCategory(id: UInt(Date().timeIntervalSince1970),

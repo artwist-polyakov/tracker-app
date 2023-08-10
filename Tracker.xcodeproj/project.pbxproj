@@ -40,6 +40,8 @@
 		AFCA55F12A8235F600D9A851 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */; };
 		AFD92DF02A83D49900F36905 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DEF2A83D49900F36905 /* ScheduleViewController.swift */; };
 		AFD92DF22A83D97D00F36905 /* SheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DF12A83D97D00F36905 /* SheduleTableViewCell.swift */; };
+		AFD92DF42A854B9300F36905 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DF32A854B9300F36905 /* AlertPresenter.swift */; };
+		AFD92DF62A854BC000F36905 /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DF52A854BC000F36905 /* AlertModel.swift */; };
 		AFEDE0492A827A70002D8CE6 /* extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEDE0482A827A70002D8CE6 /* extension+UIView.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +81,8 @@
 		AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
 		AFD92DEF2A83D49900F36905 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		AFD92DF12A83D97D00F36905 /* SheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheduleTableViewCell.swift; sourceTree = "<group>"; };
+		AFD92DF32A854B9300F36905 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		AFD92DF52A854BC000F36905 /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
 		AFEDE0482A827A70002D8CE6 /* extension+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "extension+UIView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -141,6 +145,7 @@
 				AFCA55C62A7D5BB000D9A851 /* SimpleDate.swift */,
 				AFCA55CE2A7E527500D9A851 /* TrackerCategory.swift */,
 				AFCA55D82A7FE7EA00D9A851 /* DayOfWeek.swift */,
+				AFD92DF52A854BC000F36905 /* AlertModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -187,6 +192,7 @@
 				AFCA55D02A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift */,
 				AFCA55D22A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift */,
 				AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */,
+				AFD92DF32A854B9300F36905 /* AlertPresenter.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -273,6 +279,7 @@
 				AFCA55D32A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift in Sources */,
 				AFCA55BD2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift in Sources */,
 				AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */,
+				AFD92DF62A854BC000F36905 /* AlertModel.swift in Sources */,
 				AFCA55BB2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift in Sources */,
 				AFCA55DB2A7FE81800D9A851 /* TrackerTypeViewController.swift in Sources */,
 				AFCA55B22A7C187900D9A851 /* Tracker.swift in Sources */,
@@ -284,6 +291,7 @@
 				AFCA55D52A7F895500D9A851 /* TrackersRepositoryProtocol.swift in Sources */,
 				AFCA55BF2A7C36AF00D9A851 /* Mappers.swift in Sources */,
 				AFCA55AE2A7C178800D9A851 /* TrackerCollectionViewCell.swift in Sources */,
+				AFD92DF42A854B9300F36905 /* AlertPresenter.swift in Sources */,
 				AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */,
 				AFCA55EB2A8157DB00D9A851 /* ColorCell.swift in Sources */,
 				AFCA55E92A81575C00D9A851 /* IconCell.swift in Sources */,
