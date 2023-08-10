@@ -8,6 +8,8 @@
 import Foundation
 final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
+    
+    
     static let shared = TrackersRepositoryImpl()
     
     private init() {}
@@ -95,6 +97,24 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         let newCategory = TrackerCategory(id: UInt(Date().timeIntervalSince1970),
                                           categoryTitle: name)
         categories.append(newCategory)
+    }
+    
+    func howManyDaysIsTrackerDone(trackerId: UInt) -> Int {
+        for category in categories {
+            if let tracker = category.trackers.first(where: { $0.id == trackerId }) {
+                return tracker.isDoneAt.count
+            }
+        }
+        return 0
+    }
+    
+    func isTrackerDoneAtDate(trackerId: UInt, date: SimpleDate) -> Bool {
+        for category in categories {
+            if let tracker = category.trackers.first(where: { $0.id == trackerId }) {
+                return tracker.isDoneAt.contains(date)
+            }
+        }
+        return false
     }
     
 }

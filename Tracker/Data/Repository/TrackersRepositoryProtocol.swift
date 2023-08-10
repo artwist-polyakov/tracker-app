@@ -19,4 +19,6 @@ protocol TrackersRepositoryProtocol {
     func interactWithTrackerDoneForDate(trackerId:UInt,
                                         date: SimpleDate)
     
+    func howManyDaysIsTrackerDone(trackerId: UInt) -> Int
+    func isTrackerDoneAtDate(trackerId: UInt, date: SimpleDate) -> Bool
 }
