@@ -17,7 +17,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     var viewController: TrackersViewControllerProtocol
     
     var selectedDate: Date?
-    
+
     var trackerTypeToFlush: TrackerType = .notSet {
         didSet {
             notifyObservers()

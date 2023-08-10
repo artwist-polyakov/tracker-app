@@ -66,7 +66,7 @@ class TrackersViewController: UIViewController {
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
         collectionPresenter.selectedDate = self.datePicker.date
         view.backgroundColor = UIColor(named: "TrackerWhite")
-        
+        searchField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView?.dataSource = collectionCompanion
@@ -138,6 +138,12 @@ class TrackersViewController: UIViewController {
         print("Новая дата: \(sender.date)")
         collectionView?.reloadData()
     }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        collectionCompanion?.typedText = textField.text
+        collectionView?.reloadData()
+    }
+    
     
     func setupButtons() {
         addBarButtonItem = {

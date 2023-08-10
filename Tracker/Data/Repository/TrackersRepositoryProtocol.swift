@@ -10,7 +10,7 @@ protocol TrackersRepositoryProtocol {
     
     func addNewCategory(name:String)
     func getAllTrackers() -> [TrackerCategory]
-    func getAllCategoriesPlannedTo(date:SimpleDate) -> [TrackerCategory]
+    func getAllCategoriesPlannedTo(date:SimpleDate, titleFilter: String?) -> [TrackerCategory]
     func addNewTrackerToCategory(color: Int,
                                  categoryID: UInt,
                                  trackerName: String,
