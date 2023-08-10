@@ -137,7 +137,6 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         }
         
         
-        print("realizeAllFlushProperties \(trackerCategoryToFlush), \(trackerTitleToFlush), \(trackerIconToFlush), \(trackerSheduleToFlush), \(trackerColorToFlush), \(trackerCategoryToFlush)")
         guard let trackerTitle = trackerTitleToFlush,
               let trackerIcon = trackerIconToFlush,
               let trackerShedule = trackerSheduleToFlush,

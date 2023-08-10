@@ -54,15 +54,17 @@ class CreateTrackerViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkCreateButtonReady() 
-        self.view.backgroundColor = .white
+        checkCreateButtonReady()
+        self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory().id)!)
         setupUI()
         layoutUI()
         menuTableView.reloadData()
         self.view.layoutIfNeeded()
-        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
         didDataCollected = NotificationCenter.default.addObserver(
                     forName: TrackersCollectionsPresenter.didReadyNotification,
                     object: nil,
@@ -122,7 +124,7 @@ class CreateTrackerViewController: UIViewController {
         view.addSubview(menuTableView)
         
         // Настройка cancelButton
-        cancelButton.backgroundColor = .white
+        cancelButton.backgroundColor = UIColor(named: "TrackerWhite")
         cancelButton.layer.borderColor = UIColor(named: "TrackerRed")?.cgColor
         cancelButton.layer.borderWidth = 1
         cancelButton.setTitle("Отмена", for: .normal)
@@ -136,7 +138,7 @@ class CreateTrackerViewController: UIViewController {
         createButton.setTitle("Создать", for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = UIColor(named: "TrackerGray")
-        createButton.setTitleColor(.white, for: .normal)
+        createButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
         createButton.layer.cornerRadius = 16
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         view.addSubview(createButton)
@@ -234,6 +236,10 @@ class CreateTrackerViewController: UIViewController {
     func changeSheduleMenuSubtitle(_ newTitle:String){
         menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
     }
+    
+    @objc func dismissKeyboard() {
+        trackerNameField.resignFirstResponder()
+        }
     
     // MARK: - Actions
     private func handleSelectCategory() {
@@ -379,8 +385,12 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
         case 0:
             return MenuTableViewCell.cellHeight
         case 1, 2:
+            var collectionCellWidth: CGFloat {
+                let width = view.frame.width
+                return ceil(width / 6)
+            }
             print("heightForRowAt вызван для \(indexPath.section)")
-            return 204 // высота для коллекций
+            return 3*collectionCellWidth // высота для коллекций
         default:
             return 0
         }
@@ -417,3 +427,12 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
 
 }
 
+extension CreateTrackerViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if trackerNameField.isFirstResponder {
+            return true
+        } else {
+            return false
+        }
+    }
+}

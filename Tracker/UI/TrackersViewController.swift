@@ -62,6 +62,10 @@ class TrackersViewController: UIViewController {
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
         collectionPresenter.selectedDate = self.datePicker.date
@@ -69,6 +73,8 @@ class TrackersViewController: UIViewController {
         searchField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView?.backgroundColor = UIColor(named: "TrackerWhite")
+        
         collectionView?.dataSource = collectionCompanion
         collectionView?.delegate = collectionCompanion
         collectionView?.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
@@ -144,12 +150,11 @@ class TrackersViewController: UIViewController {
         collectionView?.reloadData()
     }
     
-    
     func setupButtons() {
         addBarButtonItem = {
             let button = UIButton(type: .custom)
             button.setImage(UIImage(named: "Add"), for: .normal)
-            
+            button.tintColor = UIColor(named: "TrackerBlack")
             button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
             let barButtonItem = UIBarButtonItem(customView: button)
             return barButtonItem
@@ -161,6 +166,10 @@ class TrackersViewController: UIViewController {
         let alertPresenter = AlertPresenter()
         let alert = AlertModel(title: "Не лги!", message: "Нельзя отметить выполненным трекер из будущего", primaryButtonText: "Простите!", primaryButtonCompletion: {})
         alertPresenter.show(in: self, model:alert)
+    }
+    
+    @objc func dismissKeyboard()  {
+        searchField.resignFirstResponder()
     }
     
 }

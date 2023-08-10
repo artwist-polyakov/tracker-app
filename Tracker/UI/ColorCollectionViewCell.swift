@@ -21,7 +21,7 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
         contentView.addSubview(collectionView)
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = UIColor(named: "TrackerWhite")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),

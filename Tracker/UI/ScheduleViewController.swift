@@ -34,6 +34,7 @@ class ScheduleViewController: UIViewController {
         button.backgroundColor = UIColor(named: "TrackerBlack")
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
         button.layer.cornerRadius = 16
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -48,7 +49,7 @@ class ScheduleViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         
         completionTurnOff = { [weak self] it in
