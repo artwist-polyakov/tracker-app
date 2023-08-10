@@ -154,7 +154,6 @@ class TrackersViewController: UIViewController {
         addBarButtonItem = {
             let button = UIButton(type: .custom)
             button.setImage(UIImage(named: "Add"), for: .normal)
-            button.tintColor = UIColor(named: "TrackerBlack")
             button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
             let barButtonItem = UIBarButtonItem(customView: button)
             return barButtonItem
