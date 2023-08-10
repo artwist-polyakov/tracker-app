@@ -16,6 +16,7 @@ class SheduleTableViewCell: UITableViewCell {
     let switchControl: UISwitch = {
         let switcher = UISwitch()
         switcher.translatesAutoresizingMaskIntoConstraints = false
+        switcher.onTintColor = UIColor(named: "TrackerBlue")
         return switcher
     }()
     
