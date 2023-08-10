@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
-    static let DidReadyNotification = Notification.Name(rawValue: "ready")
-    static let DidNotReadyNotification = Notification.Name(rawValue: "not ready")
+    static let didReadyNotification = Notification.Name(rawValue: "ready")
+    static let didNotReadyNotification = Notification.Name(rawValue: "not ready")
     let repository = TrackersRepositoryImpl.shared
     
     let cellIdentifier = "TrackerCollectionViewCell"
@@ -176,13 +176,13 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         if isReadyToFlush() {
             print("Уведомление отправлено что данные готовы")
             NotificationCenter.default.post(
-                name: TrackersCollectionsPresenter.DidReadyNotification,
+                name: TrackersCollectionsPresenter.didReadyNotification,
                 object: self,
                 userInfo: ["GO": true ])
         } else {
             print("Уведомление отправлено что данные не готовы")
             NotificationCenter.default.post(
-                name: TrackersCollectionsPresenter.DidNotReadyNotification,
+                name: TrackersCollectionsPresenter.didNotReadyNotification,
                 object: self,
                 userInfo: ["GO": false ])
         }

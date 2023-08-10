@@ -64,7 +64,7 @@ class CreateTrackerViewController: UIViewController {
         self.view.layoutIfNeeded()
         
         didDataCollected = NotificationCenter.default.addObserver(
-                    forName: TrackersCollectionsPresenter.DidReadyNotification,
+                    forName: TrackersCollectionsPresenter.didReadyNotification,
                     object: nil,
                     queue: .main
                 ) { [weak self] _ in
@@ -75,7 +75,7 @@ class CreateTrackerViewController: UIViewController {
                 }
         
         didDataNotCollected = NotificationCenter.default.addObserver(
-                    forName: TrackersCollectionsPresenter.DidNotReadyNotification,
+                    forName: TrackersCollectionsPresenter.didNotReadyNotification,
                     object: nil,
                     queue: .main
                 ) { [weak self] _ in
