@@ -9,7 +9,7 @@ import UIKit
 class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var delegate: TrackerTypeDelegate?
     var collectionView: UICollectionView!
-    let colors: [UIColor] = (1...18).compactMap { UIColor(named: "\($0)") }
+    let colors: [UIColor] = (1...QUANTITY.COLLECTIONS_CELLS.rawValue).compactMap { UIColor(named: "\($0)") }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

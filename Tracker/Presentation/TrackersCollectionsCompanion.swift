@@ -37,7 +37,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         cell.configure(
             text: tracker.title,
             emoji: Mappers.intToIconMapper(tracker.icon) ,
-            sheetColor: ((UIColor(named: "\((tracker.color) % 18)") ?? UIColor(named: "1"))!),
+            sheetColor: ((UIColor(named: "\((tracker.color) % QUANTITY.COLLECTIONS_CELLS.rawValue)") ?? UIColor(named: "1"))!),
             quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count),
             hasMark: tracker.isDoneAt.contains(SimpleDate(date:selectedDate ?? Date()))
         )

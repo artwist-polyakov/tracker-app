@@ -12,7 +12,7 @@ class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICol
     
     let numberOfColumns: CGFloat = 6
     var collectionView: UICollectionView!
-    let icons: [String] =  (1...18).compactMap { Mappers.intToIconMapper($0) }
+    let icons: [String] =  (1...QUANTITY.COLLECTIONS_CELLS.rawValue).compactMap { Mappers.intToIconMapper($0) }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

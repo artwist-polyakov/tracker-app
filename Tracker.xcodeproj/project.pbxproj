@@ -42,6 +42,7 @@
 		AFD92DF22A83D97D00F36905 /* SheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DF12A83D97D00F36905 /* SheduleTableViewCell.swift */; };
 		AFD92DF42A854B9300F36905 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DF32A854B9300F36905 /* AlertPresenter.swift */; };
 		AFD92DF62A854BC000F36905 /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DF52A854BC000F36905 /* AlertModel.swift */; };
+		AFD92DF82A85517500F36905 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD92DF72A85517500F36905 /* Constants.swift */; };
 		AFEDE0492A827A70002D8CE6 /* extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFEDE0482A827A70002D8CE6 /* extension+UIView.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +84,7 @@
 		AFD92DF12A83D97D00F36905 /* SheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheduleTableViewCell.swift; sourceTree = "<group>"; };
 		AFD92DF32A854B9300F36905 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		AFD92DF52A854BC000F36905 /* AlertModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertModel.swift; sourceTree = "<group>"; };
+		AFD92DF72A85517500F36905 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		AFEDE0482A827A70002D8CE6 /* extension+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "extension+UIView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -146,6 +148,7 @@
 				AFCA55CE2A7E527500D9A851 /* TrackerCategory.swift */,
 				AFCA55D82A7FE7EA00D9A851 /* DayOfWeek.swift */,
 				AFD92DF52A854BC000F36905 /* AlertModel.swift */,
+				AFD92DF72A85517500F36905 /* Constants.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 				AFCA55BF2A7C36AF00D9A851 /* Mappers.swift in Sources */,
 				AFCA55AE2A7C178800D9A851 /* TrackerCollectionViewCell.swift in Sources */,
 				AFD92DF42A854B9300F36905 /* AlertPresenter.swift in Sources */,
+				AFD92DF82A85517500F36905 /* Constants.swift in Sources */,
 				AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */,
 				AFCA55EB2A8157DB00D9A851 /* ColorCell.swift in Sources */,
 				AFCA55E92A81575C00D9A851 /* IconCell.swift in Sources */,

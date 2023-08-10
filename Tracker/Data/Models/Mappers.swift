@@ -24,7 +24,7 @@ struct Mappers {
     static func intToIconMapper(_ number:Int) -> String {
         let icons = ["🙂","😻","🌺","🐶","❤️","😱","😇","😡","🥶",
                      "🤔","🙌","🍔","🥦","🏓","🥇","🎸","🏝","😪"]
-        return icons[number % 18]
+        return icons[number % QUANTITY.COLLECTIONS_CELLS.rawValue]
     }
     
     static func iconToIntMapper(_ icon:String) -> Int {
