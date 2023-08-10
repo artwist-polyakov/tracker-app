@@ -120,7 +120,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func didSetTrackerColorToFlush(_ color: Int) {
-        trackerColorToFlush = color
+        trackerColorToFlush = color + 1 // Нумерация цветов начинается с 1
     }
     
     func clearAllFlushProperties() {

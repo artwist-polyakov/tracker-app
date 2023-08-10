@@ -34,10 +34,11 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         
         let tracker = trackerCategory.trackers[indexPath.row]
         print("collectionView устанавливает трекер \(tracker)")
+        let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
         cell.configure(
             text: tracker.title,
             emoji: Mappers.intToIconMapper(tracker.icon) ,
-            sheetColor: ((UIColor(named: "\((tracker.color) % QUANTITY.COLLECTIONS_CELLS.rawValue)") ?? UIColor(named: "1"))!),
+            sheetColor: color,
             quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count),
             hasMark: tracker.isDoneAt.contains(SimpleDate(date:selectedDate ?? Date()))
         )
