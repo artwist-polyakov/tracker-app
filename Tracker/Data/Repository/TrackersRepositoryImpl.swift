@@ -23,21 +23,21 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
+                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeekRussian]),
                                     isDoneAt: Set()
                                    ),
                             Tracker(id: 1+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
+                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeekRussian]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                                    ),
                             Tracker(id: 2+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeek]),
+                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeekRussian]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                                    )])
     ]
