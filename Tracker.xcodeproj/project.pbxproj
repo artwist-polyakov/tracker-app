@@ -28,7 +28,6 @@
 		AFCA55D72A7F96C000D9A851 /* TrackersRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */; };
 		AFCA55DB2A7FE81800D9A851 /* TrackerTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */; };
 		AFCA55DD2A7FE8FE00D9A851 /* CreateTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */; };
-		AFCA55DF2A7FEEE300D9A851 /* SchedullerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55DE2A7FEEE300D9A851 /* SchedullerViewController.swift */; };
 		AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */; };
 		AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */; };
 		AFCA55E52A8135BF00D9A851 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55E42A8135BF00D9A851 /* MenuItem.swift */; };
@@ -69,7 +68,6 @@
 		AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRepositoryImpl.swift; sourceTree = "<group>"; };
 		AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTypeViewController.swift; sourceTree = "<group>"; };
 		AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerViewController.swift; sourceTree = "<group>"; };
-		AFCA55DE2A7FEEE300D9A851 /* SchedullerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedullerViewController.swift; sourceTree = "<group>"; };
 		AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewController.swift; sourceTree = "<group>"; };
 		AFCA55E22A7FF09C00D9A851 /* TrackerTypeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTypeDelegate.swift; sourceTree = "<group>"; };
 		AFCA55E42A8135BF00D9A851 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
@@ -169,7 +167,6 @@
 				AFCA55AD2A7C178800D9A851 /* TrackerCollectionViewCell.swift */,
 				AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */,
 				AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */,
-				AFCA55DE2A7FEEE300D9A851 /* SchedullerViewController.swift */,
 				AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */,
 				AFCA55E42A8135BF00D9A851 /* MenuItem.swift */,
 				AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */,
@@ -285,7 +282,6 @@
 				AFCA55B22A7C187900D9A851 /* Tracker.swift in Sources */,
 				AFCA55C72A7D5BB000D9A851 /* SimpleDate.swift in Sources */,
 				AFCA55A82A7AB02C00D9A851 /* TrackersViewController.swift in Sources */,
-				AFCA55DF2A7FEEE300D9A851 /* SchedullerViewController.swift in Sources */,
 				AFCA55A42A7AB01A00D9A851 /* StatsViewController.swift in Sources */,
 				AFCA55DD2A7FE8FE00D9A851 /* CreateTrackerViewController.swift in Sources */,
 				AFCA55D52A7F895500D9A851 /* TrackersRepositoryProtocol.swift in Sources */,
