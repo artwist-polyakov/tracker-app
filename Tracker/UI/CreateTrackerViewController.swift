@@ -109,11 +109,21 @@ class CreateTrackerViewController: UIViewController {
         iconCollectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
         colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
         colorCollectionView.frame.size.width = view.bounds.width
-        menuItems = [
-            MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
-            MenuItem(title: "Создать расписание", subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
-                ]
-                
+        
+        guard let type = selectedTrackerType else { return }
+        switch type {
+        case .habit:
+            menuItems = [
+                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
+                MenuItem(title: "Создать расписание", subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
+                    ]
+        case .irregularEvent:
+            menuItems = [
+                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory)
+                    ]
+        case .notSet:
+            menuItems = []
+        }
         menuTableView.dataSource = self
         menuTableView.delegate = self
         menuTableView.isScrollEnabled = false
@@ -337,13 +347,6 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             cell.titleLabel.text = menuItem.title
             cell.backgroundColor = UIColor(named: "TrackerBackground")
             cell.layer.cornerRadius = 16
-            if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
-                cell.isUserInteractionEnabled = false
-                cell.titleLabel.textColor = .gray
-            } else {
-                cell.isUserInteractionEnabled = true
-                cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
-            }
             
             cell.subtitleLabel.text = menuItem.subtitle
             if menuItem.subtitle.isEmpty {

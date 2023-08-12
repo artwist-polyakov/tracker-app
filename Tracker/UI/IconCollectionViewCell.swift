@@ -24,7 +24,7 @@ class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICol
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-        
+        collectionView.isScrollEnabled = false
         contentView.addSubview(collectionView)
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false

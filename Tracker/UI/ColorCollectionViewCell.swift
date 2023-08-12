@@ -13,13 +13,13 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
+        collectionView.isScrollEnabled = false
         contentView.addSubview(collectionView)
         collectionView.backgroundColor = UIColor(named: "TrackerWhite")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
