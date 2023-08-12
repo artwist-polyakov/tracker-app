@@ -69,6 +69,7 @@ class ScheduleViewController: UIViewController {
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
         tableView.register(SheduleTableViewCell.self, forCellReuseIdentifier: "MenuCell")
     }
     

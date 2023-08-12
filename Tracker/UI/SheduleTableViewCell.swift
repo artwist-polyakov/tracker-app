@@ -63,7 +63,7 @@ class SheduleTableViewCell: UITableViewCell {
         addSubview(separatorView)
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            separatorView.heightAnchor.constraint(equalToConstant: 1),
+            separatorView.heightAnchor.constraint(equalToConstant: 0.5),
             separatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             separatorView.bottomAnchor.constraint(equalTo: bottomAnchor)

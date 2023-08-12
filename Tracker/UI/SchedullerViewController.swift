@@ -22,6 +22,7 @@ class SchedullerViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DayCell")
+        tableView.separatorStyle = .none
         title = "Расписание"
     }
     
@@ -40,7 +41,7 @@ class SchedullerViewController: UITableViewController {
         switchView.isOn = selectedDays.contains(daysOfWeek[indexPath.row])
         switchView.addTarget(self, action: #selector(handleSwitchChange(_:)), for: .valueChanged)
         cell.accessoryView = switchView
-        
+    
         return cell
     }
     
