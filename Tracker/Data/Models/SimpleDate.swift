@@ -37,3 +37,13 @@ struct SimpleDate: Hashable {
     
     
 }
+
+
+extension SimpleDate {
+    var dayOfWeekRussian: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: self.date).lowercased()
+    }
+}

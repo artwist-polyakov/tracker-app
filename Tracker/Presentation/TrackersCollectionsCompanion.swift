@@ -60,7 +60,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 9 - 16 * 2) / 2 // 9 for gap, 16 for each side margin
+        let width = (collectionView.frame.width - 9 - 16 * 2) / 2
         return CGSize(width: width, height: 148)
     }
     
