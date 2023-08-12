@@ -44,6 +44,7 @@ class TrackersViewController: UIViewController {
     var searchField: UISearchTextField = {
         let field = UISearchTextField()
         field.text = "Поиск"
+        field.backgroundColor = UIColor(named: "TrackerSearchFieldColor")
         field.textColor = UIColor(named: "TrackerGray")
         return field
     }()
@@ -104,6 +105,8 @@ class TrackersViewController: UIViewController {
             searchField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
         
+        
+        
         view.addSubview(VoidImage)
         VoidImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -130,6 +133,8 @@ class TrackersViewController: UIViewController {
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
     }
+    
+    
     
     @objc func addButtonTapped() {
         let trackerTypeViewController = TrackerTypeViewController()
@@ -175,7 +180,9 @@ class TrackersViewController: UIViewController {
 
 extension TrackersViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = ""
+        searchField.text = ""
+        collectionCompanion?.typedText = ""
+        collectionView?.reloadData()
         textField.textColor = UIColor(named: "TrackerBlack")
     }
 }
