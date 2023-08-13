@@ -13,7 +13,7 @@ class CreateTrackerViewController: UIViewController {
             configureForSelectedType()
         }
     }
-    
+    private var isTextFieldFocused: Bool = false
     // Элементы UI
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -253,6 +253,7 @@ class CreateTrackerViewController: UIViewController {
     
     @objc func dismissKeyboard() {
         trackerNameField.resignFirstResponder()
+        isTextFieldFocused = false
         }
     
     // MARK: - Actions
@@ -278,6 +279,7 @@ class CreateTrackerViewController: UIViewController {
 
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        isTextFieldFocused = true
         if textField.text?.isEmpty == false {
             textField.textColor = UIColor(named: "TrackerBlack")
             textField.rightViewMode = .always
@@ -440,7 +442,7 @@ extension CreateTrackerViewController: UIGestureRecognizerDelegate {
         if trackerNameField.isFirstResponder {
             return true
         } else {
-            if let control = touch.view as? UIControl, control.isEnabled {
+            if let control = touch.view as? UIControl, control.isEnabled && isTextFieldFocused {
                 control.sendActions(for: .touchUpInside)
             }
             return false

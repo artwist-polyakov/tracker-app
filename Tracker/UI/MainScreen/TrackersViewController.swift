@@ -13,7 +13,7 @@ class TrackersViewController: UIViewController {
     var collectionView: UICollectionView?
     var collectionPresenter: TrackersCollectionsPresenter!
     var collectionCompanion: TrackersCollectionsCompanion?
-    
+    private var isSearchFocused: Bool  = false
     let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.preferredDatePickerStyle = .compact
@@ -155,6 +155,7 @@ class TrackersViewController: UIViewController {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         collectionCompanion?.typedText = textField.text
+        isSearchFocused = true
         collectionView?.reloadData()
     }
     
@@ -177,6 +178,7 @@ class TrackersViewController: UIViewController {
     
     @objc func dismissKeyboard()  {
         searchField.resignFirstResponder()
+        isSearchFocused = false
     }
     
 }
@@ -187,6 +189,7 @@ extension TrackersViewController: UITextFieldDelegate {
         collectionCompanion?.typedText = ""
         collectionView?.reloadData()
         textField.textColor = UIColor(named: "TrackerBlack")
+        isSearchFocused = true
     }
 }
 
@@ -211,7 +214,7 @@ extension TrackersViewController: UIGestureRecognizerDelegate {
         if searchField.isFirstResponder {
             return true
         } else {
-            if let control = touch.view as? UIControl, control.isEnabled {
+            if let control = touch.view as? UIControl, control.isEnabled && isSearchFocused {
                 control.sendActions(for: .touchUpInside)
             }
             return false
