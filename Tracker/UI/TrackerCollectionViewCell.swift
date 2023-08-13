@@ -16,6 +16,8 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = UIColor(named: "TrackerWhite")
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.numberOfLines = 0 // Разрешить несколько строк
+        label.lineBreakMode = .byWordWrapping // Перенос по словам
         return label
     }()
     
@@ -78,14 +80,6 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        //        emojiLabel.insertSubview(whiteCircle, at: 0)
-        //        whiteCircle.translatesAutoresizingMaskIntoConstraints = false
-        //        NSLayoutConstraint.activate([
-        //            whiteCircle.centerXAnchor.constraint(equalTo: emojiLabel.centerXAnchor),
-        //            whiteCircle.centerYAnchor.constraint(equalTo: emojiLabel.centerYAnchor),
-        //            whiteCircle.widthAnchor.constraint(equalToConstant: 24),
-        //            whiteCircle.heightAnchor.constraint(equalToConstant: 24),
-        //        ])
         contentView.addSubview(sheet)
         contentView.addSubview(titleLabel)
         contentView.addSubview(quantityLabel)
@@ -103,6 +97,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             sheet.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: sheet.bottomAnchor, constant: -12),
             titleLabel.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
+            titleLabel.trailingAnchor.constraint(equalTo: sheet.trailingAnchor, constant: 12),
             emojiButton.topAnchor.constraint(equalTo: sheet.topAnchor, constant: 12),
             emojiButton.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
             quantityLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
