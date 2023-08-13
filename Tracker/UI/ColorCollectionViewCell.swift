@@ -8,12 +8,16 @@
 import UIKit
 class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var delegate: TrackerTypeDelegate?
+    
+    let numberOfColumns: CGFloat = 6
     var collectionView: UICollectionView!
     let colors: [UIColor] = (1...QUANTITY.COLLECTIONS_CELLS.rawValue).compactMap { UIColor(named: "\($0)") }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
         collectionView.dataSource = self
@@ -43,6 +47,7 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath) as! ColorCell
         cell.backgroundColor = .clear
+        cell.cellWidth = floor((collectionView.frame.width - (numberOfColumns - 1)) / numberOfColumns)
         cell.colorView.backgroundColor = colors[indexPath.row]
         return cell
     }
@@ -52,7 +57,8 @@ class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 50, height: 50)
+        let widthPerItem = floor((collectionView.frame.width - (numberOfColumns - 1)) / numberOfColumns)
+        return CGSize(width: widthPerItem, height: widthPerItem)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

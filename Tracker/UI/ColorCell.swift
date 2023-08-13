@@ -21,6 +21,8 @@ class ColorCell: UICollectionViewCell {
         }
     }
     
+    var cellWidth: CGFloat = 0
+    
     let colorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false

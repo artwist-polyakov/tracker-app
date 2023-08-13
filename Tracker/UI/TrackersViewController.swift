@@ -65,6 +65,8 @@ class TrackersViewController: UIViewController {
         super.viewDidLoad()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.delegate = self
+        tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
@@ -199,5 +201,19 @@ extension TrackersViewController: TrackersViewControllerProtocol {
     func hideStartingBlock() {
         VoidImage.isHidden = true
         questionLabel.isHidden = true
+    }
+}
+
+extension TrackersViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+
+        if searchField.isFirstResponder {
+            return true
+        } else {
+            if let control = touch.view as? UIControl, control.isEnabled {
+                control.sendActions(for: .touchUpInside)
+            }
+            return false
+        }
     }
 }

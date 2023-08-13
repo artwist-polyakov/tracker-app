@@ -57,6 +57,7 @@ class CreateTrackerViewController: UIViewController {
         checkCreateButtonReady()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
+        self.navigationItem.hidesSearchBarWhenScrolling = false
         delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory().id)!)
         setupUI()
         layoutUI()
@@ -64,6 +65,7 @@ class CreateTrackerViewController: UIViewController {
         self.view.layoutIfNeeded()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.delegate = self
+        tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         didDataCollected = NotificationCenter.default.addObserver(
                     forName: TrackersCollectionsPresenter.didReadyNotification,
@@ -157,6 +159,7 @@ class CreateTrackerViewController: UIViewController {
     // MARK: - Layout
     private func layoutUI() {
         view.addSubview(titleLabel)
+        
         view.addSubview(trackerNameField)
         view.addSubview(warningLabel)
         
@@ -211,6 +214,7 @@ class CreateTrackerViewController: UIViewController {
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             menuTableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16)
         ])
+        
     }
     
     private func configureForLocale() {
@@ -393,7 +397,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
                 return ceil(width / 6)
             }
             print("heightForRowAt вызван для \(indexPath.section)")
-            return 3*collectionCellWidth // высота для коллекций
+            return 3*(collectionCellWidth+2) // высота для коллекций
         default:
             return 0
         }
@@ -401,7 +405,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section > 0 {
-            return 32
+            return 12
         }
         return 0
     }
@@ -432,10 +436,16 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
 
 extension CreateTrackerViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+
         if trackerNameField.isFirstResponder {
             return true
         } else {
+            if let control = touch.view as? UIControl, control.isEnabled {
+                control.sendActions(for: .touchUpInside)
+            }
             return false
         }
     }
 }
+
+
