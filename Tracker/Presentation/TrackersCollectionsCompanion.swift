@@ -73,18 +73,12 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
+        return UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 16)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        
-        let sampleLabel = UILabel()
-        sampleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
-        sampleLabel.text = "Sample text"
-        sampleLabel.sizeToFit()
-        let height = sampleLabel.frame.height + 4
-        
-        return CGSize(width: collectionView.frame.width, height: height)
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {      
+        return CGSize(width: collectionView.frame.width, height: 55)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -98,7 +92,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             id = ""
         }
         
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryView
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
         
         if kind == UICollectionView.elementKindSectionHeader {
             let category = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")[indexPath.section]

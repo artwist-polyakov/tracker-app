@@ -81,7 +81,7 @@ class TrackersViewController: UIViewController {
         collectionView?.dataSource = collectionCompanion
         collectionView?.delegate = collectionCompanion
         collectionView?.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
-        collectionView?.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+        collectionView?.register(SupplementaryViewMain.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         
         
         view.addSubview(collectionView!)
@@ -104,7 +104,8 @@ class TrackersViewController: UIViewController {
         NSLayoutConstraint.activate([
             searchField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             searchField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            searchField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            searchField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
         ])
         
         
