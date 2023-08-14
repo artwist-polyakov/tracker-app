@@ -12,23 +12,12 @@ class TrackerTypeViewController: UIViewController {
     let buttonsContainer = UIView()
     let habitButton = UIButton(type: .system)
     let irregularEventButton = UIButton(type: .system)
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Создание трекера"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.textColor = UIColor(named: "TrackerBlack")
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
-        self.view.addSubview(titleLabel)
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+        self.title = "Создание трекера"
+
         setupButtons()
         layoutButtons()
     }
@@ -63,8 +52,8 @@ class TrackerTypeViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             // Ограничения для контейнера
-            buttonsContainer.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            buttonsContainer.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            buttonsContainer.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
+            buttonsContainer.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor),
             buttonsContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             buttonsContainer.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             

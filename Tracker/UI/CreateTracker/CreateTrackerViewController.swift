@@ -15,15 +15,6 @@ class CreateTrackerViewController: UIViewController {
     }
     private var isTextFieldFocused: Bool = false
     // Элементы UI
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Новая привычка"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.textColor = UIColor(named: "TrackerBlack")
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     let warningLabel: UILabel = {
         let label = UILabel()
         label.text = "Ограничение 38 символов"
@@ -107,7 +98,6 @@ class CreateTrackerViewController: UIViewController {
                 trackerNameField.rightViewMode = .whileEditing
             }
         
-        titleLabel.textAlignment = .center
         iconCollectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
         colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
         colorCollectionView.frame.size.width = view.bounds.width
@@ -158,12 +148,9 @@ class CreateTrackerViewController: UIViewController {
     
     // MARK: - Layout
     private func layoutUI() {
-        view.addSubview(titleLabel)
-        
         view.addSubview(trackerNameField)
         view.addSubview(warningLabel)
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         trackerNameField.translatesAutoresizingMaskIntoConstraints = false
         trackerNameField.layer.cornerRadius = 16
         trackerNameField.clipsToBounds = true
@@ -192,10 +179,8 @@ class CreateTrackerViewController: UIViewController {
         colorCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             trackerNameField.heightAnchor.constraint(equalToConstant: 75),
-            trackerNameField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            trackerNameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             trackerNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             trackerNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             warningLabel.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 8),
@@ -315,11 +300,11 @@ class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
-            titleLabel.text = "Новая привычка"
+            self.title = "Новая привычка"
         case .irregularEvent:
-            titleLabel.text = "Новое нерегулярное событие"
+            self.title = "Новое нерегулярное событие"
         case .notSet:
-            titleLabel.text = "Неизвестный лейбл"
+            self.title = "Неизвестный лейбл"
         }
     }
 
@@ -417,7 +402,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func roundCornersForCell(_ cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {
-        cell.layer.cornerRadius = 0 // reset corner radius
+        cell.layer.cornerRadius = 0
         cell.clipsToBounds = false
         
         let totalRows = tableView.numberOfRows(inSection: indexPath.section)

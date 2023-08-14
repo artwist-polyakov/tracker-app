@@ -19,15 +19,6 @@ class ScheduleViewController: UIViewController {
     
     
     // Элементы UI
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Расписание"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.textColor = UIColor(named: "TrackerBlack")
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     let doneButton: UIButton = {
         let button = UIButton()
         button.setTitle("Готово", for: .normal)
@@ -51,7 +42,7 @@ class ScheduleViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
-        
+        self.title = "Расписание"
         completionTurnOff = { [weak self] it in
             self?.daysChecked.remove(it)
         }
@@ -75,7 +66,6 @@ class ScheduleViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        view.addSubview(titleLabel)
         view.addSubview(doneButton)
         view.addSubview(tableView)
     }
@@ -83,14 +73,12 @@ class ScheduleViewController: UIViewController {
     // MARK: - Layout
     private func layoutUI() {
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
+
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             doneButton.heightAnchor.constraint(equalToConstant: 60),
-            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 38),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             tableView.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: -38)
@@ -137,7 +125,7 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func roundCornersForCell(_ cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {
-        cell.layer.cornerRadius = 0 // reset corner radius
+        cell.layer.cornerRadius = 0
         cell.clipsToBounds = false
         
         let totalRows = tableView.numberOfRows(inSection: indexPath.section)

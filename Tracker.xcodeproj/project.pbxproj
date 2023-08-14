@@ -118,6 +118,7 @@
 		AF0D45A52A89264100C60143 /* CreateTracker */ = {
 			isa = PBXGroup;
 			children = (
+				AF7D307C2A8A3CD200EA2A2F /* TrackerType */,
 				AFCA55EE2A8235BA00D9A851 /* IconCollectionViewCell.swift */,
 				AFCA55F02A8235F600D9A851 /* ColorCollectionViewCell.swift */,
 				AFCA55E62A81364100D9A851 /* MenuTableViewCell.swift */,
@@ -126,7 +127,6 @@
 				AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */,
 				AFCA55E42A8135BF00D9A851 /* MenuItem.swift */,
 				AFCA55AB2A7C05C500D9A851 /* SupplementaryView.swift */,
-				AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */,
 				AF0D45A72A8926A000C60143 /* Category */,
 				AF0D45A62A89269900C60143 /* Shedule */,
 			);
@@ -148,6 +148,14 @@
 				AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */,
 			);
 			path = Category;
+			sourceTree = "<group>";
+		};
+		AF7D307C2A8A3CD200EA2A2F /* TrackerType */ = {
+			isa = PBXGroup;
+			children = (
+				AFCA55DA2A7FE81800D9A851 /* TrackerTypeViewController.swift */,
+			);
+			path = TrackerType;
 			sourceTree = "<group>";
 		};
 		AF9332332A72B59300BA0DB8 = {
