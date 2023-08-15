@@ -56,13 +56,17 @@ struct Mappers {
         // зависит от локали
         
         let shift = 1 // MARK: - тут будет Int(NSLocalizedString()) 0 для английского
-        return ["понедельник":[2,((2+7)-shift)%8],
-                "вторник":[3,((3+7)-shift)%8],
-                "среда":[4,((4+7)-shift)%8],
-                "четверг":[5,((5+7)-shift)%8],
-                "пятница":[6,((6+7)-shift)%8],
-                "суббота":[7,((7+7)-shift)%8],
-                "воскресенье":[1,((1+7)-shift)%8]]
+        return ["понедельник": shifter(2, shift),
+                "вторник": shifter(3, shift),
+                "среда": shifter(4, shift),
+                "четверг": shifter(5, shift),
+                "пятница": shifter(6, shift),
+                "суббота": shifter(7, shift),
+                "воскресенье": shifter(1, shift)]
+    }
+    
+    static private func shifter(_ pos: Int, _ shift: Int) -> [Int] {
+        return [pos,((pos+7)-shift)%8]
     }
     
     static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
