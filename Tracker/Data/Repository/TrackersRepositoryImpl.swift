@@ -47,8 +47,6 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
     func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> [TrackerCategory] {
         let dayOfWeek = date.weekDayNum
-        print("РЕВЬЮВЕР settings дата: \(date.dayOfWeek)")
-        print("РЕВЬЮВЕР русская дата: \(date.dayOfWeekRussian)")
         let filteredCategories = categories.compactMap { category -> TrackerCategory? in
             let filteredTrackers = category.trackers.filter { tracker in
                 let matchesDateCondition = tracker.isPlannedFor.contains(dayOfWeek) || tracker.isPlannedFor.isEmpty
