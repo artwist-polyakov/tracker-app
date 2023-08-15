@@ -23,21 +23,21 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeekRussian]),
+                                    isPlannedFor: Set([SimpleDate(date: Date()).weekDayNum]),
                                     isDoneAt: Set()
                                    ),
                             Tracker(id: 1+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeekRussian]),
+                                    isPlannedFor: Set([SimpleDate(date: Date()).weekDayNum]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                                    ),
                             Tracker(id: 2+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).dayOfWeekRussian]),
+                                    isPlannedFor: Set([SimpleDate(date: Date()).weekDayNum]),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                                    )])
     ]
@@ -46,7 +46,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     }
     
     func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> [TrackerCategory] {
-        let dayOfWeek = date.dayOfWeekRussian
+        let dayOfWeek = date.weekDayNum
         print("РЕВЬЮВЕР settings дата: \(date.dayOfWeek)")
         print("РЕВЬЮВЕР русская дата: \(date.dayOfWeekRussian)")
         let filteredCategories = categories.compactMap { category -> TrackerCategory? in
@@ -70,7 +70,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         return filteredCategories
     }
     
-    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: Set<String>) {
+    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: Set<Int>) {
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
             let newTracker = Tracker(id: UInt(Date().timeIntervalSince1970),
                                      color: color, // MARK: когда будем выбирать цвета, надо проставлять

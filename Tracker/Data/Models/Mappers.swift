@@ -49,14 +49,20 @@ struct Mappers {
         return icons[icon] ?? 0
     }
     
-    static func giveMeAllWeekdaysNames() -> [String:Int] {
-        return ["понедельник":1,
-                "вторник":2,
-                "среда":3,
-                "четверг":4,
-                "пятница":5,
-                "суббота":6,
-                "воскресенье":7]
+    static func giveMeAllWeekdaysNames() -> [String:[Int]] {
+        
+        // отдаст массив: имя дня недели, номер дня недели в мире с
+        // воскр день 1, и сортировка дней недели в мире где первый день
+        // зависит от локали
+        
+        let shift = 1 // MARK: - тут будет Int(NSLocalizedString()) 0 для английского
+        return ["понедельник":[2,((2+7)-shift)%8],
+                "вторник":[3,((3+7)-shift)%8],
+                "среда":[4,((4+7)-shift)%8],
+                "четверг":[5,((5+7)-shift)%8],
+                "пятница":[6,((6+7)-shift)%8],
+                "суббота":[7,((7+7)-shift)%8],
+                "воскресенье":[1,((1+7)-shift)%8]]
     }
     
     static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
@@ -72,7 +78,7 @@ struct Mappers {
                            "воскресенье":"Вс"]
         
         let sortedWeekdays = weekdays.sorted {
-            return giveMeAllWeekdaysNames()[$0.lowercased()]! < giveMeAllWeekdaysNames()[$1.lowercased()]!
+            return giveMeAllWeekdaysNames()[$0.lowercased()]![1] < giveMeAllWeekdaysNames()[$1.lowercased()]![1]
         }
         
         let sortedShortNames = sortedWeekdays.map { short_names[$0.lowercased()]! }

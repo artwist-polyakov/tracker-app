@@ -49,7 +49,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             print("trackerIconToFlush: \(icon)")
         }
     }
-    var trackerSheduleToFlush: Set<String>? = Set() {
+    var trackerSheduleToFlush: Set<Int>? = Set() {
         didSet {
             notifyObservers()
             guard let shedule = trackerSheduleToFlush
@@ -89,8 +89,8 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
-    func giveMeSelectedDays() -> Set<String> {
-        return trackerSheduleToFlush ?? Set<String>()
+    func giveMeSelectedDays() -> Set<Int> {
+        return trackerSheduleToFlush ?? Set<Int>()
     }
     
     func giveMeSelectedCategory() -> TrackerCategory {
@@ -114,9 +114,9 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerIconToFlush = icon
     }
     
-    func didSetShedulleToFlush(_ shedule: Set<String>) {
+    func didSetShedulleToFlush(_ shedule: Set<Int>) {
         trackerSheduleToFlush = Set()
-        shedule.forEach { trackerSheduleToFlush?.insert($0.lowercased()) }
+        shedule.forEach { trackerSheduleToFlush?.insert($0)}
     }
     
     func didSetTrackerColorToFlush(_ color: Int) {

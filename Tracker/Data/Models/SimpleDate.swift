@@ -19,6 +19,12 @@ struct SimpleDate: Hashable {
         return dateFormatter.string(from: self.date)
     }
     
+    var weekDayNum: Int {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: self.date)
+        return weekday
+    }
+    
     init(date: Date) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: date)
