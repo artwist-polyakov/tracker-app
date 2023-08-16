@@ -80,10 +80,10 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         
         repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))
         
-        //        viewController.collectionView?.reloadItems(at: [IndexPath(item: item, section: section)])
+        self.viewController.collectionView?.reloadItems(at: [IndexPath(row: item, section: section)])
+
+
         
-        // MARK: TODO продумать как разрешить коллизию, когда полностью исчезает коллеция
-        viewController.collectionView?.reloadData()
     }
     
 }

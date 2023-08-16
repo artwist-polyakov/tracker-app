@@ -55,7 +55,6 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         }
         
         print("setOfdays = \(tracker.isPlannedFor)")
-        
         return cell
     }
     
