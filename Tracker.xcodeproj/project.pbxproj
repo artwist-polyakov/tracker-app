@@ -180,9 +180,7 @@
 				AFCA55B72A7C202000D9A851 /* Presentation */,
 				AF93323F2A72B59300BA0DB8 /* AppDelegate.swift */,
 				AF9332412A72B59300BA0DB8 /* SceneDelegate.swift */,
-				AF9332482A72B59400BA0DB8 /* Assets.xcassets */,
-				AF93324A2A72B59400BA0DB8 /* LaunchScreen.storyboard */,
-				AF93324D2A72B59400BA0DB8 /* Info.plist */,
+				AFD92E212A8E445400F36905 /* Supporting Files */,
 				AFCA55B62A7C19BD00D9A851 /* UI */,
 				AFCA55B32A7C198600D9A851 /* Data */,
 			);
@@ -243,6 +241,16 @@
 				AFD92DF32A854B9300F36905 /* AlertPresenter.swift */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		AFD92E212A8E445400F36905 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AF9332482A72B59400BA0DB8 /* Assets.xcassets */,
+				AF93324D2A72B59400BA0DB8 /* Info.plist */,
+				AF93324A2A72B59400BA0DB8 /* LaunchScreen.storyboard */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -489,7 +497,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6LXSUZFYBY;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Tracker/Info.plist;
+				INFOPLIST_FILE = "Tracker/Supporting Files/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -520,7 +528,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6LXSUZFYBY;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Tracker/Info.plist;
+				INFOPLIST_FILE = "Tracker/Supporting Files/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
