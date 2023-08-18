@@ -11,6 +11,6 @@ struct Tracker {
     let color: Int
     let title: String
     let icon: Int
-    var isPlannedFor: Set<Int>
+    var isPlannedFor: String // строка вида "137" для отображения дней недели на которые запланирован трекер
     var isDoneAt: Set<SimpleDate>
 }

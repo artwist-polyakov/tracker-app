@@ -14,10 +14,6 @@ class ScheduleViewController: UIViewController {
     var completionTurnOn: ((String) -> Void)?
     var completionDone: (() -> Void)?
     var content: [String] = []
-
-    
-    
-    
     
     // Элементы UI
     let doneButton: UIButton = {

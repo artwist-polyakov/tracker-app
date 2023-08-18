@@ -11,12 +11,12 @@ protocol TrackerTypeDelegate: AnyObject {
     func didSelectTrackerCategory(_ categoryId: UInt)
     func didSetTrackerTitle(_ title: String)
     func didSetTrackerIcon(_ icon: String)
-    func didSetShedulleToFlush(_ shedule: Set<Int>)
+    func didSetShedulleToFlush(_ shedule: [Int])
     func didSetTrackerColorToFlush(_ color: Int)
     func clearAllFlushProperties()
     func realizeAllFlushProperties()
     func giveMeSelectedCategory() -> TrackerCategory
-    func giveMeSelectedDays() -> Set<Int>
+    func giveMeSelectedDays() -> [Int]
     func isReadyToFlush() -> Bool
 }
 

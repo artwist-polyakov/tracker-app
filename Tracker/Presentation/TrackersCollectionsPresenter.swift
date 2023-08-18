@@ -49,12 +49,10 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             print("trackerIconToFlush: \(icon)")
         }
     }
-    var trackerSheduleToFlush: Set<Int>? = Set() {
+    var trackerSheduleToFlush: String = "" {
         didSet {
             notifyObservers()
-            guard let shedule = trackerSheduleToFlush
-            else {print ("trackerSheduleToFlush: Пусто") ; return}
-            print("trackerSheduleToFlush: \(shedule)")
+            print("trackerSheduleToFlush: \(trackerSheduleToFlush)")
         }
     }
     var trackerColorToFlush: Int? {
@@ -89,8 +87,8 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
-    func giveMeSelectedDays() -> Set<Int> {
-        return trackerSheduleToFlush ?? Set<Int>()
+    func giveMeSelectedDays() -> [Int] {
+        return trackerSheduleToFlush.compactMap { Int(String($0)) }
     }
     
     func giveMeSelectedCategory() -> TrackerCategory {
@@ -114,9 +112,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerIconToFlush = icon
     }
     
-    func didSetShedulleToFlush(_ shedule: Set<Int>) {
-        trackerSheduleToFlush = Set()
-        shedule.forEach { trackerSheduleToFlush?.insert($0)}
+    func didSetShedulleToFlush(_ shedule: [Int]) {
+        shedule.forEach { trackerSheduleToFlush += String($0)}
     }
     
     func didSetTrackerColorToFlush(_ color: Int) {
@@ -127,32 +124,26 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerTypeToFlush = .notSet
         trackerTitleToFlush = nil
         trackerIconToFlush = nil
-        trackerSheduleToFlush = nil
+        trackerSheduleToFlush = ""
         trackerColorToFlush = nil
     }
     
     func realizeAllFlushProperties() {
-        if trackerSheduleToFlush == nil {
-            trackerSheduleToFlush = Set()
-        }
-        
-        
         guard let trackerTitle = trackerTitleToFlush,
               let trackerIcon = trackerIconToFlush,
-              let trackerShedule = trackerSheduleToFlush,
               let trackerColor = trackerColorToFlush,
               let trackseCategory = trackerCategoryToFlush
         else {
             print("Не все данные готовы")
             return }
         
-        print("Записываю \(trackerTitle), \(trackerIcon), \(trackerShedule), \(trackerColor), \(trackseCategory)")
+        print("Записываю \(trackerTitle), \(trackerIcon), \(trackerSheduleToFlush), \(trackerColor), \(trackseCategory)")
         repository.addNewTrackerToCategory(
             color: trackerColor,
             categoryID: trackseCategory,
             trackerName: trackerTitle,
             icon: Mappers.iconToIntMapper(trackerIcon),
-            plannedDaysOfWeek: trackerShedule)
+            plannedDaysOfWeek: trackerSheduleToFlush)
         
         clearAllFlushProperties()
         viewController.collectionView?.reloadData()

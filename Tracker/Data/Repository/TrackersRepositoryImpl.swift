@@ -23,21 +23,21 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).weekDayNum]),
+                                    isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
                                     isDoneAt: Set()
                                    ),
                             Tracker(id: 1+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).weekDayNum]),
+                                    isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                                    ),
                             Tracker(id: 2+UInt(Date().timeIntervalSince1970),
                                     color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
-                                    isPlannedFor: Set([SimpleDate(date: Date()).weekDayNum]),
+                                    isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                                    )])
     ]
@@ -46,7 +46,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     }
     
     func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> [TrackerCategory] {
-        let dayOfWeek = date.weekDayNum
+        let dayOfWeek = String(date.weekDayNum)
         let filteredCategories = categories.compactMap { category -> TrackerCategory? in
             let filteredTrackers = category.trackers.filter { tracker in
                 let matchesDateCondition = tracker.isPlannedFor.contains(dayOfWeek) || tracker.isPlannedFor.isEmpty
@@ -68,13 +68,13 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         return filteredCategories
     }
     
-    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: Set<Int>) {
+    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: String) {
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
             let newTracker = Tracker(id: UInt(Date().timeIntervalSince1970),
                                      color: color, // MARK: когда будем выбирать цвета, надо проставлять
                                      title: trackerName,
                                      icon: icon, // MARK: когда будем выбирать цвета, надо проставлять
-                                     isPlannedFor: Set(plannedDaysOfWeek),
+                                     isPlannedFor: plannedDaysOfWeek,
                                      isDoneAt: Set<SimpleDate>())
             categories[categoryIndex].trackers.append(newTracker)
         }
