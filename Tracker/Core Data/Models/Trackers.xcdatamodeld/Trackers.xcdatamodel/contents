@@ -16,6 +16,8 @@
         <attribute name="creation_date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="executed_on" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="shedule" optional="YES" attributeType="String"/>
+        <attribute name="tracker_color" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="tracker_emoji" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="tracker_id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="tracker_title" attributeType="String"/>
         <relationship name="tracker_to_category" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="category_to_trackers" inverseEntity="Category"/>

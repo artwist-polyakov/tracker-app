@@ -19,7 +19,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
             return container
-        }() 
+        }()
+    
+    func saveContext() {
+        let context = persistentContainer.viewContext
+        if context.hasChanges { // Проверяем если у контекста какие-то изменения
+            do {
+                try context.save() // Пробуем сохранить изменения
+            } catch {
+                context.rollback() // Если что-то пошло не так, то мы просто "откатываем" все изменения назад
+            }
+        }
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
