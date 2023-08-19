@@ -25,7 +25,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         }
     }
     
-    var trackerCategoryToFlush: UInt? {
+    var trackerCategoryToFlush: UUID? {
         didSet {
             notifyObservers()
             guard let category = trackerCategoryToFlush
@@ -96,7 +96,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         return repository.getAllTrackers()[0]
     }
     
-    func didSelectTrackerCategory(_ category: UInt) {
+    func didSelectTrackerCategory(_ category: UUID) {
         trackerCategoryToFlush = category
     }
     

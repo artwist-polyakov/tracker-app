@@ -16,25 +16,21 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
     // Изначальное наполнение данными
     private var categories: [TrackerCategory] = [
-        TrackerCategory(id: UInt(Date().timeIntervalSince1970),
-                        categoryTitle: "Домашний тестовый уют",
+        TrackerCategory(categoryTitle: "Домашний тестовый уют",
                         trackers: [
-                            Tracker(id: UInt(Date().timeIntervalSince1970),
-                                    color: 1,
+                            Tracker(color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
                                     isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
                                     isDoneAt: Set()
                                    ),
-                            Tracker(id: 1+UInt(Date().timeIntervalSince1970),
-                                    color: 1,
+                            Tracker(color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
                                     isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
                                     isDoneAt: Set([SimpleDate(date: Date())])
                                    ),
-                            Tracker(id: 2+UInt(Date().timeIntervalSince1970),
-                                    color: 1,
+                            Tracker(color: 1,
                                     title: "Тестовый трекер 123",
                                     icon: 1,
                                     isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
@@ -58,7 +54,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
             }
             
             if !filteredTrackers.isEmpty {
-                return TrackerCategory(id: category.id,
+                return TrackerCategory(categoryId: category.id,
                                        categoryTitle: category.categoryTitle,
                                        trackers: filteredTrackers)
             } else {
@@ -68,10 +64,9 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         return filteredCategories
     }
     
-    func addNewTrackerToCategory(color: Int, categoryID: UInt, trackerName: String, icon: Int, plannedDaysOfWeek: String) {
+    func addNewTrackerToCategory(color: Int, categoryID: UUID, trackerName: String, icon: Int, plannedDaysOfWeek: String) {
         if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
-            let newTracker = Tracker(id: UInt(Date().timeIntervalSince1970),
-                                     color: color, // MARK: когда будем выбирать цвета, надо проставлять
+            let newTracker = Tracker(color: color, // MARK: когда будем выбирать цвета, надо проставлять
                                      title: trackerName,
                                      icon: icon, // MARK: когда будем выбирать цвета, надо проставлять
                                      isPlannedFor: plannedDaysOfWeek,
@@ -80,7 +75,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         }
     }
     
-    func interactWithTrackerDoneForDate(trackerId: UInt, date: SimpleDate) {
+    func interactWithTrackerDoneForDate(trackerId: UUID, date: SimpleDate) {
         for (categoryIndex, category) in categories.enumerated() {
             if let trackerIndex = category.trackers.firstIndex(where: { $0.id == trackerId }) {
                 let isDoneAt = categories[categoryIndex].trackers[trackerIndex].isDoneAt
@@ -94,12 +89,11 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     }
     
     func addNewCategory(name: String) {
-        let newCategory = TrackerCategory(id: UInt(Date().timeIntervalSince1970),
-                                          categoryTitle: name)
+        let newCategory = TrackerCategory(categoryTitle: name)
         categories.append(newCategory)
     }
     
-    func howManyDaysIsTrackerDone(trackerId: UInt) -> Int {
+    func howManyDaysIsTrackerDone(trackerId: UUID) -> Int {
         for category in categories {
             if let tracker = category.trackers.first(where: { $0.id == trackerId }) {
                 return tracker.isDoneAt.count
@@ -108,7 +102,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         return 0
     }
     
-    func isTrackerDoneAtDate(trackerId: UInt, date: SimpleDate) -> Bool {
+    func isTrackerDoneAtDate(trackerId: UUID, date: SimpleDate) -> Bool {
         for category in categories {
             if let tracker = category.trackers.first(where: { $0.id == trackerId }) {
                 return tracker.isDoneAt.contains(date)

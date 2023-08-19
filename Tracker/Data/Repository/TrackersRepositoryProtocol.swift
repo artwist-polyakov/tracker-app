@@ -12,13 +12,13 @@ protocol TrackersRepositoryProtocol {
     func getAllTrackers() -> [TrackerCategory]
     func getAllCategoriesPlannedTo(date:SimpleDate, titleFilter: String?) -> [TrackerCategory]
     func addNewTrackerToCategory(color: Int,
-                                 categoryID: UInt,
+                                 categoryID: UUID,
                                  trackerName: String,
                                  icon: Int,
                                  plannedDaysOfWeek: String)
-    func interactWithTrackerDoneForDate(trackerId:UInt,
+    func interactWithTrackerDoneForDate(trackerId:UUID,
                                         date: SimpleDate)
     
-    func howManyDaysIsTrackerDone(trackerId: UInt) -> Int
-    func isTrackerDoneAtDate(trackerId: UInt, date: SimpleDate) -> Bool
+    func howManyDaysIsTrackerDone(trackerId: UUID) -> Int
+    func isTrackerDoneAtDate(trackerId: UUID, date: SimpleDate) -> Bool
 }
