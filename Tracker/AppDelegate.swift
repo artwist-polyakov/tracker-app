@@ -6,11 +6,20 @@
 //
 
 import UIKit
+import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    
+    lazy var persistentContainer: NSPersistentContainer = {                     // 1
+            let container = NSPersistentContainer(name: "Trackers")              // 2
+            container.loadPersistentStores(completionHandler: { (storeDescription, error) in // 3
+                if let error = error as NSError? {                              // 4
+                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
+            })
+            return container
+        }() 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

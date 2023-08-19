@@ -4,14 +4,14 @@
         <attribute name="category_id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="category_name" attributeType="String"/>
         <attribute name="creation_date" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="category_to_trackers" toMany="YES" deletionRule="Nullify" destinationEntity="Tracker" inverseName="tracker_to_category" inverseEntity="Tracker"/>
+        <relationship name="category_to_trackers" toMany="YES" deletionRule="Nullify" destinationEntity="Trackers" inverseName="tracker_to_category" inverseEntity="Trackers"/>
     </entity>
     <entity name="Executions" representedClassName="Executions" syncable="YES" codeGenerationType="class">
         <attribute name="simple_timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="tracker_id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <relationship name="execution_to_trackers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tracker" inverseName="tracker_to_executions" inverseEntity="Tracker"/>
+        <relationship name="execution_to_trackers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Trackers" inverseName="tracker_to_executions" inverseEntity="Trackers"/>
     </entity>
-    <entity name="Tracker" representedClassName="Tracker" syncable="YES" codeGenerationType="class">
+    <entity name="Trackers" representedClassName="Trackers" syncable="YES" codeGenerationType="class">
         <attribute name="category_id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="creation_date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="executed_on" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
