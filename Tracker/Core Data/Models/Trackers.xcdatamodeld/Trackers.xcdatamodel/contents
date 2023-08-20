@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22F82" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Category" representedClassName="Category" syncable="YES" codeGenerationType="class">
         <attribute name="category_id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="category_name" attributeType="String"/>
@@ -7,7 +7,7 @@
         <relationship name="category_to_trackers" toMany="YES" deletionRule="Nullify" destinationEntity="Trackers" inverseName="tracker_to_category" inverseEntity="Trackers"/>
     </entity>
     <entity name="Executions" representedClassName="Executions" syncable="YES" codeGenerationType="class">
-        <attribute name="simple_timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="tracker_id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="execution_to_trackers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Trackers" inverseName="tracker_to_executions" inverseEntity="Trackers"/>
     </entity>

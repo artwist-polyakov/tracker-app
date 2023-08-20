@@ -157,7 +157,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         } else if trackerTypeToFlush == .irregularEvent {
             return trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerColorToFlush != nil
         } else {
-            return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != nil && trackerColorToFlush != nil
+            return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != "" && trackerColorToFlush != nil
         }
     }
     

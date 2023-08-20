@@ -40,4 +40,11 @@ public final class TrackersDataStore: NSObject {
         appdelegate.saveContext()
     }
     
+    func addExecution(tracker_id: UUID) {
+        let execution = Executions(context: self.context)
+        execution.date = SimpleDate(date: Date()).date
+        execution.tracker_id = tracker_id
+        appdelegate.saveContext()
+    }
+    
 }
