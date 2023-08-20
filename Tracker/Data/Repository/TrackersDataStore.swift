@@ -17,6 +17,8 @@ public final class TrackersDataStore: NSObject {
         appdelegate.persistentContainer.viewContext
     }
     
+    
+    // MARK: - ADD CATEGORY
     func addTrackerCategory (_ title: String ) {
         let trackerCategory = Categories(context: self.context)
         trackerCategory.category_name = title
@@ -24,6 +26,7 @@ public final class TrackersDataStore: NSObject {
         self.appdelegate.saveContext()
     }
     
+    // MARK: - ADD TRACKER
     func addTracker(title: String,
                     color: Int,
                     icon: Int,
@@ -40,24 +43,55 @@ public final class TrackersDataStore: NSObject {
         appdelegate.saveContext()
     }
     
-    func addExecution(tracker_id: UUID) {
-        let execution = Executions(context: self.context)
-        execution.date = SimpleDate(date: Date()).date
-        execution.tracker_id = tracker_id
+    private func attachExecution(toDate date: Date, trackerId: UUID) {
+        let newExecution = Executions(context: context)
+        newExecution.date = date
+        newExecution.tracker_id = trackerId
         appdelegate.saveContext()
     }
     
-    func fetchAllObjects<T>(entityName: String) -> [T] {
+    private func detachExecution(byObjectId objectId: NSManagedObjectID) {
+        if let objectToDelete = context.object(with: objectId) as? Executions {
+            context.delete(objectToDelete)
+            appdelegate.saveContext()
+        }
+    }
+    
+    // MARK: - INTERACT WITH
+    func interactWithExecution(date: Date, trackerId: UUID) {
+        let fetchRequest: NSFetchRequest<Executions> = Executions.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(Executions.date), date as CVarArg, #keyPath(Executions.tracker_id), trackerId as CVarArg)
+        do {
+            let existingExecutions = try context.fetch(fetchRequest)
+            if existingExecutions.isEmpty {
+                attachExecution(toDate: date, trackerId: trackerId)
+            } else if let objectId = existingExecutions.first?.objectID {
+                detachExecution(byObjectId: objectId)
+            }
+        } catch {
+            print("FATAL ERROR: \(error)")
+        }
+    }
+
+    
+    private func fetchAllObjects<T>(entityName: String) -> [T] {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         do {
             return (try? context.fetch(fetchRequest) as? [T]) ?? []
         }
     }
     
-    func getObjectByID<T>(id: NSManagedObjectID) -> T? {
+    private func fetchAllObjects<T>(request: NSFetchRequest<T>) -> [T] {
+        do {
+            return (try? context.fetch(request) as? [T]) ?? []
+        }
+    }
+    
+    private func getObjectByID<T>(id: NSManagedObjectID) -> T? {
         let object = (try? context.existingObject(with: id) as? T) ?? nil
         return object
     }
+    
     
     private func fetchTrackersSortedByCategoryFields() -> [Trackers] {
         let request = NSFetchRequest<Trackers>(entityName: "Trackers")
@@ -71,20 +105,29 @@ public final class TrackersDataStore: NSObject {
         
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort, trackerCreationSort]
         
-        do {
-            return (try? context.fetch(request) as? [Trackers]) ?? []
-        }
+        return fetchAllObjects<Trackers>(request: request)
     }
     
+    // MARK: - FETCH ALL CATEGORIES WITH SORT
     private func fetchCategoriesSortedByDate() -> [Categories] {
         let request = NSFetchRequest<Categories>(entityName: "Categories")
         let categoryDateSort = NSSortDescriptor(key: "creation_date", ascending: true)
         let categoryUUIDSort = NSSortDescriptor(key: "category_id", ascending: true)
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort]
         do {
-            return (try? context.fetch(request) as? [Categories]) ?? []
+            return fetchAllObjects<Categories>(request: request)
         }
-        
+    }
+    
+    // MARK: - FETCH ALL TRACKERS IN CATEGORY
+    private func fetchAllTrackersInCategory(_ categoryId: UUID) -> [Trackers] {
+        let request = NSFetchRequest<Trackers>(entityName: "Trackers")
+        let trackerCreationSort = NSSortDescriptor(key: "creation_date", ascending: true)
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(Trackers.category_id), categoryId as CVarArg)
+        request.sortDescriptors = [trackerCreationSort]
+        do {
+            return fetchAllObjects<Trackers>(request: request)
+        }
     }
     
 }
