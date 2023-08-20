@@ -18,7 +18,7 @@ public final class TrackersDataStore: NSObject {
     }
     
     func addTrackerCategory (_ title: String ) {
-        let trackerCategory = Category(context: self.context)
+        let trackerCategory = Categories(context: self.context)
         trackerCategory.category_name = title
         trackerCategory.creation_date = SimpleDate(date: Date()).date
         self.appdelegate.saveContext()
@@ -45,6 +45,46 @@ public final class TrackersDataStore: NSObject {
         execution.date = SimpleDate(date: Date()).date
         execution.tracker_id = tracker_id
         appdelegate.saveContext()
+    }
+    
+    func fetchAllObjects<T>(entityName: String) -> [T] {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        do {
+            return (try? context.fetch(fetchRequest) as? [T]) ?? []
+        }
+    }
+    
+    func getObjectByID<T>(id: NSManagedObjectID) -> T? {
+        let object = (try? context.existingObject(with: id) as? T) ?? nil
+        return object
+    }
+    
+    private func fetchTrackersSortedByCategoryFields() -> [Trackers] {
+        let request = NSFetchRequest<Trackers>(entityName: "Trackers")
+        
+        // Сортировка сначала по дате создания категории
+        let categoryDateSort = NSSortDescriptor(key: "category_id.creation_date", ascending: true)
+        // Затем сортировка по UUID категории
+        let categoryUUIDSort = NSSortDescriptor(key: "category_id", ascending: true)
+        // По желанию, можно добавить еще сортировку по title трекера или другим полям
+        let trackerCreationSort = NSSortDescriptor(key: "creation_date", ascending: true)
+        
+        request.sortDescriptors = [categoryDateSort, categoryUUIDSort, trackerCreationSort]
+        
+        do {
+            return (try? context.fetch(request) as? [Trackers]) ?? []
+        }
+    }
+    
+    private func fetchCategoriesSortedByDate() -> [Categories] {
+        let request = NSFetchRequest<Categories>(entityName: "Categories")
+        let categoryDateSort = NSSortDescriptor(key: "creation_date", ascending: true)
+        let categoryUUIDSort = NSSortDescriptor(key: "category_id", ascending: true)
+        request.sortDescriptors = [categoryDateSort, categoryUUIDSort]
+        do {
+            return (try? context.fetch(request) as? [Categories]) ?? []
+        }
+        
     }
     
 }
