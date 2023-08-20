@@ -59,13 +59,15 @@ public final class TrackersDataStore: NSObject {
     
     // MARK: - INTERACT WITH
     func interactWithExecution(date: Date, trackerId: UUID) {
-        let fetchRequest: NSFetchRequest<Executions> = Executions.fetchRequest()
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Executions.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(Executions.date), date as CVarArg, #keyPath(Executions.tracker_id), trackerId as CVarArg)
+        fetchRequest.resultType = .managedObjectIDResultType
         do {
-            let existingExecutions = try context.fetch(fetchRequest)
+            let existingExecutions = try context.fetch(fetchRequest) as! [NSManagedObjectID]
             if existingExecutions.isEmpty {
                 attachExecution(toDate: date, trackerId: trackerId)
-            } else if let objectId = existingExecutions.first?.objectID {
+            } else {
+                let objectId = existingExecutions.first!
                 detachExecution(byObjectId: objectId)
             }
         } catch {
@@ -108,26 +110,63 @@ public final class TrackersDataStore: NSObject {
         return fetchAllObjects<Trackers>(request: request)
     }
     
-    // MARK: - FETCH ALL CATEGORIES WITH SORT
-    private func fetchCategoriesSortedByDate() -> [Categories] {
+    private func fetchCategoriesSortedByDate(plannedDay substring: String, searchQuery: String) -> [Categories] {
         let request = NSFetchRequest<Categories>(entityName: "Categories")
         let categoryDateSort = NSSortDescriptor(key: "creation_date", ascending: true)
         let categoryUUIDSort = NSSortDescriptor(key: "category_id", ascending: true)
+
+        // Предикат для отбора категорий, основываясь на их трекерах
+        request.predicate = NSPredicate(format: "ANY category_to_trackers.shedule CONTAINS %@ AND ANY category_to_trackers.title CONTAINS[cd] %@",
+                                        substring, searchQuery)
+
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort]
+
         do {
             return fetchAllObjects<Categories>(request: request)
         }
     }
+
     
     // MARK: - FETCH ALL TRACKERS IN CATEGORY
-    private func fetchAllTrackersInCategory(_ categoryId: UUID) -> [Trackers] {
+    private func fetchAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> [Trackers] {
         let request = NSFetchRequest<Trackers>(entityName: "Trackers")
         let trackerCreationSort = NSSortDescriptor(key: "creation_date", ascending: true)
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(Trackers.category_id), categoryId as CVarArg)
+        
+        // Предикат для поиска трекеров, которые:
+        // 1) Принадлежат определенной категории
+        // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
+        // 3) Содержат searchQuery в поле title
+        request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
+                                        #keyPath(Trackers.category_id), categoryId as CVarArg,
+                                        #keyPath(Trackers.shedule), substring,
+                                        #keyPath(Trackers.shedule),
+                                        #keyPath(Trackers.tracker_title), searchQuery)
+        
         request.sortDescriptors = [trackerCreationSort]
-        do {
-            return fetchAllObjects<Trackers>(request: request)
-        }
+        return fetchAllObjects<Trackers>(request: request)
     }
+
+
+    
+    // MARK: - COUNT TRACKERS IN CATEGORY
+    private func countAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> Int {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Trackers")
+        
+        // Предикат для поиска трекеров, которые:
+        // 1) Принадлежат определенной категории
+        // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
+        // 3) Содержат searchQuery в поле title
+        request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
+                                        #keyPath(Trackers.category_id), categoryId as CVarArg,
+                                        #keyPath(Trackers.shedule), substring,
+                                        #keyPath(Trackers.shedule),
+                                        #keyPath(Trackers.tracker_title), searchQuery)
+        
+        request.resultType = .countResultType
+
+        let count = (try? context.count(for: request)) ?? 0
+        return count
+    }
+
     
 }
