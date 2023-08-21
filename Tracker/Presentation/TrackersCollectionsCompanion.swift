@@ -23,7 +23,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let responce = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
+        let responce = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
         let trackerCategory = responce.categoryies[section].id
         let quantity = responce.trackers.filter({ $0.categoryId ==  trackerCategory}).count
         return quantity
@@ -31,7 +31,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
-        let response = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
+        let response = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
         let trackerCategory = response.categoryies[indexPath.section].id
         let tracker = response.trackers.filter({$0.categoryId == trackerCategory})[indexPath.row]
         let days = repository.howManyDaysIsTrackerDone(trackerId: tracker.id)
@@ -97,7 +97,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
         
         if kind == UICollectionView.elementKindSectionHeader {
-            let category = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies[indexPath.section]
+            let category = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies[indexPath.section]
             view.titleLabel.text = category.categoryTitle
         }
         
@@ -105,7 +105,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        let quantity = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies.count
+        let quantity = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies.count
         delegate.quantityTernar(quantity)
         return quantity
     }

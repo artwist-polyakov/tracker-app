@@ -19,7 +19,7 @@ class TrackersRepositoryImplCoreData: TrackersRepositoryProtocol{
         return TrackersSearchResponse(categoryies: [], trackers: [], executions: [])
     }
     
-    func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> TrackersSearchResponse {
+    func getAllDataPlannedTo(date: SimpleDate, titleFilter: String?) -> TrackersSearchResponse {
         return TrackersSearchResponse(categoryies: [], trackers: [], executions: [])
     }
     

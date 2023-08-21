@@ -52,7 +52,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         return response
     }
     
-    func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> TrackersSearchResponse {
+    func getAllDataPlannedTo(date: SimpleDate, titleFilter: String?) -> TrackersSearchResponse {
         let dayOfWeek = String(date.weekDayNum)
         
         // Фильтруем трекеры по дате и названию
