@@ -22,8 +22,8 @@ public final class TrackersDataStoreImpl: NSObject {
     // MARK: - ADD CATEGORY
     func addTrackerCategory (_ title: String ) {
         let trackerCategory = CategoriesCoreData(context: self.context)
-        trackerCategory.category_name = title
-        trackerCategory.creation_date = SimpleDate(date: Date()).date
+        trackerCategory.title = title
+        trackerCategory.creationDate = SimpleDate(date: Date()).date
         self.appdelegate.saveContext()
     }
     
@@ -35,19 +35,19 @@ public final class TrackersDataStoreImpl: NSObject {
                     categoryId: UUID
     ) {
         let tracker = TrackersCoreData(context: self.context)
-        tracker.category_id = categoryId
-        tracker.tracker_title = title
-        tracker.tracker_color = Int16(color)
-        tracker.tracker_emoji = Int16(icon)
+        tracker.categoryId = categoryId
+        tracker.title = title
+        tracker.color = Int16(color)
+        tracker.icon = Int16(icon)
         tracker.shedule = planedFor
-        tracker.creation_date = SimpleDate(date: Date()).date
+        tracker.creationDate = SimpleDate(date: Date()).date
         appdelegate.saveContext()
     }
     
     private func attachExecution(toDate date: Date, trackerId: UUID) {
         let newExecution = ExecutionsCoreData(context: context)
         newExecution.date = date
-        newExecution.tracker_id = trackerId
+        newExecution.trackerId = trackerId
         appdelegate.saveContext()
     }
     
@@ -61,7 +61,7 @@ public final class TrackersDataStoreImpl: NSObject {
     // MARK: - INTERACT WITH
     func interactWithExecution(date: Date, trackerId: UUID) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.tracker_id), trackerId as NSUUID)
+        fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
         fetchRequest.resultType = .managedObjectIDResultType
         do {
             let existingExecutions = try context.fetch(fetchRequest) as! [NSManagedObjectID]
@@ -113,8 +113,8 @@ public final class TrackersDataStoreImpl: NSObject {
     
     private func fetchCategoriesSortedByDate(plannedDay substring: String, searchQuery: String) -> [CategoriesCoreData] {
         let request = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
-        let categoryDateSort = NSSortDescriptor(key: "creation_date", ascending: true)
-        let categoryUUIDSort = NSSortDescriptor(key: "category_id", ascending: true)
+        let categoryDateSort = NSSortDescriptor(key: "creationDate", ascending: true)
+        let categoryUUIDSort = NSSortDescriptor(key: "id", ascending: true)
 
         // Предикат для отбора категорий, основываясь на их трекерах
         request.predicate = NSPredicate(format: "ANY category_to_trackers.shedule CONTAINS %@ AND ANY category_to_trackers.title CONTAINS[cd] %@",
@@ -138,10 +138,10 @@ public final class TrackersDataStoreImpl: NSObject {
         // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
         // 3) Содержат searchQuery в поле title
         request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                        #keyPath(TrackersCoreData.category_id), categoryId as NSUUID,
+                                        #keyPath(TrackersCoreData.categoryId), categoryId as NSUUID,
                                         #keyPath(TrackersCoreData.shedule), substring,
                                         #keyPath(TrackersCoreData.shedule),
-                                        #keyPath(TrackersCoreData.tracker_title), searchQuery)
+                                        #keyPath(TrackersCoreData.title), searchQuery)
         
         request.sortDescriptors = [trackerCreationSort]
         return fetchAllObjects<TrackersCoreData>(request: request)
@@ -158,10 +158,10 @@ public final class TrackersDataStoreImpl: NSObject {
         // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
         // 3) Содержат searchQuery в поле title
         request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                        #keyPath(TrackersCoreData.category_id), categoryId as NSUUID,
+                                        #keyPath(TrackersCoreData.categoryId), categoryId as NSUUID,
                                         #keyPath(TrackersCoreData.shedule), substring,
                                         #keyPath(TrackersCoreData.shedule),
-                                        #keyPath(TrackersCoreData.tracker_title), searchQuery)
+                                        #keyPath(TrackersCoreData.title), searchQuery)
         
         request.resultType = .countResultType
 
@@ -174,7 +174,7 @@ public final class TrackersDataStoreImpl: NSObject {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ExecutionsCoreData")
         request.predicate = NSPredicate(format: "%K == %@ AND %K == %@",
                                         #keyPath(ExecutionsCoreData.date), date as NSDate,
-                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as NSUUID)
+                                        #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
 
         request.resultType = .countResultType
         let count = (try? context.count(for: request)) ?? 0
@@ -185,7 +185,7 @@ public final class TrackersDataStoreImpl: NSObject {
     private func isTrackerDoneAtDate(_ trackerId: UUID) -> Int {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ExecutionsCoreData")
         request.predicate = NSPredicate(format: "%K == %@",
-                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as NSUUID)
+                                        #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
         request.resultType = .countResultType
         let count = (try? context.count(for: request)) ?? 0
         return count

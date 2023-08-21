@@ -36,6 +36,17 @@ final class TrackersDataProvider: NSObject {
         case failedToInitializeContext
     }
     
+    var selectedDate: SimpleDate = SimpleDate(date: Date()) {
+        didSet {
+            
+        }
+    }
+    var typedText: String = "" {
+        didSet {
+            
+        }
+    }
+    
     weak var delegate: TrackersDataProviderDelegate?
     
     private let context: NSManagedObjectContext
@@ -49,7 +60,7 @@ final class TrackersDataProvider: NSObject {
     // Здесь я добавлю только один для `CategoriesCoreData` в качестве примера.
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creation_date", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
         let fetchedResultsController = NSFetchedResultsController(
                                         fetchRequest: fetchRequest,

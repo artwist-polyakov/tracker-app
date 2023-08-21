@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22F82" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CategoriesCoreData" representedClassName="CategoriesCoreData" syncable="YES" codeGenerationType="class">
-        <attribute name="category_id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="category_name" attributeType="String"/>
-        <attribute name="creation_date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
         <relationship name="category_to_trackers" toMany="YES" deletionRule="Nullify" destinationEntity="TrackersCoreData" inverseName="tracker_to_category" inverseEntity="TrackersCoreData"/>
     </entity>
     <entity name="ExecutionsCoreData" representedClassName="ExecutionsCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="tracker_id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="trackerId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="execution_to_trackers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackersCoreData" inverseName="tracker_to_executions" inverseEntity="TrackersCoreData"/>
     </entity>
     <entity name="TrackersCoreData" representedClassName="TrackersCoreData" syncable="YES" codeGenerationType="class">
-        <attribute name="category_id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="creation_date" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="executed_on" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="categoryId" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="color" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="icon" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="shedule" optional="YES" attributeType="String"/>
-        <attribute name="tracker_color" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="tracker_emoji" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="tracker_id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
         <attribute name="tracker_title" attributeType="String"/>
         <relationship name="tracker_to_category" maxCount="1" deletionRule="Nullify" destinationEntity="CategoriesCoreData" inverseName="category_to_trackers" inverseEntity="CategoriesCoreData"/>
         <relationship name="tracker_to_executions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ExecutionsCoreData" inverseName="execution_to_trackers" inverseEntity="ExecutionsCoreData"/>
