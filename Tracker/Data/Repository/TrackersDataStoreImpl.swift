@@ -7,12 +7,13 @@
 
 import Foundation
 import CoreData
+import UIKit
 
-public final class TrackersDataStore: NSObject {
-    public static let shared = TrackersDataStore()
+public final class TrackersDataStoreImpl: NSObject {
+    public static let shared = TrackersDataStoreImpl()
     private override init () {}
     
-    private let appdelegate: AppDelegate = AppDelegate()
+    private let appdelegate = UIApplication.shared.delegate as! AppDelegate
     private var context: NSManagedObjectContext {
         appdelegate.persistentContainer.viewContext
     }
@@ -60,7 +61,7 @@ public final class TrackersDataStore: NSObject {
     // MARK: - INTERACT WITH
     func interactWithExecution(date: Date, trackerId: UUID) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as CVarArg, #keyPath(ExecutionsCoreData.tracker_id), trackerId as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.tracker_id), trackerId as NSUUID)
         fetchRequest.resultType = .managedObjectIDResultType
         do {
             let existingExecutions = try context.fetch(fetchRequest) as! [NSManagedObjectID]
@@ -137,7 +138,7 @@ public final class TrackersDataStore: NSObject {
         // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
         // 3) Содержат searchQuery в поле title
         request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                        #keyPath(TrackersCoreData.category_id), categoryId as CVarArg,
+                                        #keyPath(TrackersCoreData.category_id), categoryId as NSUUID,
                                         #keyPath(TrackersCoreData.shedule), substring,
                                         #keyPath(TrackersCoreData.shedule),
                                         #keyPath(TrackersCoreData.tracker_title), searchQuery)
@@ -157,7 +158,7 @@ public final class TrackersDataStore: NSObject {
         // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
         // 3) Содержат searchQuery в поле title
         request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                        #keyPath(TrackersCoreData.category_id), categoryId as CVarArg,
+                                        #keyPath(TrackersCoreData.category_id), categoryId as NSUUID,
                                         #keyPath(TrackersCoreData.shedule), substring,
                                         #keyPath(TrackersCoreData.shedule),
                                         #keyPath(TrackersCoreData.tracker_title), searchQuery)
@@ -172,8 +173,9 @@ public final class TrackersDataStore: NSObject {
     private func isTrackerDoneAtDate(_ trackerId: UUID, _ date: Date) -> Bool {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ExecutionsCoreData")
         request.predicate = NSPredicate(format: "%K == %@ AND %K == %@",
-                                        #keyPath(ExecutionsCoreData.date), date as CVarArg,
-                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as CVarArg)
+                                        #keyPath(ExecutionsCoreData.date), date as NSDate,
+                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as NSUUID)
+
         request.resultType = .countResultType
         let count = (try? context.count(for: request)) ?? 0
         return count > 0
@@ -183,7 +185,7 @@ public final class TrackersDataStore: NSObject {
     private func isTrackerDoneAtDate(_ trackerId: UUID) -> Int {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ExecutionsCoreData")
         request.predicate = NSPredicate(format: "%K == %@",
-                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as CVarArg)
+                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as NSUUID)
         request.resultType = .countResultType
         let count = (try? context.count(for: request)) ?? 0
         return count
