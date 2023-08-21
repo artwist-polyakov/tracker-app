@@ -94,7 +94,7 @@ public final class TrackersDataStore: NSObject {
         return object
     }
     
-    
+    // MARK: ALL TRACKERS SORTED
     private func fetchTrackersSortedByCategoryFields() -> [Trackers] {
         let request = NSFetchRequest<Trackers>(entityName: "Trackers")
         
@@ -167,6 +167,28 @@ public final class TrackersDataStore: NSObject {
         let count = (try? context.count(for: request)) ?? 0
         return count
     }
+    
+    // MARK: - IS TRACKER DONE AT DATE
+    private func isTrackerDoneAtDate(_ trackerId: UUID, _ date: Date) -> Bool {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Executions")
+        request.predicate = NSPredicate(format: "%K == %@ AND %K == %@",
+                                        #keyPath(Executions.date), date as CVarArg,
+                                        #keyPath(Executions.tracker_id), trackerId as CVarArg)
+        request.resultType = .countResultType
+        let count = (try? context.count(for: request)) ?? 0
+        return count > 0
+    }
+    
+    // MARK: - HOW MANY EXECUTIONS TRACKER HAS
+    private func isTrackerDoneAtDate(_ trackerId: UUID) -> Int {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Executions")
+        request.predicate = NSPredicate(format: "%K == %@",
+                                        #keyPath(Executions.tracker_id), trackerId as CVarArg)
+        request.resultType = .countResultType
+        let count = (try? context.count(for: request)) ?? 0
+        return count
+    }
+
 
     
 }

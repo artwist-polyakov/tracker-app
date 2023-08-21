@@ -191,6 +191,7 @@
 		AF93323E2A72B59300BA0DB8 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				AFBF95C32A93A156007D4C7C /* Domain */,
 				AFD92E272A9008B700F36905 /* Core Data */,
 				AFCA55B72A7C202000D9A851 /* Presentation */,
 				AF93323F2A72B59300BA0DB8 /* AppDelegate.swift */,
@@ -200,6 +201,14 @@
 				AFCA55B32A7C198600D9A851 /* Data */,
 			);
 			path = Tracker;
+			sourceTree = "<group>";
+		};
+		AFBF95C32A93A156007D4C7C /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				AFCA55D42A7F895500D9A851 /* TrackersRepositoryProtocol.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 		AFCA55B32A7C198600D9A851 /* Data */ = {
@@ -229,7 +238,6 @@
 		AFCA55B52A7C19A900D9A851 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
-				AFCA55D42A7F895500D9A851 /* TrackersRepositoryProtocol.swift */,
 				AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */,
 				AF9B4AF92A913C77007EC298 /* TrackersRepositoryImplCoreData.swift */,
 				AF9B4AFB2A913DE1007EC298 /* DataStore.swift */,
