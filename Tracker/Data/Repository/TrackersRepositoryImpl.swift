@@ -8,83 +8,94 @@
 import Foundation
 final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
-    
-    
     static let shared = TrackersRepositoryImpl()
     
     private init() {}
     
-    // Изначальное наполнение данными
+    
+    // MARK: - Изначальное наполнение данными
     private var categories: [TrackerCategory] = [
-        TrackerCategory(categoryTitle: "Домашний тестовый уют",
-                        trackers: [
-                            Tracker(color: 1,
-                                    title: "Тестовый трекер 123",
-                                    icon: 1,
-                                    isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
-                                    isDoneAt: Set()
-                                   ),
-                            Tracker(color: 1,
-                                    title: "Тестовый трекер 123",
-                                    icon: 1,
-                                    isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
-                                    isDoneAt: Set([SimpleDate(date: Date())])
-                                   ),
-                            Tracker(color: 1,
-                                    title: "Тестовый трекер 123",
-                                    icon: 1,
-                                    isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
-                                    isDoneAt: Set([SimpleDate(date: Date())])
-                                   )])
+        TrackerCategory(categoryTitle: "Домашний тестовый уют")
     ]
-    func getAllTrackers() -> [TrackerCategory] {
-        return categories
+    
+    
+    private lazy var trackers: [Tracker] = [
+                                        Tracker(categoryId: categories[0].id,
+                                        color: 1,
+                                        title: "Тестовый трекер 123",
+                                        icon: 1,
+                                        isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+                                        ),
+                                        
+                                        Tracker(categoryId: categories[0].id,
+                                        color: 1,
+                                        title: "Тестовый трекер 123",
+                                        icon: 1,
+                                        isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+                                        ),
+                                        
+                                        Tracker(categoryId: categories[0].id,
+                                        color: 1,
+                                        title: "Тестовый трекер 123",
+                                        icon: 1,
+                                        isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+                                        )
+    ]
+    
+    private lazy var executions: [Execution] = [
+        Execution(day: SimpleDate(date: Date()), tracker_id: trackers[1].id),
+        Execution(day: SimpleDate(date: Date()), tracker_id: trackers[2].id)
+    ]
+    
+    func getAllTrackers() -> TrackersSearchResponse {
+        let response = TrackersSearchResponse(categoryies: categories, trackers: trackers, executions: executions)
+        return response
     }
     
-    func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> [TrackerCategory] {
+    func getAllDataPlannedTo(date: SimpleDate, titleFilter: String?) -> TrackersSearchResponse {
         let dayOfWeek = String(date.weekDayNum)
-        let filteredCategories = categories.compactMap { category -> TrackerCategory? in
-            let filteredTrackers = category.trackers.filter { tracker in
-                let matchesDateCondition = tracker.isPlannedFor.contains(dayOfWeek) || tracker.isPlannedFor.isEmpty
-                if let titleFilter = titleFilter, !titleFilter.isEmpty {
-                    return matchesDateCondition && tracker.title.localizedCaseInsensitiveContains(titleFilter)
-                } else {
-                    return matchesDateCondition
-                }
-            }
-            
-            if !filteredTrackers.isEmpty {
-                return TrackerCategory(categoryId: category.id,
-                                       categoryTitle: category.categoryTitle,
-                                       trackers: filteredTrackers)
+        
+        // Фильтруем трекеры по дате и названию
+        let filteredTrackers = trackers.filter { tracker in
+            let matchesDateCondition = tracker.isPlannedFor.contains(dayOfWeek) || tracker.isPlannedFor.isEmpty
+            if let titleFilter = titleFilter, !titleFilter.isEmpty {
+                return matchesDateCondition && tracker.title.localizedCaseInsensitiveContains(titleFilter)
             } else {
-                return nil
+                return matchesDateCondition
             }
         }
-        return filteredCategories
+        
+        // Получаем уникальные категории для отфильтрованных трекеров
+        let filteredCategoryIds = Set(filteredTrackers.map { $0.categoryId })
+        let filteredCategories = categories.filter { filteredCategoryIds.contains($0.id) }
+        
+        // Фильтруем выполнения по отфильтрованным трекерам
+        let filteredTrackerIds = Set(filteredTrackers.map { $0.id })
+        let filteredExecutions = executions.filter { filteredTrackerIds.contains($0.tracker_id) }
+        
+        return TrackersSearchResponse(categoryies: filteredCategories, trackers: filteredTrackers, executions: filteredExecutions)
     }
+
     
     func addNewTrackerToCategory(color: Int, categoryID: UUID, trackerName: String, icon: Int, plannedDaysOfWeek: String) {
-        if let categoryIndex = categories.firstIndex(where: { $0.id == categoryID }) {
-            let newTracker = Tracker(color: color, // MARK: когда будем выбирать цвета, надо проставлять
-                                     title: trackerName,
-                                     icon: icon, // MARK: когда будем выбирать цвета, надо проставлять
-                                     isPlannedFor: plannedDaysOfWeek,
-                                     isDoneAt: Set<SimpleDate>())
-            categories[categoryIndex].trackers.append(newTracker)
-        }
+        let newTracker = Tracker(categoryId: categoryID,
+                                 color: color,
+                                 title: trackerName,
+                                 icon: icon,
+                                 isPlannedFor: plannedDaysOfWeek)
+        
+        trackers.append(newTracker)
     }
     
     func interactWithTrackerDoneForDate(trackerId: UUID, date: SimpleDate) {
-        for (categoryIndex, category) in categories.enumerated() {
-            if let trackerIndex = category.trackers.firstIndex(where: { $0.id == trackerId }) {
-                let isDoneAt = categories[categoryIndex].trackers[trackerIndex].isDoneAt
-                if isDoneAt.contains(date) {
-                    categories[categoryIndex].trackers[trackerIndex].isDoneAt.remove(date)
-                } else {
-                    categories[categoryIndex].trackers[trackerIndex].isDoneAt.insert(date)
-                }
-            }
+        // Попробуем найти индекс выполнения в массиве executions
+        if let executionIndex = executions.firstIndex(where: { $0.tracker_id == trackerId && $0.day == date }) {
+            // Если выполнение найдено, удаляем его
+            executions.remove(at: executionIndex)
+        } else {
+            // В противном случае добавляем новое выполнение в массив
+            let newExecution = Execution(day: date, tracker_id: trackerId)
+            executions.append(newExecution)
         }
     }
     
@@ -94,21 +105,10 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     }
     
     func howManyDaysIsTrackerDone(trackerId: UUID) -> Int {
-        for category in categories {
-            if let tracker = category.trackers.first(where: { $0.id == trackerId }) {
-                return tracker.isDoneAt.count
-            }
-        }
-        return 0
+        return executions.filter { $0.tracker_id == trackerId }.count
     }
     
     func isTrackerDoneAtDate(trackerId: UUID, date: SimpleDate) -> Bool {
-        for category in categories {
-            if let tracker = category.trackers.first(where: { $0.id == trackerId }) {
-                return tracker.isDoneAt.contains(date)
-            }
-        }
-        return false
+        return executions.contains(where: { $0.tracker_id == trackerId && $0.day == date })
     }
-    
 }
