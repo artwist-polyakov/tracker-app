@@ -73,15 +73,9 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     
     func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date, text: String) {
-        let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date:date), titleFilter: text)[section]
-        let tracker = trackerCategory.trackers[item]
-        
+        let tracker = repository.getAllCategoriesPlannedTo(date: SimpleDate(date:date), titleFilter: text).trackers[item]
         repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))
-        
-        self.viewController.collectionView?.reloadItems(at: [IndexPath(row: item, section: section)])
-
-
-        
+        self.viewController.collectionView?.reloadItems(at: [IndexPath(row: item, section: section)])        
     }
     
 }
@@ -93,7 +87,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     
     func giveMeSelectedCategory() -> TrackerCategory {
         //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
-        return repository.getAllTrackers()[0]
+        return repository.getAllTrackers().categoryies[0]
     }
     
     func didSelectTrackerCategory(_ category: UUID) {

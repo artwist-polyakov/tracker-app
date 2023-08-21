@@ -23,24 +23,27 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")[section]
-        let quantity = trackerCategory.trackers.count
+        let responce = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
+        let trackerCategory = responce.categoryies[section].id
+        let quantity = responce.trackers.filter({ $0.categoryId ==  trackerCategory}).count
         return quantity
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
-        let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")[indexPath.section]
-        
-        let tracker = trackerCategory.trackers[indexPath.row]
+        let response = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
+        let trackerCategory = response.categoryies[indexPath.section].id
+        let tracker = response.trackers.filter({$0.categoryId == trackerCategory})[indexPath.row]
+        let days = repository.howManyDaysIsTrackerDone(trackerId: tracker.id)
+        let isDone = repository.isTrackerDoneAtDate(trackerId: tracker.id, date: SimpleDate(date: selectedDate ?? Date()))
         print("collectionView устанавливает трекер \(tracker)")
         let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
         cell.configure(
             text: tracker.title,
             emoji: Mappers.intToIconMapper(tracker.icon) ,
             sheetColor: color,
-            quantityText: Mappers.intToDaysGoneMapper(tracker.isDoneAt.count),
-            hasMark: tracker.isDoneAt.contains(SimpleDate(date:selectedDate ?? Date()))
+            quantityText: Mappers.intToDaysGoneMapper(days),
+            hasMark: isDone
         )
         
         cell.onFunctionButtonTapped = { [weak self] in
@@ -94,7 +97,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
         
         if kind == UICollectionView.elementKindSectionHeader {
-            let category = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")[indexPath.section]
+            let category = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies[indexPath.section]
             view.titleLabel.text = category.categoryTitle
         }
         
@@ -102,9 +105,9 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        let quantity = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").count
+        let quantity = repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies.count
         delegate.quantityTernar(quantity)
-        return repository.getAllCategoriesPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").count
+        return quantity
     }
     
 }
