@@ -8,18 +8,19 @@
 import Foundation
 class TrackersRepositoryImplCoreData: TrackersRepositoryProtocol{
     
+    
     static let shared = TrackersRepositoryImplCoreData()
     
     func addNewCategory(name: String) {
         return
     }
     
-    func getAllTrackers() -> [TrackerCategory] {
-        return []
+    func getAllTrackers() -> TrackersSearchResponse {
+        return TrackersSearchResponse(categoryies: [], trackers: [], executions: [])
     }
     
-    func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> [TrackerCategory] {
-        return []
+    func getAllCategoriesPlannedTo(date: SimpleDate, titleFilter: String?) -> TrackersSearchResponse {
+        return TrackersSearchResponse(categoryies: [], trackers: [], executions: [])
     }
     
     func addNewTrackerToCategory(color: Int, categoryID: UUID, trackerName: String, icon: Int, plannedDaysOfWeek: String) {

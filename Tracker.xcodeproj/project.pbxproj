@@ -15,6 +15,8 @@
 		AF9B4AFC2A913DE1007EC298 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFB2A913DE1007EC298 /* DataStore.swift */; };
 		AF9B4AFE2A913DEB007EC298 /* NullStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFD2A913DEB007EC298 /* NullStore.swift */; };
 		AF9B4B022A91470A007EC298 /* TrackersDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4B012A91470A007EC298 /* TrackersDataStore.swift */; };
+		AFBF95C02A938174007D4C7C /* Execution.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBF95BF2A938174007D4C7C /* Execution.swift */; };
+		AFBF95C22A93828F007D4C7C /* TrackersSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBF95C12A93828F007D4C7C /* TrackersSearchResponse.swift */; };
 		AFCA55A42A7AB01A00D9A851 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */; };
 		AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A52A7AB02400D9A851 /* TabBarController.swift */; };
 		AFCA55A82A7AB02C00D9A851 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A72A7AB02C00D9A851 /* TrackersViewController.swift */; };
@@ -61,6 +63,8 @@
 		AF9B4AFB2A913DE1007EC298 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		AF9B4AFD2A913DEB007EC298 /* NullStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullStore.swift; sourceTree = "<group>"; };
 		AF9B4B012A91470A007EC298 /* TrackersDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataStore.swift; sourceTree = "<group>"; };
+		AFBF95BF2A938174007D4C7C /* Execution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution.swift; sourceTree = "<group>"; };
+		AFBF95C12A93828F007D4C7C /* TrackersSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersSearchResponse.swift; sourceTree = "<group>"; };
 		AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		AFCA55A52A7AB02400D9A851 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		AFCA55A72A7AB02C00D9A851 /* TrackersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
@@ -216,6 +220,8 @@
 				AFCA55CE2A7E527500D9A851 /* TrackerCategory.swift */,
 				AFD92DF52A854BC000F36905 /* AlertModel.swift */,
 				AFD92DF72A85517500F36905 /* Constants.swift */,
+				AFBF95BF2A938174007D4C7C /* Execution.swift */,
+				AFBF95C12A93828F007D4C7C /* TrackersSearchResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -360,7 +366,9 @@
 				AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */,
 				AFCA55AC2A7C05C500D9A851 /* SupplementaryView.swift in Sources */,
 				AFCA55D72A7F96C000D9A851 /* TrackersRepositoryImpl.swift in Sources */,
+				AFBF95C02A938174007D4C7C /* Execution.swift in Sources */,
 				AF9332402A72B59300BA0DB8 /* AppDelegate.swift in Sources */,
+				AFBF95C22A93828F007D4C7C /* TrackersSearchResponse.swift in Sources */,
 				AFD92DF02A83D49900F36905 /* ScheduleViewController.swift in Sources */,
 				AFEDE0492A827A70002D8CE6 /* extension+UIView.swift in Sources */,
 				AFCA55D32A7E5CA600D9A851 /* TrackersCollectionsCompanion.swift in Sources */,

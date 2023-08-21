@@ -9,8 +9,8 @@ import Foundation
 protocol TrackersRepositoryProtocol {
     
     func addNewCategory(name:String)
-    func getAllTrackers() -> [TrackerCategory]
-    func getAllCategoriesPlannedTo(date:SimpleDate, titleFilter: String?) -> [TrackerCategory]
+    func getAllTrackers() -> TrackersSearchResponse
+    func getAllCategoriesPlannedTo(date:SimpleDate, titleFilter: String?) -> TrackersSearchResponse
     func addNewTrackerToCategory(color: Int,
                                  categoryID: UUID,
                                  trackerName: String,
