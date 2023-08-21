@@ -20,7 +20,7 @@ public final class TrackersDataStore: NSObject {
     
     // MARK: - ADD CATEGORY
     func addTrackerCategory (_ title: String ) {
-        let trackerCategory = Categories(context: self.context)
+        let trackerCategory = CategoriesCoreData(context: self.context)
         trackerCategory.category_name = title
         trackerCategory.creation_date = SimpleDate(date: Date()).date
         self.appdelegate.saveContext()
@@ -33,7 +33,7 @@ public final class TrackersDataStore: NSObject {
                     planedFor: String,
                     categoryId: UUID
     ) {
-        let tracker = Trackers(context: self.context)
+        let tracker = TrackersCoreData(context: self.context)
         tracker.category_id = categoryId
         tracker.tracker_title = title
         tracker.tracker_color = Int16(color)
@@ -44,14 +44,14 @@ public final class TrackersDataStore: NSObject {
     }
     
     private func attachExecution(toDate date: Date, trackerId: UUID) {
-        let newExecution = Executions(context: context)
+        let newExecution = ExecutionsCoreData(context: context)
         newExecution.date = date
         newExecution.tracker_id = trackerId
         appdelegate.saveContext()
     }
     
     private func detachExecution(byObjectId objectId: NSManagedObjectID) {
-        if let objectToDelete = context.object(with: objectId) as? Executions {
+        if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
             context.delete(objectToDelete)
             appdelegate.saveContext()
         }
@@ -59,8 +59,8 @@ public final class TrackersDataStore: NSObject {
     
     // MARK: - INTERACT WITH
     func interactWithExecution(date: Date, trackerId: UUID) {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Executions.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(Executions.date), date as CVarArg, #keyPath(Executions.tracker_id), trackerId as CVarArg)
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as CVarArg, #keyPath(ExecutionsCoreData.tracker_id), trackerId as CVarArg)
         fetchRequest.resultType = .managedObjectIDResultType
         do {
             let existingExecutions = try context.fetch(fetchRequest) as! [NSManagedObjectID]
@@ -95,8 +95,8 @@ public final class TrackersDataStore: NSObject {
     }
     
     // MARK: ALL TRACKERS SORTED
-    private func fetchTrackersSortedByCategoryFields() -> [Trackers] {
-        let request = NSFetchRequest<Trackers>(entityName: "Trackers")
+    private func fetchTrackersSortedByCategoryFields() -> [TrackersCoreData] {
+        let request = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         
         // Сортировка сначала по дате создания категории
         let categoryDateSort = NSSortDescriptor(key: "category_id.creation_date", ascending: true)
@@ -107,11 +107,11 @@ public final class TrackersDataStore: NSObject {
         
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort, trackerCreationSort]
         
-        return fetchAllObjects<Trackers>(request: request)
+        return fetchAllObjects<TrackersCoreData>(request: request)
     }
     
-    private func fetchCategoriesSortedByDate(plannedDay substring: String, searchQuery: String) -> [Categories] {
-        let request = NSFetchRequest<Categories>(entityName: "Categories")
+    private func fetchCategoriesSortedByDate(plannedDay substring: String, searchQuery: String) -> [CategoriesCoreData] {
+        let request = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         let categoryDateSort = NSSortDescriptor(key: "creation_date", ascending: true)
         let categoryUUIDSort = NSSortDescriptor(key: "category_id", ascending: true)
 
@@ -122,14 +122,14 @@ public final class TrackersDataStore: NSObject {
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort]
 
         do {
-            return fetchAllObjects<Categories>(request: request)
+            return fetchAllObjects<CategoriesCoreData>(request: request)
         }
     }
 
     
     // MARK: - FETCH ALL TRACKERS IN CATEGORY
-    private func fetchAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> [Trackers] {
-        let request = NSFetchRequest<Trackers>(entityName: "Trackers")
+    private func fetchAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> [TrackersCoreData] {
+        let request = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         let trackerCreationSort = NSSortDescriptor(key: "creation_date", ascending: true)
         
         // Предикат для поиска трекеров, которые:
@@ -137,30 +137,30 @@ public final class TrackersDataStore: NSObject {
         // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
         // 3) Содержат searchQuery в поле title
         request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                        #keyPath(Trackers.category_id), categoryId as CVarArg,
-                                        #keyPath(Trackers.shedule), substring,
-                                        #keyPath(Trackers.shedule),
-                                        #keyPath(Trackers.tracker_title), searchQuery)
+                                        #keyPath(TrackersCoreData.category_id), categoryId as CVarArg,
+                                        #keyPath(TrackersCoreData.shedule), substring,
+                                        #keyPath(TrackersCoreData.shedule),
+                                        #keyPath(TrackersCoreData.tracker_title), searchQuery)
         
         request.sortDescriptors = [trackerCreationSort]
-        return fetchAllObjects<Trackers>(request: request)
+        return fetchAllObjects<TrackersCoreData>(request: request)
     }
 
 
     
     // MARK: - COUNT TRACKERS IN CATEGORY
     private func countAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> Int {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Trackers")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackersCoreData")
         
         // Предикат для поиска трекеров, которые:
         // 1) Принадлежат определенной категории
         // 2) Содержат подстроку в поле shedule или имеют пустое значение shedule
         // 3) Содержат searchQuery в поле title
         request.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                        #keyPath(Trackers.category_id), categoryId as CVarArg,
-                                        #keyPath(Trackers.shedule), substring,
-                                        #keyPath(Trackers.shedule),
-                                        #keyPath(Trackers.tracker_title), searchQuery)
+                                        #keyPath(TrackersCoreData.category_id), categoryId as CVarArg,
+                                        #keyPath(TrackersCoreData.shedule), substring,
+                                        #keyPath(TrackersCoreData.shedule),
+                                        #keyPath(TrackersCoreData.tracker_title), searchQuery)
         
         request.resultType = .countResultType
 
@@ -170,10 +170,10 @@ public final class TrackersDataStore: NSObject {
     
     // MARK: - IS TRACKER DONE AT DATE
     private func isTrackerDoneAtDate(_ trackerId: UUID, _ date: Date) -> Bool {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Executions")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ExecutionsCoreData")
         request.predicate = NSPredicate(format: "%K == %@ AND %K == %@",
-                                        #keyPath(Executions.date), date as CVarArg,
-                                        #keyPath(Executions.tracker_id), trackerId as CVarArg)
+                                        #keyPath(ExecutionsCoreData.date), date as CVarArg,
+                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as CVarArg)
         request.resultType = .countResultType
         let count = (try? context.count(for: request)) ?? 0
         return count > 0
@@ -181,14 +181,11 @@ public final class TrackersDataStore: NSObject {
     
     // MARK: - HOW MANY EXECUTIONS TRACKER HAS
     private func isTrackerDoneAtDate(_ trackerId: UUID) -> Int {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Executions")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "ExecutionsCoreData")
         request.predicate = NSPredicate(format: "%K == %@",
-                                        #keyPath(Executions.tracker_id), trackerId as CVarArg)
+                                        #keyPath(ExecutionsCoreData.tracker_id), trackerId as CVarArg)
         request.resultType = .countResultType
         let count = (try? context.count(for: request)) ?? 0
         return count
     }
-
-
-    
 }
