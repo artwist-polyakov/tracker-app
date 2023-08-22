@@ -23,7 +23,7 @@ protocol TrackersDataProviderDelegate: AnyObject {
 protocol TrackersDataProviderProtocol {
     var numberOfSections: Int { get }
     func numberOfRowsInSection(_ section: Int) -> Int
-    func object(at indexPath: IndexPath) -> NSManagedObject?
+    func object(at indexPath: IndexPath) -> TrackersRecord?
     func addCategory(_ category: TrackerCategory) throws
     func addTracker(_ tracker: Tracker) throws
     func addExecution(_ execution: Execution) throws
@@ -56,11 +56,31 @@ final class TrackersDataProvider: NSObject {
     private var deletedIndexes: IndexSet?
     private var updatedIndexes: IndexSet?
     
-    // Вам потребуется настроить NSFetchedResultsController для каждого типа объекта.
-    // Здесь я добавлю только один для `CategoriesCoreData` в качестве примера.
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(
+                                        fetchRequest: fetchRequest,
+                                        managedObjectContext: context,
+                                        sectionNameKeyPath: nil,
+                                        cacheName: nil)
+        fetchedResultsController.delegate = self
+        try? fetchedResultsController.performFetch()
+        return fetchedResultsController
+    }()
+    
+    private lazy var trackersFetchedResultsController:  NSFetchedResultsController<TrackersCoreData> = {
+        let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true),
+            NSSortDescriptor(key:"tracker_to_category.creationDate", ascending: false),
+            NSSortDescriptor(key:"tracker_to_category.id", ascending: false)]
+        
+        
+        fetchRequest.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
+                            #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
+                            #keyPath(TrackersCoreData.shedule),
+                            #keyPath(TrackersCoreData.title), typedText)
         
         let fetchedResultsController = NSFetchedResultsController(
                                         fetchRequest: fetchRequest,
@@ -82,7 +102,6 @@ final class TrackersDataProvider: NSObject {
         self.dataStore = dataStore
     }
 }
-
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
@@ -119,3 +138,33 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
 }
 
+extension TrackersDataProvider: TrackersDataProviderProtocol {
+    var numberOfSections: Int {
+        return categoriesFetchedResultsController.sections?.count ?? 0  }
+    
+    func numberOfRowsInSection(_ section: Int) -> Int {
+        trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
+    }
+    
+    func object(at indexPath: IndexPath) -> TrackersRecord? {
+        trackersFetchedResultsController.object(at: indexPath) as! any TrackersRecord
+    }
+    
+    func addCategory(_ category: TrackerCategory) throws {
+        <#code#>
+    }
+    
+    func addTracker(_ tracker: Tracker) throws {
+        <#code#>
+    }
+    
+    func addExecution(_ execution: Execution) throws {
+        <#code#>
+    }
+    
+    func deleteObject(at indexPath: IndexPath) throws {
+        <#code#>
+    }
+    
+    
+}

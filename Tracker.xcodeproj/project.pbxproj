@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AF5D5B362A93F12300498D80 /* TrackersDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B352A93F12300498D80 /* TrackersDataStore.swift */; };
 		AF5D5B382A93F13D00498D80 /* CategoriesDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B372A93F13D00498D80 /* CategoriesDataStore.swift */; };
 		AF5D5B3A2A93F15E00498D80 /* ExecutionsDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B392A93F15E00498D80 /* ExecutionsDataStore.swift */; };
 		AF5D5B3C2A93F21700498D80 /* TrackersRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B3B2A93F21700498D80 /* TrackersRecord.swift */; };
@@ -19,7 +18,7 @@
 		AF9332492A72B59400BA0DB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF9332482A72B59400BA0DB8 /* Assets.xcassets */; };
 		AF93324C2A72B59400BA0DB8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF93324A2A72B59400BA0DB8 /* LaunchScreen.storyboard */; };
 		AF9B4AFA2A913C77007EC298 /* TrackersRepositoryImplCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AF92A913C77007EC298 /* TrackersRepositoryImplCoreData.swift */; };
-		AF9B4AFC2A913DE1007EC298 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFB2A913DE1007EC298 /* DataStore.swift */; };
+		AF9B4AFC2A913DE1007EC298 /* TrackersDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFB2A913DE1007EC298 /* TrackersDataStore.swift */; };
 		AF9B4AFE2A913DEB007EC298 /* NullStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFD2A913DEB007EC298 /* NullStore.swift */; };
 		AF9B4B022A91470A007EC298 /* TrackersDataStoreImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4B012A91470A007EC298 /* TrackersDataStoreImpl.swift */; };
 		AFBF95C02A938174007D4C7C /* Execution.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBF95BF2A938174007D4C7C /* Execution.swift */; };
@@ -61,7 +60,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AF5D5B352A93F12300498D80 /* TrackersDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataStore.swift; sourceTree = "<group>"; };
 		AF5D5B372A93F13D00498D80 /* CategoriesDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesDataStore.swift; sourceTree = "<group>"; };
 		AF5D5B392A93F15E00498D80 /* ExecutionsDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionsDataStore.swift; sourceTree = "<group>"; };
 		AF5D5B3B2A93F21700498D80 /* TrackersRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRecord.swift; sourceTree = "<group>"; };
@@ -75,7 +73,7 @@
 		AF93324B2A72B59400BA0DB8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AF93324D2A72B59400BA0DB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AF9B4AF92A913C77007EC298 /* TrackersRepositoryImplCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRepositoryImplCoreData.swift; sourceTree = "<group>"; };
-		AF9B4AFB2A913DE1007EC298 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		AF9B4AFB2A913DE1007EC298 /* TrackersDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataStore.swift; sourceTree = "<group>"; };
 		AF9B4AFD2A913DEB007EC298 /* NullStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullStore.swift; sourceTree = "<group>"; };
 		AF9B4B012A91470A007EC298 /* TrackersDataStoreImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataStoreImpl.swift; sourceTree = "<group>"; };
 		AFBF95BF2A938174007D4C7C /* Execution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution.swift; sourceTree = "<group>"; };
@@ -183,7 +181,7 @@
 		AF5D5B342A93F10A00498D80 /* DataStore */ = {
 			isa = PBXGroup;
 			children = (
-				AF5D5B352A93F12300498D80 /* TrackersDataStore.swift */,
+				AF9B4AFB2A913DE1007EC298 /* TrackersDataStore.swift */,
 				AF5D5B372A93F13D00498D80 /* CategoriesDataStore.swift */,
 				AF5D5B392A93F15E00498D80 /* ExecutionsDataStore.swift */,
 			);
@@ -270,7 +268,6 @@
 			children = (
 				AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */,
 				AF9B4AF92A913C77007EC298 /* TrackersRepositoryImplCoreData.swift */,
-				AF9B4AFB2A913DE1007EC298 /* DataStore.swift */,
 				AF9B4AFD2A913DEB007EC298 /* NullStore.swift */,
 				AF9B4B012A91470A007EC298 /* TrackersDataStoreImpl.swift */,
 			);
@@ -421,7 +418,7 @@
 				AFCA55BB2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift in Sources */,
 				AF5D5B382A93F13D00498D80 /* CategoriesDataStore.swift in Sources */,
 				AFCA55DB2A7FE81800D9A851 /* TrackerTypeViewController.swift in Sources */,
-				AF9B4AFC2A913DE1007EC298 /* DataStore.swift in Sources */,
+				AF9B4AFC2A913DE1007EC298 /* TrackersDataStore.swift in Sources */,
 				AF5D5B402A93F3AF00498D80 /* CategoriesRecord.swift in Sources */,
 				AFCA55B22A7C187900D9A851 /* Tracker.swift in Sources */,
 				AFCA55C72A7D5BB000D9A851 /* SimpleDate.swift in Sources */,
@@ -439,7 +436,6 @@
 				AFD92DF82A85517500F36905 /* Constants.swift in Sources */,
 				AF9B4AFE2A913DEB007EC298 /* NullStore.swift in Sources */,
 				AF9B4AFA2A913C77007EC298 /* TrackersRepositoryImplCoreData.swift in Sources */,
-				AF5D5B362A93F12300498D80 /* TrackersDataStore.swift in Sources */,
 				AFCA55E32A7FF09C00D9A851 /* TrackerTypeDelegate.swift in Sources */,
 				AFCA55EB2A8157DB00D9A851 /* ColorCell.swift in Sources */,
 				AFCA55E92A81575C00D9A851 /* IconCell.swift in Sources */,
