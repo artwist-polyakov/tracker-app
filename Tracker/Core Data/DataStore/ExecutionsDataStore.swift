@@ -9,6 +9,5 @@ import CoreData
 
 protocol ExecutionsDataStore {
     var managedObjectContext: NSManagedObjectContext? { get }
-    func add(_ record: ExecutionsRecord) throws
-    func delete(_ record: NSManagedObject) throws
+    func interactWith(_ record: Execution) throws
 }

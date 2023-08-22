@@ -50,7 +50,9 @@ final class TrackersDataProvider: NSObject {
     weak var delegate: TrackersDataProviderDelegate?
     
     private let context: NSManagedObjectContext
-    private let dataStore: TrackersDataStore
+    private let trackersDataStore: TrackersDataStore
+    private let categoriesDataStore: CategoriesDataStore
+    private let executionsDataStore: ExecutionsDataStore
 
     private var insertedIndexes: IndexSet?
     private var deletedIndexes: IndexSet?
@@ -92,14 +94,19 @@ final class TrackersDataProvider: NSObject {
         return fetchedResultsController
     }()
     
-    init(_ dataStore: TrackersDataStore, delegate: TrackersDataProviderDelegate)
+    init(trackersStore trackersDataStore: TrackersDataStore,
+         categoriesStore categoriesDataStore: CategoriesDataStore,
+         executionsStore executionsDataStore: ExecutionsDataStore,
+         delegate: TrackersDataProviderDelegate)
         throws {
-        guard let context = dataStore.managedObjectContext else {
+        guard let context = trackersDataStore.managedObjectContext else {
             throw TrackersDataProviderError.failedToInitializeContext
         }
         self.delegate = delegate
         self.context = context
-        self.dataStore = dataStore
+        self.trackersDataStore = trackersDataStore
+        self.categoriesDataStore = categoriesDataStore
+        self.executionsDataStore = executionsDataStore
     }
 }
 
@@ -147,23 +154,24 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func object(at indexPath: IndexPath) -> TrackersRecord? {
-        trackersFetchedResultsController.object(at: indexPath) as! any TrackersRecord
+        trackersFetchedResultsController.object(at: indexPath) as? any TrackersRecord
     }
     
     func addCategory(_ category: TrackerCategory) throws {
-        <#code#>
+        try categoriesDataStore.add(category)
     }
     
     func addTracker(_ tracker: Tracker) throws {
-        <#code#>
+        try trackersDataStore.add(tracker)
     }
     
     func addExecution(_ execution: Execution) throws {
-        <#code#>
+        try executionsDataStore.interactWith(execution)
     }
     
     func deleteObject(at indexPath: IndexPath) throws {
-        <#code#>
+        let record = trackersFetchedResultsController.object(at: indexPath)
+        try? trackersDataStore.delete(record)
     }
     
     
