@@ -33,7 +33,8 @@ final class DataStore {
         do {
             container = try NSPersistentContainer.load(name: modelName, model: model, url: storeURL)
             context = container.newBackgroundContext()
-        } catch {
+        } catch let error as NSError {
+            print("Произошла ошибка при инициализации dataStore: \(error.localizedDescription)")
             throw StoreError.failedToLoadPersistentContainer(error)
         }
     }
@@ -101,7 +102,7 @@ extension DataStore: TrackersDataStore {
                 print(trackersCoreData)
                 do {
                     try context.save()
-                } catch {
+                } catch let error as NSError {
                     print("Ошибка при сохранении контекста: \(error)")
                 }
                 

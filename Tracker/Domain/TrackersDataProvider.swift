@@ -163,6 +163,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     private func reloadData() {
+        print("Метод reloadData вызван.")
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
         do {
@@ -172,10 +173,12 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             print("Error performing fetch: \(error)")
         }
         do {
+            print(" try trackersFetchedResultsController")
             try trackersFetchedResultsController.performFetch()
         } catch let error as NSError  {
             print("Error performing fetch: \(error)")
         }
+        print("Метод reloadData завершен")
     }
 }
 
@@ -190,10 +193,14 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     
     var numberOfSections: Int {
-        return categoriesFetchedResultsController.sections?.count ?? 0  }
+        let result = categoriesFetchedResultsController.sections?.count ?? 0
+        print("Метод numberOfSections вызван. Резульатат \(result)")
+        
+        return result}
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
+        print("Метод numberOfRowsInSection вызван для секции \(section).")
+        return trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     func object(at indexPath: IndexPath) -> TrackersRecord? {

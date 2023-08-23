@@ -23,8 +23,8 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
                 delegate: self
             )
             return provider
-        } catch {
-            print("Данные недоступны.")
+        } catch let error as NSError {
+            Swift.print("Данные недоступны. Ошибка \(error)")
             return nil
         }
     }()
@@ -142,10 +142,14 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
 }
 
 extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
+    
     func didUpdate(_ update: TrackersDataUpdate) {
+        print("Метод didUpdate вызван.")
         viewController.collectionView?.performBatchUpdates{
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+            Swift.print("Вставка элементов по индексам: \(insertedIndexPaths)")
+            Swift.print("Удаление элементов по индексам: \(deletedIndexPaths)")
             viewController.collectionView?.insertItems(at: insertedIndexPaths)
             viewController.collectionView?.deleteItems(at: deletedIndexPaths)
             
