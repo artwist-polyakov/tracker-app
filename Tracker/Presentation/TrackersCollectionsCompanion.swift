@@ -51,43 +51,39 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let responce = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
-        let trackerCategory = responce.categoryies[section].id
-        let quantity = responce.trackers.filter({ $0.categoryId ==  trackerCategory}).count
-        return quantity
+        return dataProvider?.numberOfRowsInSection(section) ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
-        let response = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "")
-        let trackerCategory = response.categoryies[indexPath.section].id
-        let tracker = response.trackers.filter({$0.categoryId == trackerCategory})[indexPath.row]
-        let days = repository.howManyDaysIsTrackerDone(trackerId: tracker.id)
-        let isDone = repository.isTrackerDoneAtDate(trackerId: tracker.id, date: SimpleDate(date: selectedDate ?? Date()))
-        print("collectionView устанавливает трекер \(tracker)")
-        let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
-        cell.configure(
-            text: tracker.title,
-            emoji: Mappers.intToIconMapper(tracker.icon) ,
-            sheetColor: color,
-            quantityText: Mappers.intToDaysGoneMapper(days),
-            hasMark: isDone
-        )
+        
+        if let tracker = dataProvider?.object(at: indexPath) {
+            let days = repository.howManyDaysIsTrackerDone(trackerId: tracker.trackerId)
+            let isDone = repository.isTrackerDoneAtDate(trackerId: tracker.trackerId, date: SimpleDate(date: selectedDate ?? Date()))
+            
+            let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
+            cell.configure(
+                text: tracker.title,
+                emoji: Mappers.intToIconMapper(tracker.icon),
+                sheetColor: color,
+                quantityText: Mappers.intToDaysGoneMapper(days),
+                hasMark: isDone
+            )
+        }
         
         cell.onFunctionButtonTapped = { [weak self] in
             let selectdate = self?.selectedDate ?? Date()
             let text = self?.typedText ?? ""
             if selectdate <= Date() {
                 self?.delegate.handleFunctionButtonTapped(at: indexPath.item, inSection: indexPath.section, date: selectdate, text: text)
-                
             } else {
                 self?.viewController.showFutureDateAlert()
             }
         }
         
-        print("setOfdays = \(tracker.isPlannedFor)")
         return cell
     }
+
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (collectionView.frame.width - 9 - 16 * 2) / 2
@@ -133,9 +129,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        let quantity = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies.count
-        delegate.quantityTernar(quantity)
-        return quantity
+        return dataProvider?.numberOfSections ?? 0
     }
     
 }

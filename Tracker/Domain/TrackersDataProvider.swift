@@ -41,6 +41,7 @@ final class TrackersDataProvider: NSObject {
     
     var selectedDate: SimpleDate = SimpleDate(date: Date()) {
         didSet {
+            print("Меняю дату в DidSet")
             reloadData()
         }
     }
@@ -146,16 +147,18 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     private func giveCategoriesPredicate() -> NSPredicate {
-        let predicate = NSPredicate(format: "ANY category_to_trackers.shedule CONTAINS %@ AND ANY category_to_trackers.title CONTAINS[cd] %@",
+        let predicate = NSPredicate(format: "((ANY category_to_trackers.shedule CONTAINS %@) OR (ANY  category_to_trackers.shedule == '' )) AND ANY category_to_trackers.title CONTAINS[cd] %@",
                                     String(selectedDate.weekDayNum), typedText)
         return predicate
     }
     
     private func giveTrackersPredicate() -> NSPredicate {
-        let predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
+        print("giveTrackersPredicate")
+        let predicate = NSPredicate(format: "((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
                                     #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
                                     #keyPath(TrackersCoreData.shedule),
                                     #keyPath(TrackersCoreData.title), typedText)
+        print("giveTrackersPredicate READY")
         return predicate
     }
     
@@ -163,13 +166,14 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
         do {
+            print(" try categoriesFetchedResultsController")
             try categoriesFetchedResultsController.performFetch()
-        } catch {
+        } catch let error as NSError  {
             print("Error performing fetch: \(error)")
         }
         do {
             try trackersFetchedResultsController.performFetch()
-        } catch {
+        } catch let error as NSError  {
             print("Error performing fetch: \(error)")
         }
     }
