@@ -171,13 +171,11 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     
     private func notifyObservers(){
         if isReadyToFlush() {
-            print("Уведомление отправлено что данные готовы")
             NotificationCenter.default.post(
                 name: TrackersCollectionsPresenter.didReadyNotification,
                 object: self,
                 userInfo: ["GO": true ])
         } else {
-            print("Уведомление отправлено что данные не готовы")
             NotificationCenter.default.post(
                 name: TrackersCollectionsPresenter.didNotReadyNotification,
                 object: self,

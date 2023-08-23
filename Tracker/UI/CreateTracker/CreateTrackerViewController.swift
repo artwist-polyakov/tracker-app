@@ -65,7 +65,6 @@ class CreateTrackerViewController: UIViewController {
                 ) { [weak self] _ in
                     guard let self = self
                     else { return }
-                    print("ПОЛУЧИЛ УВЕДОМЛЕНИЕ ЧТО ДАННЫЕ ГОТОВЫ")
                     checkCreateButtonReady()
                 }
         
@@ -76,7 +75,6 @@ class CreateTrackerViewController: UIViewController {
                 ) { [weak self] _ in
                     guard let self = self
                     else { return }
-                    print("ПОЛУЧИЛ УВЕДОМЛЕНИЕ ЧТО ДАННЫЕ НЕ ГОТОВЫ")
                     checkCreateButtonReady()
                 }
         

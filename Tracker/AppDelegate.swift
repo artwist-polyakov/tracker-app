@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     lazy var trackersDataStore: TrackersDataStore = {
         do {
-            return try DataStore()
+            return try DataStore() as! TrackersDataStore
         } catch {
             return NullStore() as! TrackersDataStore
         }
@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     lazy var categoriesDataStore: CategoriesDataStore = {
         do {
-            return try DataStore()
+            return try DataStore() as! CategoriesDataStore
         } catch {
             return NullStore() as! CategoriesDataStore
         }
@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     lazy var executionsDataStore: ExecutionsDataStore = {
         do {
-            return try DataStore() 
+            return try DataStore() as! ExecutionsDataStore
         } catch {
             return NullStore() as! ExecutionsDataStore
         }
