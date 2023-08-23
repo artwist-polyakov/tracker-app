@@ -9,9 +9,17 @@ import CoreData
 
 final class NullStore {}
 
-extension NullStore: TrackersDataStore {
+extension NullStore: TrackersDataStore {   
     var managedObjectContext: NSManagedObjectContext? { nil }
-    func add(_ record: Tracker) throws {}
+    func add(_ record: Tracker, categoryId: UUID) throws {}
     func delete(_ record: NSManagedObject) throws {}
+}
+
+extension NullStore: CategoriesDataStore {
+    func add(_ record: TrackerCategory) throws {}
+}
+
+extension NullStore: ExecutionsDataStore {
+    func interactWith(_ record: Execution) throws {}
 }
 

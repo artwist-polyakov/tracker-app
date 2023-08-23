@@ -9,11 +9,39 @@ import Foundation
 import UIKit
 
 class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    private lazy var dataProvider: TrackersDataProviderProtocol? = {
+        let trackersDataStore = (UIApplication.shared.delegate as! AppDelegate).trackersDataStore
+        let categoriesDataStore = (UIApplication.shared.delegate as! AppDelegate).categoriesDataStore
+        let executionsDataStore = (UIApplication.shared.delegate as! AppDelegate).executionsDataStore
+        
+        do {
+            let provider = try TrackersDataProvider(
+                trackersStore: trackersDataStore,
+                categoriesStore: categoriesDataStore,
+                executionsStore: executionsDataStore,
+                delegate: self
+            )
+            return provider
+        } catch {
+            print("Данные недоступны.")
+            return nil
+        }
+    }()
+    
     let repository = TrackersRepositoryImpl.shared
     let cellIdentifier = "TrackerCollectionViewCell"
     var delegate: TrackersCollectionsCompanionDelegate
-    var selectedDate: Date?
-    var typedText: String?
+    var selectedDate: Date? {
+        didSet {
+            dataProvider?.setDate(date: SimpleDate(date: self.selectedDate ?? Date()))
+        }
+    }
+    var typedText: String? {
+        didSet {
+            dataProvider?.setQuery(query: typedText ?? "")
+        }
+    }
     var viewController: TrackersViewControllerProtocol
     
     init(vc: TrackersViewControllerProtocol, delegate: TrackersCollectionsCompanionDelegate) {
@@ -112,3 +140,14 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
 }
 
+extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
+    func didUpdate(_ update: TrackersDataUpdate) {
+        viewController.collectionView?.performBatchUpdates{
+            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
+            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+            viewController.collectionView?.insertItems(at: insertedIndexPaths)
+            viewController.collectionView?.deleteItems(at: deletedIndexPaths)
+            
+        }
+    }
+}

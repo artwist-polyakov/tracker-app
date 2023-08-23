@@ -18,7 +18,6 @@
         <attribute name="icon" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="shedule" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <attribute name="tracker_title" attributeType="String"/>
         <relationship name="tracker_to_category" maxCount="1" deletionRule="Nullify" destinationEntity="CategoriesCoreData" inverseName="category_to_trackers" inverseEntity="CategoriesCoreData"/>
         <relationship name="tracker_to_executions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ExecutionsCoreData" inverseName="execution_to_trackers" inverseEntity="ExecutionsCoreData"/>
     </entity>

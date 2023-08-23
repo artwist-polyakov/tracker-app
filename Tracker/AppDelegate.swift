@@ -11,6 +11,31 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    lazy var trackersDataStore: TrackersDataStore = {
+        do {
+            return try DataStore()
+        } catch {
+            return NullStore() as! TrackersDataStore
+        }
+    }()
+    
+    lazy var categoriesDataStore: CategoriesDataStore = {
+        do {
+            return try DataStore()
+        } catch {
+            return NullStore() as! CategoriesDataStore
+        }
+    }()
+
+    lazy var executionsDataStore: ExecutionsDataStore = {
+        do {
+            return try DataStore() 
+        } catch {
+            return NullStore() as! ExecutionsDataStore
+        }
+    }()
+
+    
     lazy var persistentContainer: NSPersistentContainer = {                     // 1
             let container = NSPersistentContainer(name: "Trackers")              // 2
             container.loadPersistentStores(completionHandler: { (storeDescription, error) in // 3

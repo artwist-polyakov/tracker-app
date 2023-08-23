@@ -21,13 +21,16 @@ protocol TrackersDataProviderDelegate: AnyObject {
 }
 
 protocol TrackersDataProviderProtocol {
+    
     var numberOfSections: Int { get }
     func numberOfRowsInSection(_ section: Int) -> Int
     func object(at indexPath: IndexPath) -> TrackersRecord?
     func addCategory(_ category: TrackerCategory) throws
-    func addTracker(_ tracker: Tracker) throws
+    func addTracker(_ tracker: Tracker, categoryId: UUID) throws
     func addExecution(_ execution: Execution) throws
     func deleteObject(at indexPath: IndexPath) throws
+    func setDate (date: SimpleDate)
+    func setQuery (query: String)
 }
 
 final class TrackersDataProvider: NSObject {
@@ -38,12 +41,12 @@ final class TrackersDataProvider: NSObject {
     
     var selectedDate: SimpleDate = SimpleDate(date: Date()) {
         didSet {
-            
+            reloadData()
         }
     }
     var typedText: String = "" {
         didSet {
-            
+            reloadData()
         }
     }
     
@@ -62,10 +65,12 @@ final class TrackersDataProvider: NSObject {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
+        fetchRequest.predicate = giveCategoriesPredicate()
+        
         let fetchedResultsController = NSFetchedResultsController(
                                         fetchRequest: fetchRequest,
                                         managedObjectContext: context,
-                                        sectionNameKeyPath: nil,
+                                        sectionNameKeyPath: "id",
                                         cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
@@ -79,15 +84,11 @@ final class TrackersDataProvider: NSObject {
             NSSortDescriptor(key:"tracker_to_category.id", ascending: false)]
         
         
-        fetchRequest.predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                            #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
-                            #keyPath(TrackersCoreData.shedule),
-                            #keyPath(TrackersCoreData.title), typedText)
-        
+        fetchRequest.predicate = giveTrackersPredicate()
         let fetchedResultsController = NSFetchedResultsController(
                                         fetchRequest: fetchRequest,
                                         managedObjectContext: context,
-                                        sectionNameKeyPath: nil,
+                                        sectionNameKeyPath: "categoryId",
                                         cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
@@ -143,9 +144,47 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             break
         }
     }
+    
+    private func giveCategoriesPredicate() -> NSPredicate {
+        let predicate = NSPredicate(format: "ANY category_to_trackers.shedule CONTAINS %@ AND ANY category_to_trackers.title CONTAINS[cd] %@",
+                                    String(selectedDate.weekDayNum), typedText)
+        return predicate
+    }
+    
+    private func giveTrackersPredicate() -> NSPredicate {
+        let predicate = NSPredicate(format: "(%K == %@) AND ((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
+                                    #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
+                                    #keyPath(TrackersCoreData.shedule),
+                                    #keyPath(TrackersCoreData.title), typedText)
+        return predicate
+    }
+    
+    private func reloadData() {
+        categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
+        trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
+        do {
+            try categoriesFetchedResultsController.performFetch()
+        } catch {
+            print("Error performing fetch: \(error)")
+        }
+        do {
+            try trackersFetchedResultsController.performFetch()
+        } catch {
+            print("Error performing fetch: \(error)")
+        }
+    }
 }
 
 extension TrackersDataProvider: TrackersDataProviderProtocol {
+    func setDate(date: SimpleDate) {
+        self.selectedDate  = date
+    }
+    
+    func setQuery(query: String) {
+        self.typedText = query
+    }
+    
+    
     var numberOfSections: Int {
         return categoriesFetchedResultsController.sections?.count ?? 0  }
     
@@ -161,8 +200,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         try categoriesDataStore.add(category)
     }
     
-    func addTracker(_ tracker: Tracker) throws {
-        try trackersDataStore.add(tracker)
+    func addTracker(_ tracker: Tracker, categoryId: UUID) throws {
+        try trackersDataStore.add(tracker, categoryId: categoryId)
     }
     
     func addExecution(_ execution: Execution) throws {
