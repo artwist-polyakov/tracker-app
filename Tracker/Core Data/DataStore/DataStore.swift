@@ -72,31 +72,49 @@ extension DataStore: TrackersDataStore {
                 fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as CVarArg)
                 let existingCategories = try context.fetch(fetchRequest)
                 
-                var finalCategoryId: UUID = categoryId
+                var finalCategory: CategoriesCoreData!
                 
                 // Если категория не существует, создадим новую
                 if existingCategories.isEmpty {
                     let newCategory = CategoriesCoreData(context: context)
                     newCategory.title = categoryTitle
                     newCategory.creationDate = Date()
-                    if let newCategoryId = newCategory.id {
-                        finalCategoryId = newCategoryId
-                    }
+                    finalCategory = newCategory
+                } else {
+                    finalCategory = existingCategories.first
                 }
                 
                 let trackersCoreData = TrackersCoreData(context: context)
                 trackersCoreData.title = record.title
-                trackersCoreData.categoryId = finalCategoryId
+                trackersCoreData.categoryId = finalCategory.id
                 trackersCoreData.creationDate = Date()
                 trackersCoreData.icon = Int16(record.icon)
                 trackersCoreData.shedule = record.isPlannedFor
                 trackersCoreData.color = Int16(record.color)
+                
+                // Установим отношение между трекером и категорией
+                trackersCoreData.tracker_to_category = finalCategory
+                
                 print("Результат добавления")
                 print(trackersCoreData)
                 try context.save()
+                
+                // MARK: - ПРОВЕРКА СОХРАНЕНИЯ
+                let checkFetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
+                checkFetchRequest.predicate = NSPredicate(format: "title == %@", record.title)
+                let savedTrackers = try context.fetch(checkFetchRequest)
+
+                print("Проверка сохранения:")
+                if let savedTracker = savedTrackers.first {
+                    print("Трекер был успешно сохранен!")
+                    print(savedTracker)
+                } else {
+                    print("Трекер не был найден в базе данных.")
+                }
             }
         }
     }
+
 
 
     
