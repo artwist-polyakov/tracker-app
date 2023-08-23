@@ -77,6 +77,7 @@ extension DataStore: TrackersDataStore {
                 // Если категория не существует, создадим новую
                 if existingCategories.isEmpty {
                     let newCategory = CategoriesCoreData(context: context)
+                    newCategory.id = UUID()
                     newCategory.title = categoryTitle
                     newCategory.creationDate = Date()
                     finalCategory = newCategory
@@ -91,13 +92,18 @@ extension DataStore: TrackersDataStore {
                 trackersCoreData.icon = Int16(record.icon)
                 trackersCoreData.shedule = record.isPlannedFor
                 trackersCoreData.color = Int16(record.color)
+                trackersCoreData.id = UUID()
                 
                 // Установим отношение между трекером и категорией
                 trackersCoreData.tracker_to_category = finalCategory
                 
                 print("Результат добавления")
                 print(trackersCoreData)
-                try context.save()
+                do {
+                    try context.save()
+                } catch {
+                    print("Ошибка при сохранении контекста: \(error)")
+                }
                 
                 // MARK: - ПРОВЕРКА СОХРАНЕНИЯ
                 let checkFetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
