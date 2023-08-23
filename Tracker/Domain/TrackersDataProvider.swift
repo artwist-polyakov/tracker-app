@@ -31,6 +31,7 @@ protocol TrackersDataProviderProtocol {
     func deleteObject(at indexPath: IndexPath) throws
     func setDate (date: SimpleDate)
     func setQuery (query: String)
+    func categoryTitle(for categoryId: UUID) -> String?
 }
 
 final class TrackersDataProvider: NSObject {
@@ -85,7 +86,7 @@ final class TrackersDataProvider: NSObject {
             NSSortDescriptor(key:"tracker_to_category.id", ascending: false)]
         
         
-        fetchRequest.predicate = giveTrackersPredicate()
+//        fetchRequest.predicate = giveTrackersPredicate()
         let fetchedResultsController = NSFetchedResultsController(
                                         fetchRequest: fetchRequest,
                                         managedObjectContext: context,
@@ -93,6 +94,8 @@ final class TrackersDataProvider: NSObject {
                                         cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
+        
+        
         return fetchedResultsController
     }()
     
@@ -109,7 +112,21 @@ final class TrackersDataProvider: NSObject {
         self.trackersDataStore = trackersDataStore
         self.categoriesDataStore = categoriesDataStore
         self.executionsDataStore = executionsDataStore
+        super.init()
+        print("Всего объектов в trackersFetchedResultsController: \(trackersFetchedResultsController.fetchedObjects?.count ?? 0)")
+
+        for section in 0..<numberOfSections {
+            print("Объекты в секции \(section): \(numberOfRowsInSection(section))")
+            if let firstTrackerInSection = trackersFetchedResultsController.object(at: IndexPath(item: 0, section: section)) as? TrackersRecord {
+                print("Первый трекер в секции \(section): \(firstTrackerInSection)")
+            } else {
+                print("Не удалось получить первый трекер для секции \(section)")
+            }
+        }
+            
     }
+    
+    
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
@@ -193,18 +210,25 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     
     var numberOfSections: Int {
-        let result = categoriesFetchedResultsController.sections?.count ?? 0
+        let result = trackersFetchedResultsController.sections?.count ?? 0
+        let totalObjects = trackersFetchedResultsController.fetchedObjects?.count ?? 0
+        print("Общее количество объектов: \(totalObjects)")
         print("Метод numberOfSections вызван. Резульатат \(result)")
-        
-        return result}
+        return result
+    }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
         print("Метод numberOfRowsInSection вызван для секции \(section).")
-        return trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
+        let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
+        print("число элементов \(result)")
+        return result
     }
     
     func object(at indexPath: IndexPath) -> TrackersRecord? {
-        trackersFetchedResultsController.object(at: indexPath) as? any TrackersRecord
+        
+        let coreDataObject = trackersFetchedResultsController.object(at: indexPath)
+        
+        return TrackersRecordImpl(from: coreDataObject)
     }
     
     func addCategory(_ category: TrackerCategory) throws {
@@ -223,6 +247,21 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     func deleteObject(at indexPath: IndexPath) throws {
         let record = trackersFetchedResultsController.object(at: indexPath)
         try? trackersDataStore.delete(record)
+    }
+    
+    func categoryTitle(for categoryId: UUID) -> String? {
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+            fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
+            fetchRequest.fetchLimit = 1
+            print("Запрос на категорию вызван")
+            do {
+                let categories = try context.fetch(fetchRequest)
+                print(categories)
+                return categories.first?.title
+            } catch let error as NSError {
+                print("Ошибка при извлечении категории: \(error)")
+                return nil
+            }
     }
     
     

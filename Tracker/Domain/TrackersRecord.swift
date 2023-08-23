@@ -25,5 +25,22 @@ struct TrackersRecordImpl: TrackersRecord {
     let color: Int
     let icon: Int
     let shedule: String
+    
+    init?(from coreDataObject: TrackersCoreData) {
+            guard
+                let trackerId = coreDataObject.id,
+                let title = coreDataObject.title,
+                let creationDate = coreDataObject.creationDate,
+                let categoryId = coreDataObject.categoryId
+            else { return nil }
+            
+            self.trackerId = trackerId
+            self.title = title
+            self.creationDate = creationDate
+            self.categoryId = categoryId
+            self.color = Int(coreDataObject.color)
+            self.icon = Int(coreDataObject.icon)
+            self.shedule = coreDataObject.shedule ?? ""
+        }
 }
 

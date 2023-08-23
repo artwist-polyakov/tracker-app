@@ -127,9 +127,31 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
         
+//        if kind == UICollectionView.elementKindSectionHeader {
+//            let category = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies[indexPath.section]
+//            view.titleLabel.text = category.categoryTitle
+//        }
+//        if kind == UICollectionView.elementKindSectionHeader {
+//                if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)),
+//                   let categoryTitle = dataProvider?.categoryTitle(for: tracker.categoryId) {
+//                    view.titleLabel.text = categoryTitle
+//                }
+//            }
         if kind == UICollectionView.elementKindSectionHeader {
-            let category = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies[indexPath.section]
-            view.titleLabel.text = category.categoryTitle
+            print("Обработка заголовка для секции \(indexPath.section)")
+            
+            if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)) {
+                print("Найден трекер для секции \(indexPath.section): \(tracker)")
+                
+                if let categoryTitle = dataProvider?.categoryTitle(for: tracker.categoryId) {
+                    print("Найден заголовок категории: \(categoryTitle) для трекера из секции \(indexPath.section)")
+                    view.titleLabel.text = categoryTitle
+                } else {
+                    print("Заголовок категории не найден для трекера из секции \(indexPath.section)")
+                }
+            } else {
+                print("Трекер не найден для секции \(indexPath.section)")
+            }
         }
         
         return view
