@@ -64,6 +64,7 @@ extension DataStore: TrackersDataStore {
     }
     
     func add(_ record: Tracker, categoryId: UUID) throws {
+        print("Пытаюсь добавить трекер")
         try performSync { context in
             Result {
                 let trackersCoreData = TrackersCoreData(context: context)

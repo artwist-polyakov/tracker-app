@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
+    private let trackersCollectionCompanionInteractor = TrackersCollectionsCompanionInteractor.shared
     private lazy var dataProvider: TrackersDataProviderProtocol? = {
         let trackersDataStore = (UIApplication.shared.delegate as! AppDelegate).trackersDataStore
         let categoriesDataStore = (UIApplication.shared.delegate as! AppDelegate).categoriesDataStore
@@ -47,6 +47,11 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     init(vc: TrackersViewControllerProtocol, delegate: TrackersCollectionsCompanionDelegate) {
         self.viewController = vc
         self.delegate = delegate
+        
+    }
+    
+    func addTracker(tracker: Tracker, categoryId: UUID) {
+        try? dataProvider?.addTracker(tracker, categoryId: categoryId)
     }
     
     // UICollectionViewDataSource

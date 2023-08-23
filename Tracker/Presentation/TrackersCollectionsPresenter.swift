@@ -9,10 +9,15 @@ import Foundation
 import UIKit
 class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
+    func setInteractor(interactor: TrackersCollectionsCompanionInteractor) {
+        self.interactor = interactor
+    }
+    
+    
     static let didReadyNotification = Notification.Name(rawValue: "ready")
     static let didNotReadyNotification = Notification.Name(rawValue: "not ready")
     let repository = TrackersRepositoryImpl.shared
-    
+    var interactor: TrackersCollectionsCompanionInteractor? = nil
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
     
@@ -138,6 +143,14 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
             trackerName: trackerTitle,
             icon: Mappers.iconToIntMapper(trackerIcon),
             plannedDaysOfWeek: trackerSheduleToFlush)
+        
+        
+        let tracker = Tracker(categoryId: trackseCategory,
+                              color: trackerColor,
+                              title: trackerTitle,
+                              icon: Mappers.iconToIntMapper(trackerIcon),
+                              isPlannedFor: trackerSheduleToFlush)
+        interactor?.addTracker(tracker: tracker, categoryId: trackseCategory)
         
         clearAllFlushProperties()
         viewController.collectionView?.reloadData()
