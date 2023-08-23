@@ -8,9 +8,10 @@
 import Foundation
 final class TrackersCollectionsCompanionInteractor {
     static let shared = TrackersCollectionsCompanionInteractor()
-    let companion: TrackersCollectionsCompanion? = nil
+    var companion: TrackersCollectionsCompanion? = nil
     private init() {}
     func addTracker(tracker:Tracker, categoryId: UUID) {
+        print("Добавление трекера в интеракторе")
         companion?.addTracker(tracker: tracker, categoryId: categoryId)
     }
 }

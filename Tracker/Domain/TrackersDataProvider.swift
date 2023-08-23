@@ -205,6 +205,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func addTracker(_ tracker: Tracker, categoryId: UUID) throws {
+        print("Добавление трекера в провайдере")
         try trackersDataStore.add(tracker, categoryId: categoryId)
     }
     

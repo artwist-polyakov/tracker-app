@@ -47,7 +47,9 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     init(vc: TrackersViewControllerProtocol, delegate: TrackersCollectionsCompanionDelegate) {
         self.viewController = vc
         self.delegate = delegate
-        
+        super.init()
+        trackersCollectionCompanionInteractor.companion = self
+        delegate.setInteractor(interactor: trackersCollectionCompanionInteractor)
     }
     
     func addTracker(tracker: Tracker, categoryId: UUID) {

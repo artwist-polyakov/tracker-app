@@ -17,7 +17,11 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     static let didReadyNotification = Notification.Name(rawValue: "ready")
     static let didNotReadyNotification = Notification.Name(rawValue: "not ready")
     let repository = TrackersRepositoryImpl.shared
-    var interactor: TrackersCollectionsCompanionInteractor? = nil
+    var interactor: TrackersCollectionsCompanionInteractor? = nil {
+        didSet {
+            print("Установлен интерактор")
+        }
+    }
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
     
@@ -150,6 +154,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
                               title: trackerTitle,
                               icon: Mappers.iconToIntMapper(trackerIcon),
                               isPlannedFor: trackerSheduleToFlush)
+        
+        print("Добравление трекера в презенторе \(tracker) ")
         interactor?.addTracker(tracker: tracker, categoryId: trackseCategory)
         
         clearAllFlushProperties()
