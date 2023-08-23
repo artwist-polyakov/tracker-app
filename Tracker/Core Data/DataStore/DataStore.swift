@@ -91,6 +91,8 @@ extension DataStore: TrackersDataStore {
                 trackersCoreData.icon = Int16(record.icon)
                 trackersCoreData.shedule = record.isPlannedFor
                 trackersCoreData.color = Int16(record.color)
+                print("Результат добавления")
+                print(trackersCoreData)
                 try context.save()
             }
         }
