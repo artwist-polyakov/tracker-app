@@ -26,7 +26,7 @@ protocol TrackersDataProviderProtocol {
     func numberOfRowsInSection(_ section: Int) -> Int
     func object(at indexPath: IndexPath) -> TrackersRecord?
     func addCategory(_ category: TrackerCategory) throws
-    func addTracker(_ tracker: Tracker, categoryId: UUID) throws
+    func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws
     func addExecution(_ execution: Execution) throws
     func deleteObject(at indexPath: IndexPath) throws
     func setDate (date: SimpleDate)
@@ -204,9 +204,9 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         try categoriesDataStore.add(category)
     }
     
-    func addTracker(_ tracker: Tracker, categoryId: UUID) throws {
+    func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws {
         print("Добавление трекера в провайдере")
-        try trackersDataStore.add(tracker, categoryId: categoryId)
+        try trackersDataStore.add(tracker, categoryId: categoryId, categoryTitle: categoryTitle)
     }
     
     func addExecution(_ execution: Execution) throws {

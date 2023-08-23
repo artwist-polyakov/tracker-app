@@ -52,8 +52,8 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         delegate.setInteractor(interactor: trackersCollectionCompanionInteractor)
     }
     
-    func addTracker(tracker: Tracker, categoryId: UUID) {
-        try? dataProvider?.addTracker(tracker, categoryId: categoryId)
+    func addTracker(tracker: Tracker, categoryId: UUID, categoryTitle: String) {
+        try? dataProvider?.addTracker(tracker, categoryId: categoryId, categoryTitle:categoryTitle)
     }
     
     // UICollectionViewDataSource

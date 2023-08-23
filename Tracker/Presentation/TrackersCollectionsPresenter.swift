@@ -42,6 +42,15 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             print("TrackerCategoryToFlush: \(category)")
         }
     }
+    
+    var trackerCategorynameToFlush: String? {
+        didSet {
+            notifyObservers()
+            guard let categoryName = trackerCategorynameToFlush
+            else {print ("trackerCategorynameToFlush: Пусто") ; return}
+            print("trackerCategorynameToFlush: \(categoryName)")
+        }
+    }
     var trackerTitleToFlush: String? {
         didSet {
             notifyObservers()
@@ -123,6 +132,10 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerColorToFlush = color + 1 // Нумерация цветов начинается с 1
     }
     
+    func didSetTrackerCategoryName(_ categoryName: String) {
+        trackerCategorynameToFlush = categoryName
+    }
+    
     func clearAllFlushProperties() {
         trackerTypeToFlush = .notSet
         trackerTitleToFlush = nil
@@ -135,7 +148,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         guard let trackerTitle = trackerTitleToFlush,
               let trackerIcon = trackerIconToFlush,
               let trackerColor = trackerColorToFlush,
-              let trackseCategory = trackerCategoryToFlush
+              let trackseCategory = trackerCategoryToFlush,
+              let trackerCategoryName = trackerCategorynameToFlush
         else {
             print("Не все данные готовы")
             return }
@@ -156,7 +170,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
                               isPlannedFor: trackerSheduleToFlush)
         
         print("Добравление трекера в презенторе \(tracker) ")
-        interactor?.addTracker(tracker: tracker, categoryId: trackseCategory)
+        interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
         
         clearAllFlushProperties()
         viewController.collectionView?.reloadData()

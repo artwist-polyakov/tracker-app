@@ -50,6 +50,7 @@ class CreateTrackerViewController: UIViewController {
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
         delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory().id)!)
+        delegate?.didSetTrackerCategoryName(((delegate?.giveMeSelectedCategory().categoryTitle)!))
         setupUI()
         layoutUI()
         menuTableView.reloadData()

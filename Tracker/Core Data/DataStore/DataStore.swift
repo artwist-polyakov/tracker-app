@@ -63,13 +63,30 @@ extension DataStore: TrackersDataStore {
         context
     }
     
-    func add(_ record: Tracker, categoryId: UUID) throws {
+    func add(_ record: Tracker, categoryId: UUID, categoryTitle: String) throws {
         print("Пытаюсь добавить трекер")
         try performSync { context in
             Result {
+                // Проверяем, существует ли уже категория с указанным categoryId
+                let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+                fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as CVarArg)
+                let existingCategories = try context.fetch(fetchRequest)
+                
+                var finalCategoryId: UUID = categoryId
+                
+                // Если категория не существует, создадим новую
+                if existingCategories.isEmpty {
+                    let newCategory = CategoriesCoreData(context: context)
+                    newCategory.title = categoryTitle
+                    newCategory.creationDate = Date()
+                    if let newCategoryId = newCategory.id {
+                        finalCategoryId = newCategoryId
+                    }
+                }
+                
                 let trackersCoreData = TrackersCoreData(context: context)
                 trackersCoreData.title = record.title
-                trackersCoreData.categoryId = categoryId
+                trackersCoreData.categoryId = finalCategoryId
                 trackersCoreData.creationDate = Date()
                 trackersCoreData.icon = Int16(record.icon)
                 trackersCoreData.shedule = record.isPlannedFor
@@ -78,6 +95,8 @@ extension DataStore: TrackersDataStore {
             }
         }
     }
+
+
     
     func delete(_ record: NSManagedObject) throws {
         try performSync { context in

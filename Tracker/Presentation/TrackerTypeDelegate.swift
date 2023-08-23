@@ -15,6 +15,7 @@ protocol TrackerTypeDelegate: AnyObject {
     func didSetTrackerIcon(_ icon: String)
     func didSetShedulleToFlush(_ shedule: [Int])
     func didSetTrackerColorToFlush(_ color: Int)
+    func didSetTrackerCategoryName (_ categoryName: String)
     func clearAllFlushProperties()
     func realizeAllFlushProperties()
     func giveMeSelectedCategory() -> TrackerCategory
