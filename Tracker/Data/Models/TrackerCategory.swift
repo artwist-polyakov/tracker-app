@@ -10,8 +10,8 @@ class TrackerCategory {
     let id: UUID
     var categoryTitle: String
     
-    init(categoryTitle: String) {
-        self.id = UUID()
+    init(id: UUID, categoryTitle: String) {
+        self.id = id
         self.categoryTitle = categoryTitle
     }
 }

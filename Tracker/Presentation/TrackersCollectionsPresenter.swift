@@ -103,9 +103,12 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         return trackerSheduleToFlush.compactMap { Int(String($0)) }
     }
     
-    func giveMeSelectedCategory() -> TrackerCategory {
+    func giveMeSelectedCategory() -> TrackerCategory? {
         //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
-        return repository.getAllTrackers().categoryies[0]
+        
+//        return repository.getAllTrackers().categoryies[0]
+        
+        return interactor?.giveMeAnyCategory()
     }
     
     func didSelectTrackerCategory(_ category: UUID) {

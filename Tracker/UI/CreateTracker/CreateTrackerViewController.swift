@@ -49,8 +49,8 @@ class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory().id)!)
-        delegate?.didSetTrackerCategoryName(((delegate?.giveMeSelectedCategory().categoryTitle)!))
+        delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory()?.id)!)
+        delegate?.didSetTrackerCategoryName(((delegate?.giveMeSelectedCategory()?.categoryTitle)!))
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -104,13 +104,14 @@ class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
+            
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
+                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
                 MenuItem(title: "Создать расписание", subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
                     ]
         case .irregularEvent:
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory)
+                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory)
                     ]
         case .notSet:
             menuItems = []

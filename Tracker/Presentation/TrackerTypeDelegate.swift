@@ -18,7 +18,7 @@ protocol TrackerTypeDelegate: AnyObject {
     func didSetTrackerCategoryName (_ categoryName: String)
     func clearAllFlushProperties()
     func realizeAllFlushProperties()
-    func giveMeSelectedCategory() -> TrackerCategory
+    func giveMeSelectedCategory() -> TrackerCategory?
     func giveMeSelectedDays() -> [Int]
     func isReadyToFlush() -> Bool
 }

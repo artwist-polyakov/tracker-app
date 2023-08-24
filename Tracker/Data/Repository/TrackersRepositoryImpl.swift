@@ -15,7 +15,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
     // MARK: - Изначальное наполнение данными
     private var categories: [TrackerCategory] = [
-        TrackerCategory(categoryTitle: "Домашний тестовый уют")
+        TrackerCategory(id: UUID(), categoryTitle: "Домашний тестовый уют")
     ]
     
     
@@ -100,7 +100,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     }
     
     func addNewCategory(name: String) {
-        let newCategory = TrackerCategory(categoryTitle: name)
+        let newCategory = TrackerCategory(id: UUID(), categoryTitle: name)
         categories.append(newCategory)
     }
     

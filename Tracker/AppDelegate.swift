@@ -57,6 +57,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func clearAllCoreData() {
+        let context = persistentContainer.viewContext
+        let entities = persistentContainer.managedObjectModel.entities
+
+        for entity in entities {
+            if let entityName = entity.name {
+                let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entityName)
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                
+                do {
+                    try context.execute(deleteRequest)
+                } catch let error as NSError {
+                    print("Error deleting entity \(entityName): \(error.localizedDescription)")
+                }
+            }
+        }
+        saveContext()
+    }
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true

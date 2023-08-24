@@ -56,6 +56,13 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         try? dataProvider?.addTracker(tracker, categoryId: categoryId, categoryTitle:categoryTitle)
     }
     
+    func giveMeAnyTrackercategory() -> TrackerCategory? {
+        if let firstCategoryObject = dataProvider?.object(at: IndexPath(item: 0, section: 0)) {
+               return TrackerCategory(id: firstCategoryObject.categoryId, categoryTitle: firstCategoryObject.title)
+           }
+        return nil
+    }
+    
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
