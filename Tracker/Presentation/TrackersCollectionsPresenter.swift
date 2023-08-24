@@ -112,13 +112,13 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
         
 //        return repository.getAllTrackers().categoryies[0]
-        
+        var result  = interactor?.giveMeAnyCategory()
         if let category = interactor?.giveMeAnyCategory() {
-            let result  = category
+            result  = category
         } else {
-            let result = repository.getAllTrackers().categoryies[0]
+            result = repository.getAllTrackers().categoryies[0]
         }
-        return interactor?.giveMeAnyCategory()
+        return result
     }
     
     func didSelectTrackerCategory(_ category: UUID) {

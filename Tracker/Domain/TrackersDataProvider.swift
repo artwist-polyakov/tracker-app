@@ -19,6 +19,7 @@ struct TrackersDataUpdate {
 // Протокол для уведомления об изменениях.
 protocol TrackersDataProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackersDataUpdate)
+    func reloadData() 
 }
 
 protocol TrackersDataProviderProtocol {
@@ -54,6 +55,10 @@ final class TrackersDataProvider: NSObject {
             reloadData()
         }
     }
+    
+    
+    private var previousSectionCount: Int = 0
+    private var shouldReloadData: Bool = false
     
     weak var delegate: TrackersDataProviderDelegate?
     
@@ -140,17 +145,27 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        guard let currentSection = currentSection else {return}
-        delegate?.didUpdate(TrackersDataUpdate(
-                section: currentSection,
-                insertedIndexes: insertedIndexes ?? IndexSet(),
-                deletedIndexes: deletedIndexes ?? IndexSet() ,
-                updatedIndexes: updatedIndexes ?? IndexSet()
+        if previousSectionCount != numberOfSections {
+            shouldReloadData = true
+        }
+
+        if shouldReloadData {
+            delegate?.reloadData() // мы добавляем этот новый метод в протокол
+        } else {
+            guard let currentSection = currentSection else {return}
+            delegate?.didUpdate(TrackersDataUpdate(
+                    section: currentSection,
+                    insertedIndexes: insertedIndexes ?? IndexSet(),
+                    deletedIndexes: deletedIndexes ?? IndexSet(),
+                    updatedIndexes: updatedIndexes ?? IndexSet()
+                )
             )
-        )
+        }
+        shouldReloadData = false
         insertedIndexes = nil
         deletedIndexes = nil
     }
+
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
@@ -189,6 +204,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     private func reloadData() {
         print("Метод reloadData вызван.")
+        previousSectionCount = numberOfSections
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
         do {
@@ -285,10 +301,13 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         
         do {
             try context.execute(deleteRequest)
+            context.reset()
+            delegate?.reloadData()
         } catch let error as NSError {
             print("Error deleting CategoriesCoreData: \(error.localizedDescription)")
         }
     }
+
 
     
     

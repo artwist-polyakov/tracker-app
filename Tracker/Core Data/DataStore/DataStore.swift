@@ -70,7 +70,7 @@ extension DataStore: TrackersDataStore {
             Result {
                 // Проверяем, существует ли уже категория с указанным categoryId
                 let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
-                fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as CVarArg)
+                fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
                 let existingCategories = try context.fetch(fetchRequest)
                 
                 var finalCategory: CategoriesCoreData!
