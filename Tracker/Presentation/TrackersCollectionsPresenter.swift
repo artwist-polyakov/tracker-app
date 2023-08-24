@@ -15,7 +15,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     var viewController: TrackersViewControllerProtocol
     
     var selectedDate: Date?
-
+    
     var trackerTypeToFlush: TrackerType = .notSet {
         didSet {
             notifyObservers()
@@ -155,7 +155,6 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
             icon: Mappers.iconToIntMapper(trackerIcon),
             plannedDaysOfWeek: trackerSheduleToFlush)
         
-        
         let tracker = Tracker(categoryId: trackseCategory,
                               color: trackerColor,
                               title: trackerTitle,
@@ -166,8 +165,6 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         
         clearAllFlushProperties()
         viewController.collectionView?.reloadData()
-        
-        
     }
     
     func isReadyToFlush() -> Bool {

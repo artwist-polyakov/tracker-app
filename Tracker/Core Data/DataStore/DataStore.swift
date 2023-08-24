@@ -6,8 +6,8 @@ final class DataStore {
     
     private let modelName = "Trackers"
     private let storeURL = NSPersistentContainer
-                                .defaultDirectoryURL()
-                                .appendingPathComponent("data-store.sqlite")
+        .defaultDirectoryURL()
+        .appendingPathComponent("data-store.sqlite")
     
     private let container: NSPersistentContainer
     private let context: NSManagedObjectContext
@@ -104,16 +104,16 @@ extension DataStore: TrackersDataStore {
         let count = try? context.count(for: fetchRequest)
         return count ?? 0
     }
-
+    
     func hasExecutionForDate(for trackerId: UUID, date: SimpleDate) -> Bool {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         fetchRequest.predicate = NSPredicate(format: "trackerId == %@ AND date == %@", trackerId as NSUUID, date.date as NSDate)
         let count = try? context.count(for: fetchRequest)
         return count ?? 0 > 0
     }
-
-
-
+    
+    
+    
     
     func delete(_ record: NSManagedObject) throws {
         try performSync { context in
@@ -140,50 +140,50 @@ extension DataStore: CategoriesDataStore {
 
 extension DataStore: ExecutionsDataStore {
     func interactWith(_ record: UUID, _ date: SimpleDate) throws {
-            // Попробуем получить существующие выполнения для данного трекера и даты
-            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
+        // Попробуем получить существующие выполнения для данного трекера и даты
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date.date as NSDate, #keyPath(ExecutionsCoreData.trackerId), record as NSUUID)
-            fetchRequest.resultType = .managedObjectIDResultType
-            
-            do {
-                let existingExecutions = try context.fetch(fetchRequest) as! [NSManagedObjectID]
-                if existingExecutions.isEmpty {
-                    attachExecution(trackerId: record, date: date.date)
-                } else {
-                    if let objectId = existingExecutions.first {
-                        detachExecution(byObjectId: objectId)
-                    }
+        fetchRequest.resultType = .managedObjectIDResultType
+        
+        do {
+            let existingExecutions = try context.fetch(fetchRequest) as! [NSManagedObjectID]
+            if existingExecutions.isEmpty {
+                attachExecution(trackerId: record, date: date.date)
+            } else {
+                if let objectId = existingExecutions.first {
+                    detachExecution(byObjectId: objectId)
                 }
-            } catch {
-                print("FATAL ERROR: \(error)")
-                throw error
             }
+        } catch {
+            print("FATAL ERROR: \(error)")
+            throw error
         }
+    }
     
     private func attachExecution(trackerId: UUID, date: Date) {
-            let newExecution = ExecutionsCoreData(context: context)
-            newExecution.date = date
-            newExecution.trackerId = trackerId
+        let newExecution = ExecutionsCoreData(context: context)
+        newExecution.date = date
+        newExecution.trackerId = trackerId
         
-            do {
-                try context.save()
-                let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
-            } catch let error as NSError {
-                print("Ошибка при сохранении выполнения: \(error.localizedDescription)")
-            }
+        do {
+            try context.save()
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
+        } catch let error as NSError {
+            print("Ошибка при сохранении выполнения: \(error.localizedDescription)")
         }
+    }
     
     private func detachExecution(byObjectId objectId: NSManagedObjectID) {
-            if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
-                context.delete(objectToDelete)
-                do {
-                    try context.save()
-                } catch let error as NSError {
-                    print("Ошибка при удалении выполнения: \(error.localizedDescription)")
-                }
+        if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
+            context.delete(objectToDelete)
+            do {
+                try context.save()
+            } catch let error as NSError {
+                print("Ошибка при удалении выполнения: \(error.localizedDescription)")
             }
         }
+    }
     
     
 }

@@ -30,7 +30,7 @@ class SupplementaryViewMain: UICollectionReusableView {
         addSubview(footerView)
         footerView.translatesAutoresizingMaskIntoConstraints = false
         
-
+        
         titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 24).isActive = true
         
         NSLayoutConstraint.activate([

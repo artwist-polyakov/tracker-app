@@ -1,7 +1,6 @@
 import Foundation
 
 protocol TrackerTypeDelegate: AnyObject {
-    
     func didSelectTrackerType(_ type: TrackerType)
     func didSelectTrackerCategory(_ categoryId: UUID)
     func didSetTrackerTitle(_ title: String)

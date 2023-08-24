@@ -68,7 +68,7 @@ public final class TrackersDataStoreImpl: NSObject {
             print("FATAL ERROR: \(error)")
         }
     }
-
+    
     
     private func fetchAllObjects<T>(entityName: String) -> [T] {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
@@ -108,18 +108,18 @@ public final class TrackersDataStoreImpl: NSObject {
         let request = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         let categoryDateSort = NSSortDescriptor(key: "creationDate", ascending: true)
         let categoryUUIDSort = NSSortDescriptor(key: "id", ascending: true)
-
+        
         // Предикат для отбора категорий, основываясь на их трекерах
         request.predicate = NSPredicate(format: "ANY category_to_trackers.shedule CONTAINS %@ AND ANY category_to_trackers.title CONTAINS[cd] %@",
                                         substring, searchQuery)
-
+        
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort]
-
+        
         do {
             return fetchAllObjects<CategoriesCoreData>(request: request)
         }
     }
-
+    
     
     // MARK: - FETCH ALL TRACKERS IN CATEGORY
     private func fetchAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> [TrackersCoreData] {
@@ -139,8 +139,8 @@ public final class TrackersDataStoreImpl: NSObject {
         request.sortDescriptors = [trackerCreationSort]
         return fetchAllObjects<TrackersCoreData>(request: request)
     }
-
-
+    
+    
     
     // MARK: - COUNT TRACKERS IN CATEGORY
     private func countAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> Int {
@@ -157,7 +157,7 @@ public final class TrackersDataStoreImpl: NSObject {
                                         #keyPath(TrackersCoreData.title), searchQuery)
         
         request.resultType = .countResultType
-
+        
         let count = (try? context.count(for: request)) ?? 0
         return count
     }
@@ -168,7 +168,7 @@ public final class TrackersDataStoreImpl: NSObject {
         request.predicate = NSPredicate(format: "%K == %@ AND %K == %@",
                                         #keyPath(ExecutionsCoreData.date), date as NSDate,
                                         #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
-
+        
         request.resultType = .countResultType
         let count = (try? context.count(for: request)) ?? 0
         return count > 0

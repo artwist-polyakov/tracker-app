@@ -166,7 +166,6 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
         }
     }
     
-    
     func reloadData() {
         viewController.collectionView?.reloadData()
     }

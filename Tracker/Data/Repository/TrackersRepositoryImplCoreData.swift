@@ -32,5 +32,5 @@ class TrackersRepositoryImplCoreData: TrackersRepositoryProtocol{
         return true
     }
     
-
+    
 }

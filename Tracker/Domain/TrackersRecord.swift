@@ -24,22 +24,22 @@ struct TrackersRecordImpl: TrackersRecord {
     let isChecked: Bool
     
     init?(from coreDataObject: TrackersCoreData, daysDone: Int, isChecked: Bool) {
-            guard
-                let trackerId = coreDataObject.id,
-                let title = coreDataObject.title,
-                let creationDate = coreDataObject.creationDate,
-                let categoryId = coreDataObject.categoryId
-            else { return nil }
-            
-            self.trackerId = trackerId
-            self.title = title
-            self.creationDate = creationDate
-            self.categoryId = categoryId
-            self.color = Int(coreDataObject.color)
-            self.icon = Int(coreDataObject.icon)
-            self.shedule = coreDataObject.shedule ?? ""
-            self.daysDone = daysDone
-            self.isChecked = isChecked
-        }
+        guard
+            let trackerId = coreDataObject.id,
+            let title = coreDataObject.title,
+            let creationDate = coreDataObject.creationDate,
+            let categoryId = coreDataObject.categoryId
+        else { return nil }
+        
+        self.trackerId = trackerId
+        self.title = title
+        self.creationDate = creationDate
+        self.categoryId = categoryId
+        self.color = Int(coreDataObject.color)
+        self.icon = Int(coreDataObject.icon)
+        self.shedule = coreDataObject.shedule ?? ""
+        self.daysDone = daysDone
+        self.isChecked = isChecked
+    }
 }
 

@@ -10,7 +10,7 @@ class TrackerTypeViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.title = "Создание трекера"
-
+        
         setupButtons()
         layoutButtons()
     }

@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return NullStore() as CategoriesDataStore
         }
     }()
-
+    
     lazy var executionsDataStore: ExecutionsDataStore = {
         do {
             return try DataStore() as ExecutionsDataStore
@@ -27,17 +27,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return NullStore() as ExecutionsDataStore
         }
     }()
-
+    
     
     lazy var persistentContainer: NSPersistentContainer = {
-            let container = NSPersistentContainer(name: "Trackers")
-            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-                if let error = error as NSError? {
-                    fatalError("Unresolved error \(error), \(error.userInfo)")
-                }
-            })
-            return container
-        }()
+        let container = NSPersistentContainer(name: "Trackers")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        return container
+    }()
     
     func saveContext() {
         let context = persistentContainer.viewContext
@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             do {
                 try context.save()
             } catch {
-                context.rollback() 
+                context.rollback()
             }
         }
     }
