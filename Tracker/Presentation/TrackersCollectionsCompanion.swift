@@ -58,7 +58,9 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataProvider?.numberOfRowsInSection(section) ?? 0
+        let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
+        delegate.quantityTernar(quantity)
+        return quantity
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
