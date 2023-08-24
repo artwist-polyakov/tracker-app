@@ -254,7 +254,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         
         let coreDataObject = trackersFetchedResultsController.object(at: indexPath)
         guard let id = coreDataObject.id else {return nil}
-        let isDoneAt = trackersDataStore.hasExecutionForToday(for: id)
+        let isDoneAt = trackersDataStore.hasExecutionForDate(for: id, date: selectedDate)
         let daysGone = trackersDataStore.numberOfExecutions(for: id)
         return TrackersRecordImpl(from: coreDataObject, daysDone: daysGone, isChecked: isDoneAt)
     }

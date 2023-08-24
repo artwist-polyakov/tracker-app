@@ -31,12 +31,18 @@ struct SimpleDate: Hashable {
         components.year = year
         components.month = month
         components.day = day
-        return Calendar.current.date(from: components)!
-    }
-    
-    
-}
+        components.hour = 0   // Устанавливаем часы в 0
+        components.minute = 0 // Устанавливаем минуты в 0
+        components.second = 0 // Устанавливаем секунды в 0
+        components.timeZone = TimeZone.current // Учет текущей временной зоны
 
+        // Конвертация даты в ваш локальный часовой пояс
+        let localDate = Calendar.current.date(from: components)!
+        let utcDate = localDate.addingTimeInterval(TimeInterval(TimeZone.current.secondsFromGMT()))
+
+        return utcDate
+    }
+}
 
 extension SimpleDate {
     var dayOfWeekRussian: String {

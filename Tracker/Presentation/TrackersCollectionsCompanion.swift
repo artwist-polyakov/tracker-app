@@ -28,7 +28,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     var delegate: TrackersCollectionsCompanionDelegate
     var selectedDate: Date? {
         didSet {
-            dataProvider?.setDate(date: SimpleDate(date: self.selectedDate ?? Date()))
+            dataProvider?.setDate(date: SimpleDate(date: self.selectedDate ?? SimpleDate(date: Date()).date))
         }
     }
     var typedText: String? {
@@ -89,12 +89,12 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         }
         
         cell.onFunctionButtonTapped = { [weak self] in
-            let selectdate = self?.selectedDate ?? Date()
+            let selectdate = self?.selectedDate ?? SimpleDate(date: Date()).date
             guard let id = self?.dataProvider?.object(at: indexPath)?.trackerId
             else {
                 print("Поймал ошибку Execution")
                 return}
-            if selectdate <= Date() {
+            if selectdate <= SimpleDate(date:Date()).date {
                 self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate))
             } else {
                 self?.viewController.showFutureDateAlert()

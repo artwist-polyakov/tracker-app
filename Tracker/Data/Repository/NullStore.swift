@@ -8,7 +8,7 @@ extension NullStore: TrackersDataStore {
     func add(_ record: Tracker, categoryId: UUID, categoryTitle: String) throws {}
     func delete(_ record: NSManagedObject) throws {}
     func numberOfExecutions(for trackerId: UUID) -> Int {0}
-    func hasExecutionForToday(for trackerId: UUID) -> Bool {false}
+    func hasExecutionForDate(for trackerId: UUID, date: SimpleDate) -> Bool {false}
 }
 
 extension NullStore: CategoriesDataStore {

@@ -124,9 +124,9 @@ extension DataStore: TrackersDataStore {
         return count ?? 0
     }
 
-    func hasExecutionForToday(for trackerId: UUID) -> Bool {
+    func hasExecutionForDate(for trackerId: UUID, date: SimpleDate) -> Bool {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
-        fetchRequest.predicate = NSPredicate(format: "trackerId == %@ AND date == %@", trackerId as NSUUID, Date() as NSDate)
+        fetchRequest.predicate = NSPredicate(format: "trackerId == %@ AND date == %@", trackerId as NSUUID, date.date as NSDate)
         let count = try? context.count(for: fetchRequest)
         return count ?? 0 > 0
     }
@@ -182,10 +182,11 @@ extension DataStore: ExecutionsDataStore {
         }
     
     private func attachExecution(trackerId: UUID, date: Date) {
-        print("Я в аттач Executions")
+        print("Я в аттач Executions \(trackerId), \(date)")
             let newExecution = ExecutionsCoreData(context: context)
             newExecution.date = date
             newExecution.trackerId = trackerId
+        
             do {
                 try context.save()
                 let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
