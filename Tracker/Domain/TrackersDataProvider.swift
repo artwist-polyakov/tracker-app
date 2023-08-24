@@ -13,6 +13,7 @@ struct TrackersDataUpdate {
 protocol TrackersDataProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackersDataUpdate)
     func reloadData()
+    func reloadItems(at indexPaths: [IndexPath])
 }
 
 protocol TrackersDataProviderProtocol {
@@ -22,7 +23,7 @@ protocol TrackersDataProviderProtocol {
     func object(at indexPath: IndexPath) -> TrackersRecord?
     func addCategory(_ category: TrackerCategory) throws
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws
-    func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws
+    func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws
     func deleteObject(at indexPath: IndexPath) throws
     func setDate (date: SimpleDate)
     func setQuery (query: String)
@@ -278,8 +279,9 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         try trackersDataStore.add(tracker, categoryId: categoryId, categoryTitle: categoryTitle)
     }
     
-    func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws {
+    func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws {
         try executionsDataStore.interactWith(trackerId, date)
+        delegate?.reloadItems(at: [indexPath])
     }
     
     func deleteObject(at indexPath: IndexPath) throws {

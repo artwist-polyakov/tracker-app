@@ -58,8 +58,8 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         dataProvider?.clearAllCoreData()
     }
     
-    func interactWithExecution(trackerId: UUID, date: SimpleDate) {
-        try? dataProvider?.interactWith(trackerId, date)
+    func interactWithExecution(trackerId: UUID, date: SimpleDate, indexPath: IndexPath) {
+        try? dataProvider?.interactWith(trackerId, date, indexPath: indexPath)
     }
     
     // UICollectionViewDataSource
@@ -95,7 +95,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
                 print("Поймал ошибку Execution")
                 return}
             if selectdate <= SimpleDate(date:Date()).date {
-                self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate))
+                self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate), indexPath: indexPath)
             } else {
                 self?.viewController.showFutureDateAlert()
             }
@@ -167,6 +167,10 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
 }
 
 extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
+    func reloadItems(at indexPaths: [IndexPath]) {
+        viewController.collectionView?.reloadItems(at: indexPaths)
+    }
+    
     
     func didUpdate(_ update: TrackersDataUpdate) {
         print("Метод didUpdate вызван.")
