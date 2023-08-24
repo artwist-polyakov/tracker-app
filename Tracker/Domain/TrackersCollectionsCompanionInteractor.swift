@@ -1,10 +1,3 @@
-//
-//  TrackersCollectionsCompanionInteractor.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 23.08.2023.
-//
-
 import Foundation
 final class TrackersCollectionsCompanionInteractor {
     static let shared = TrackersCollectionsCompanionInteractor()

@@ -1,10 +1,3 @@
-//
-//  IconCollectionViewCell.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 08.08.2023.
-//
-
 import UIKit
 
 class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

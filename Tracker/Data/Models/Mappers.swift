@@ -1,10 +1,3 @@
-//
-//  Mappers.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.08.2023.
-//
-
 struct Mappers {
     
     static func intToDaysGoneMapper (_ number: Int) -> String {

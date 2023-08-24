@@ -1,10 +1,3 @@
-//
-//  TrackersRepositoryImpl.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 06.08.2023.
-//
-
 import Foundation
 final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
@@ -18,28 +11,27 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         TrackerCategory(id: UUID(), categoryTitle: "Домашний тестовый уют")
     ]
     
-    
     private lazy var trackers: [Tracker] = [
-                                        Tracker(categoryId: categories[0].id,
-                                        color: 1,
-                                        title: "Тестовый трекер 123",
-                                        icon: 1,
-                                        isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
-                                        ),
-                                        
-                                        Tracker(categoryId: categories[0].id,
-                                        color: 1,
-                                        title: "Тестовый трекер 123",
-                                        icon: 1,
-                                        isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
-                                        ),
-                                        
-                                        Tracker(categoryId: categories[0].id,
-                                        color: 1,
-                                        title: "Тестовый трекер 123",
-                                        icon: 1,
-                                        isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
-                                        )
+        Tracker(categoryId: categories[0].id,
+                color: 1,
+                title: "Тестовый трекер 123",
+                icon: 1,
+                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+               ),
+        
+        Tracker(categoryId: categories[0].id,
+                color: 1,
+                title: "Тестовый трекер 123",
+                icon: 1,
+                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+               ),
+        
+        Tracker(categoryId: categories[0].id,
+                color: 1,
+                title: "Тестовый трекер 123",
+                icon: 1,
+                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+               )
     ]
     
     private lazy var executions: [Execution] = [
@@ -75,7 +67,7 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
         
         return TrackersSearchResponse(categoryies: filteredCategories, trackers: filteredTrackers, executions: filteredExecutions)
     }
-
+    
     
     func addNewTrackerToCategory(color: Int, categoryID: UUID, trackerName: String, icon: Int, plannedDaysOfWeek: String) {
         let newTracker = Tracker(categoryId: categoryID,

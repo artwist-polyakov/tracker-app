@@ -1,10 +1,3 @@
-//
-//  SimpleDate.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 04.08.2023.
-//
-
 import Foundation
 
 struct SimpleDate: Hashable {
