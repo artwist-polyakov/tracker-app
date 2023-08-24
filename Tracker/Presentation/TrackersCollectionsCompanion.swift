@@ -70,9 +70,8 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
         
         if let tracker = dataProvider?.object(at: indexPath) {
-            let days = repository.howManyDaysIsTrackerDone(trackerId: tracker.trackerId)
-            let isDone = repository.isTrackerDoneAtDate(trackerId: tracker.trackerId, date: SimpleDate(date: selectedDate ?? Date()))
-            
+            let days = tracker.daysDone
+            let isDone = tracker.isChecked
             let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
             cell.configure(
                 text: tracker.title,
@@ -132,16 +131,6 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
         
-        //        if kind == UICollectionView.elementKindSectionHeader {
-        //            let category = repository.getAllDataPlannedTo(date: SimpleDate(date: selectedDate ?? Date()), titleFilter: typedText ?? "").categoryies[indexPath.section]
-        //            view.titleLabel.text = category.categoryTitle
-        //        }
-        //        if kind == UICollectionView.elementKindSectionHeader {
-        //                if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)),
-        //                   let categoryTitle = dataProvider?.categoryTitle(for: tracker.categoryId) {
-        //                    view.titleLabel.text = categoryTitle
-        //                }
-        //            }
         if kind == UICollectionView.elementKindSectionHeader {
             print("Обработка заголовка для секции \(indexPath.section)")
             

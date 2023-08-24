@@ -101,10 +101,6 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func giveMeSelectedCategory() -> TrackerCategory? {
-        
-        //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
-        
-//        return repository.getAllTrackers().categoryies[0]
         var result  = interactor?.giveMeAnyCategory()
         if let category = interactor?.giveMeAnyCategory() {
             result  = category

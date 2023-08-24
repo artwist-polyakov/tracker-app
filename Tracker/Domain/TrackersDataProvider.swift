@@ -68,7 +68,7 @@ final class TrackersDataProvider: NSObject {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
-        //        fetchRequest.predicate = giveCategoriesPredicate()
+        fetchRequest.predicate = giveCategoriesPredicate()
         
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -143,7 +143,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         }
         
         if shouldReloadData {
-            delegate?.reloadData() // мы добавляем этот новый метод в протокол
+            delegate?.reloadData()
         } else {
             guard let currentSection = currentSection else {return}
             delegate?.didUpdate(TrackersDataUpdate(
@@ -253,8 +253,10 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     func object(at indexPath: IndexPath) -> TrackersRecord? {
         
         let coreDataObject = trackersFetchedResultsController.object(at: indexPath)
-        
-        return TrackersRecordImpl(from: coreDataObject)
+        guard let id = coreDataObject.id else {return nil}
+        let isDoneAt = trackersDataStore.hasExecutionForToday(for: id)
+        let daysGone = trackersDataStore.numberOfExecutions(for: id)
+        return TrackersRecordImpl(from: coreDataObject, daysDone: daysGone, isChecked: isDoneAt)
     }
     
     func addCategory(_ category: TrackerCategory) throws {

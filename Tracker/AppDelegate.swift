@@ -29,10 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     
-    lazy var persistentContainer: NSPersistentContainer = {                     // 1
-            let container = NSPersistentContainer(name: "Trackers")              // 2
-            container.loadPersistentStores(completionHandler: { (storeDescription, error) in // 3
-                if let error = error as NSError? {                              // 4
+    lazy var persistentContainer: NSPersistentContainer = {
+            let container = NSPersistentContainer(name: "Trackers")
+            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+                if let error = error as NSError? {
                     fatalError("Unresolved error \(error), \(error.userInfo)")
                 }
             })
@@ -41,11 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func saveContext() {
         let context = persistentContainer.viewContext
-        if context.hasChanges { // Проверяем если у контекста какие-то изменения
+        if context.hasChanges {
             do {
-                try context.save() // Пробуем сохранить изменения
+                try context.save()
             } catch {
-                context.rollback() // Если что-то пошло не так, то мы просто "откатываем" все изменения назад
+                context.rollback() 
             }
         }
     }

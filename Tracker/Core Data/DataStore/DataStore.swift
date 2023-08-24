@@ -114,6 +114,20 @@ extension DataStore: TrackersDataStore {
             }
         }
     }
+    
+    func numberOfExecutions(for trackerId: UUID) -> Int {
+        let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
+        fetchRequest.predicate = NSPredicate(format: "trackerId == %@", trackerId as NSUUID)
+        let count = try? context.count(for: fetchRequest)
+        return count ?? 0
+    }
+
+    func hasExecutionForToday(for trackerId: UUID) -> Bool {
+        let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
+        fetchRequest.predicate = NSPredicate(format: "trackerId == %@ AND date == %@", trackerId as NSUUID, Date() as NSDate)
+        let count = try? context.count(for: fetchRequest)
+        return count ?? 0 > 0
+    }
 
 
 

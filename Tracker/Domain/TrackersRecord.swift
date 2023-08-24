@@ -8,6 +8,8 @@ protocol TrackersRecord {
     var color: Int { get }
     var icon: Int { get }
     var shedule: String { get }
+    var daysDone: Int { get }
+    var isChecked: Bool { get }
 }
 
 struct TrackersRecordImpl: TrackersRecord {
@@ -18,8 +20,10 @@ struct TrackersRecordImpl: TrackersRecord {
     let color: Int
     let icon: Int
     let shedule: String
+    let daysDone: Int
+    let isChecked: Bool
     
-    init?(from coreDataObject: TrackersCoreData) {
+    init?(from coreDataObject: TrackersCoreData, daysDone: Int, isChecked: Bool) {
             guard
                 let trackerId = coreDataObject.id,
                 let title = coreDataObject.title,
@@ -34,6 +38,8 @@ struct TrackersRecordImpl: TrackersRecord {
             self.color = Int(coreDataObject.color)
             self.icon = Int(coreDataObject.icon)
             self.shedule = coreDataObject.shedule ?? ""
+            self.daysDone = daysDone
+            self.isChecked = isChecked
         }
 }
 
