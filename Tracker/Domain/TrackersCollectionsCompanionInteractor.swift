@@ -5,7 +5,6 @@ final class TrackersCollectionsCompanionInteractor {
     private init() {}
     
     func addTracker(tracker:Tracker, categoryId: UUID, categoryTitle: String) {
-        print("Добавление трекера в интеракторе")
         companion?.addTracker(tracker: tracker, categoryId: categoryId, categoryTitle: categoryTitle)
     }
     

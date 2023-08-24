@@ -18,7 +18,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             )
             return provider
         } catch let error as NSError {
-            Swift.print("Данные недоступны. Ошибка \(error)")
+            print("Данные недоступны. Ошибка \(error)")
             return nil
         }
     }()
@@ -66,7 +66,6 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
         delegate.quantityTernar(quantity)
-        print("Число записей в секции \(section) ======== \(quantity)")
         return quantity
     }
     
@@ -77,7 +76,6 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             
             let days = tracker.daysDone
             let isDone = tracker.isChecked
-            print("Execution Для трекера в \(indexPath): days = \(days), isDone = \(isDone)")
             let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
             cell.configure(
                 text: tracker.title,
@@ -91,9 +89,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         cell.onFunctionButtonTapped = { [weak self] in
             let selectdate = self?.selectedDate ?? SimpleDate(date: Date()).date
             guard let id = self?.dataProvider?.object(at: indexPath)?.trackerId
-            else {
-                print("Поймал ошибку Execution")
-                return}
+            else {return}
             if selectdate <= SimpleDate(date:Date()).date {
                 self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate), indexPath: indexPath)
             } else {
@@ -141,29 +137,18 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
         
         if kind == UICollectionView.elementKindSectionHeader {
-            print("Обработка заголовка для секции \(indexPath.section)")
-            
             if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)) {
-                print("Найден трекер для секции \(indexPath.section): \(tracker)")
-                
                 if let categoryTitle = dataProvider?.categoryTitle(for: tracker.categoryId) {
-                    print("Найден заголовок категории: \(categoryTitle) для трекера из секции \(indexPath.section)")
                     view.titleLabel.text = categoryTitle
-                } else {
-                    print("Заголовок категории не найден для трекера из секции \(indexPath.section)")
                 }
-            } else {
-                print("Трекер не найден для секции \(indexPath.section)")
             }
         }
-        
         return view
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return dataProvider?.numberOfSections ?? 0
     }
-    
 }
 
 extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
@@ -173,13 +158,9 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
     
     
     func didUpdate(_ update: TrackersDataUpdate) {
-        print("Метод didUpdate вызван.")
-        
         viewController.collectionView?.performBatchUpdates {
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
-            Swift.print("Вставка элементов по индексам: \(insertedIndexPaths)")
-            Swift.print("Удаление элементов по индексам: \(deletedIndexPaths)")
             viewController.collectionView?.insertItems(at: insertedIndexPaths)
             viewController.collectionView?.deleteItems(at: deletedIndexPaths)
         }

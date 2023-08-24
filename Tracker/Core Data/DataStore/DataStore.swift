@@ -58,7 +58,6 @@ extension DataStore: TrackersDataStore {
     }
     
     func add(_ record: Tracker, categoryId: UUID, categoryTitle: String) throws {
-        print("Пытаюсь добавить трекер")
         try performSync { context in
             Result {
                 // Проверяем, существует ли уже категория с указанным categoryId
@@ -90,26 +89,10 @@ extension DataStore: TrackersDataStore {
                 
                 // Установим отношение между трекером и категорией
                 trackersCoreData.tracker_to_category = finalCategory
-                
-                print("Результат добавления")
-                print(trackersCoreData)
                 do {
                     try context.save()
                 } catch let error as NSError {
                     print("Ошибка при сохранении контекста: \(error)")
-                }
-                
-                // MARK: - ПРОВЕРКА СОХРАНЕНИЯ
-                let checkFetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
-                checkFetchRequest.predicate = NSPredicate(format: "title == %@", record.title)
-                let savedTrackers = try context.fetch(checkFetchRequest)
-
-                print("Проверка сохранения:")
-                if let savedTracker = savedTrackers.first {
-                    print("Трекер был успешно сохранен!")
-                    print(savedTracker)
-                } else {
-                    print("Трекер не был найден в базе данных.")
                 }
             }
         }
@@ -119,8 +102,6 @@ extension DataStore: TrackersDataStore {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         fetchRequest.predicate = NSPredicate(format: "trackerId == %@", trackerId as NSUUID)
         let count = try? context.count(for: fetchRequest)
-        print("Количество выполнений для трекера \(trackerId): \(count ?? 0)")
-
         return count ?? 0
     }
 
@@ -159,8 +140,6 @@ extension DataStore: CategoriesDataStore {
 
 extension DataStore: ExecutionsDataStore {
     func interactWith(_ record: UUID, _ date: SimpleDate) throws {
-            print("Attach/Detach Execution")
-            
             // Попробуем получить существующие выполнения для данного трекера и даты
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date.date as NSDate, #keyPath(ExecutionsCoreData.trackerId), record as NSUUID)
@@ -182,7 +161,6 @@ extension DataStore: ExecutionsDataStore {
         }
     
     private func attachExecution(trackerId: UUID, date: Date) {
-        print("Я в аттач Executions \(trackerId), \(date)")
             let newExecution = ExecutionsCoreData(context: context)
             newExecution.date = date
             newExecution.trackerId = trackerId
@@ -191,18 +169,12 @@ extension DataStore: ExecutionsDataStore {
                 try context.save()
                 let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
-                if let savedExecution = try context.fetch(fetchRequest).first as? ExecutionsCoreData {
-                    print("Подтверждение сохранения Execution: \(savedExecution)")
-                } else {
-                    print("Ошибка: Execution не найден после сохранения.")
-                }
             } catch let error as NSError {
                 print("Ошибка при сохранении выполнения: \(error.localizedDescription)")
             }
         }
     
     private func detachExecution(byObjectId objectId: NSManagedObjectID) {
-        print("Я в детач Executions")
             if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
                 context.delete(objectToDelete)
                 do {

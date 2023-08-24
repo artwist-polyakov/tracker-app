@@ -320,7 +320,6 @@ class CreateTrackerViewController: UIViewController {
 // MARK: UITableViewDataSource, UITableViewDelegate
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("вызван numberOfRowsInSection для \(section)")
         switch section {
         case 0:
             return menuItems.count
@@ -333,7 +332,6 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
 
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("numberOfSections вызван")
         return 3
     }
     
@@ -390,7 +388,6 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
                 let width = view.frame.width
                 return ceil(width / 6)
             }
-            print("heightForRowAt вызван для \(indexPath.section)")
             return 3*(collectionCellWidth+2) // высота для коллекций
         default:
             return 0

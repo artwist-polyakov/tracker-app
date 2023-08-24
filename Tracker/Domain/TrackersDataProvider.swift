@@ -40,7 +40,6 @@ final class TrackersDataProvider: NSObject {
     private var currentSection: Int?
     var selectedDate: SimpleDate = SimpleDate(date: Date()) {
         didSet {
-            print("Меняю дату в DidSet")
             reloadData()
         }
     }
@@ -114,21 +113,7 @@ final class TrackersDataProvider: NSObject {
         self.trackersDataStore = trackersDataStore
         self.categoriesDataStore = categoriesDataStore
         self.executionsDataStore = executionsDataStore
-        super.init()
-        print("Всего объектов в trackersFetchedResultsController: \(trackersFetchedResultsController.fetchedObjects?.count ?? 0)")
-        
-        for section in 0..<numberOfSections {
-            print("Объекты в секции \(section): \(numberOfRowsInSection(section))")
-            if let firstTrackerInSection = trackersFetchedResultsController.object(at: IndexPath(item: 0, section: section)) as? TrackersRecord {
-                print("Первый трекер в секции \(section): \(firstTrackerInSection)")
-            } else {
-                print("Не удалось получить первый трекер для секции \(section)")
-            }
-        }
-        
     }
-    
-    
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
@@ -206,23 +191,19 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     
     private func reloadData() {
-        print("Метод reloadData вызван.")
         previousSectionCount = numberOfSections
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
         do {
-            print(" try categoriesFetchedResultsController")
             try categoriesFetchedResultsController.performFetch()
         } catch let error as NSError  {
-            print("Error performing fetch: \(error)")
+            print("Error performing categoriesFetchedResultsController: \(error)")
         }
         do {
-            print(" try trackersFetchedResultsController")
             try trackersFetchedResultsController.performFetch()
         } catch let error as NSError  {
-            print("Error performing fetch: \(error)")
+            print("Error performing trackersFetchedResultsController: \(error)")
         }
-        print("Метод reloadData завершен")
     }
 }
 
@@ -239,20 +220,15 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? 0
         let totalObjects = trackersFetchedResultsController.fetchedObjects?.count ?? 0
-        print("Общее количество объектов: \(totalObjects)")
-        print("Метод numberOfSections вызван. Резульатат \(result)")
         return result
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        print("Метод numberOfRowsInSection вызван для секции \(section).")
         let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
-        print("число элементов \(result)")
         return result
     }
     
     func object(at indexPath: IndexPath) -> TrackersRecord? {
-        
         let coreDataObject = trackersFetchedResultsController.object(at: indexPath)
         guard let id = coreDataObject.id else {return nil}
         let isDoneAt = trackersDataStore.hasExecutionForDate(for: id, date: selectedDate)
@@ -275,7 +251,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws {
-        print("Добавление трекера в провайдере")
         try trackersDataStore.add(tracker, categoryId: categoryId, categoryTitle: categoryTitle)
     }
     
@@ -293,10 +268,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
         fetchRequest.fetchLimit = 1
-        print("Запрос на категорию вызван")
         do {
             let categories = try context.fetch(fetchRequest)
-            print(categories)
             return categories.first?.title
         } catch let error as NSError {
             print("Ошибка при извлечении категории: \(error)")
