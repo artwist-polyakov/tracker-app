@@ -94,7 +94,7 @@ final class TrackersDataProvider: NSObject {
             NSSortDescriptor(key:"tracker_to_category.id", ascending: false)]
         
         
-//        fetchRequest.predicate = giveTrackersPredicate()
+        fetchRequest.predicate = giveTrackersPredicate()
         let fetchedResultsController = NSFetchedResultsController(
                                         fetchRequest: fetchRequest,
                                         managedObjectContext: context,
@@ -187,20 +187,29 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
 
     
     private func giveCategoriesPredicate() -> NSPredicate {
-        let predicate = NSPredicate(format: "((ANY category_to_trackers.shedule CONTAINS %@) OR (ANY  category_to_trackers.shedule == '' )) AND ANY category_to_trackers.title CONTAINS[cd] %@",
-                                    String(selectedDate.weekDayNum), typedText)
-        return predicate
+        if typedText.isEmpty {
+            return NSPredicate(format: "(ANY category_to_trackers.shedule CONTAINS %@) OR (ANY category_to_trackers.shedule == '')",
+                               String(selectedDate.weekDayNum))
+        } else {
+            return NSPredicate(format: "((ANY category_to_trackers.shedule CONTAINS %@) OR (ANY category_to_trackers.shedule == '')) AND ANY category_to_trackers.title CONTAINS[cd] %@",
+                               String(selectedDate.weekDayNum), typedText)
+        }
     }
+
     
     private func giveTrackersPredicate() -> NSPredicate {
-        print("giveTrackersPredicate")
-        let predicate = NSPredicate(format: "((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                    #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
-                                    #keyPath(TrackersCoreData.shedule),
-                                    #keyPath(TrackersCoreData.title), typedText)
-        print("giveTrackersPredicate READY")
-        return predicate
+        if typedText.isEmpty {
+            return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
+                               #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
+                               #keyPath(TrackersCoreData.shedule))
+        } else {
+            return NSPredicate(format: "((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
+                               #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
+                               #keyPath(TrackersCoreData.shedule),
+                               #keyPath(TrackersCoreData.title), typedText)
+        }
     }
+
     
     private func reloadData() {
         print("Метод reloadData вызван.")
