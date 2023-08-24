@@ -19,4 +19,8 @@ final class TrackersCollectionsCompanionInteractor {
     func giveMeAnyCategory() -> TrackerCategory? {
         return companion?.giveMeAnyCategory()
     }
+    
+    func clearAllCoreData() {
+        companion?.clearAllCoreData()
+    }
 }

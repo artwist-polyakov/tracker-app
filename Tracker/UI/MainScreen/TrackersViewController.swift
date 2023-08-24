@@ -68,7 +68,9 @@ class TrackersViewController: UIViewController {
         tapGesture.delegate = self
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
-        
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        self.view.addGestureRecognizer(longPressRecognizer)
+
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
         collectionPresenter.selectedDate = self.datePicker.date
@@ -158,6 +160,21 @@ class TrackersViewController: UIViewController {
         isSearchFocused = true
         collectionView?.reloadData()
     }
+    
+    @objc func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state == UIGestureRecognizer.State.began {
+            let alert = UIAlertController(title: "Очистка данных", message: "Вы действительно хотите очистить все данные?", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Очистить", style: .destructive, handler: { _ in
+                self.collectionPresenter.handleClearAllData()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
     
     func setupButtons() {
         addBarButtonItem = {

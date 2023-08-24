@@ -16,6 +16,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         let executionsDataStore = (UIApplication.shared.delegate as! AppDelegate).executionsDataStore
         
         do {
+            
             let provider = try TrackersDataProvider(
                 trackersStore: trackersDataStore,
                 categoriesStore: categoriesDataStore,
@@ -58,6 +59,10 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     func giveMeAnyCategory() -> TrackerCategory? {
         return dataProvider?.giveMeAnyCategory()
+    }
+    
+    func clearAllCoreData() {
+        dataProvider?.clearAllCoreData()
     }
     
     // UICollectionViewDataSource

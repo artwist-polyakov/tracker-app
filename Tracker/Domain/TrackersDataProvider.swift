@@ -34,6 +34,7 @@ protocol TrackersDataProviderProtocol {
     func setQuery (query: String)
     func categoryTitle(for categoryId: UUID) -> String?
     func giveMeAnyCategory() -> TrackerCategory?
+    func clearAllCoreData()
 }
 
 final class TrackersDataProvider: NSObject {
@@ -277,6 +278,18 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
                 return nil
             }
     }
+    
+    func clearAllCoreData() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "CategoriesCoreData")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try context.execute(deleteRequest)
+        } catch let error as NSError {
+            print("Error deleting CategoriesCoreData: \(error.localizedDescription)")
+        }
+    }
+
     
     
 }

@@ -96,6 +96,10 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         self.viewController.collectionView?.reloadItems(at: [IndexPath(row: item, section: section)])        
     }
     
+    func handleClearAllData() {
+        interactor?.clearAllCoreData()
+    }
+    
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
@@ -104,10 +108,16 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func giveMeSelectedCategory() -> TrackerCategory? {
+        
         //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
         
 //        return repository.getAllTrackers().categoryies[0]
         
+        if let category = interactor?.giveMeAnyCategory() {
+            let result  = category
+        } else {
+            let result = repository.getAllTrackers().categoryies[0]
+        }
         return interactor?.giveMeAnyCategory()
     }
     

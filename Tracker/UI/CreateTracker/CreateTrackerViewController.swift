@@ -241,6 +241,8 @@ class CreateTrackerViewController: UIViewController {
         isTextFieldFocused = false
         }
     
+    
+    
     // MARK: - Actions
     private func handleSelectCategory() {
         // Переход к экрану выбора категории
