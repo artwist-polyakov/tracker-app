@@ -12,7 +12,7 @@ struct TrackersDataUpdate {
 // Протокол для уведомления об изменениях.
 protocol TrackersDataProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackersDataUpdate)
-    func reloadData() 
+    func reloadData()
 }
 
 protocol TrackersDataProviderProtocol {
@@ -59,7 +59,7 @@ final class TrackersDataProvider: NSObject {
     private let trackersDataStore: TrackersDataStore
     private let categoriesDataStore: CategoriesDataStore
     private let executionsDataStore: ExecutionsDataStore
-
+    
     private var insertedIndexes: IndexSet?
     private var deletedIndexes: IndexSet?
     private var updatedIndexes: IndexSet?
@@ -68,13 +68,13 @@ final class TrackersDataProvider: NSObject {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
-//        fetchRequest.predicate = giveCategoriesPredicate()
+        //        fetchRequest.predicate = giveCategoriesPredicate()
         
         let fetchedResultsController = NSFetchedResultsController(
-                                        fetchRequest: fetchRequest,
-                                        managedObjectContext: context,
-                                        sectionNameKeyPath: "id",
-                                        cacheName: nil)
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: "id",
+            cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
         return fetchedResultsController
@@ -83,16 +83,16 @@ final class TrackersDataProvider: NSObject {
     private lazy var trackersFetchedResultsController:  NSFetchedResultsController<TrackersCoreData> = {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true),
-            NSSortDescriptor(key:"tracker_to_category.creationDate", ascending: false),
-            NSSortDescriptor(key:"tracker_to_category.id", ascending: false)]
+                                        NSSortDescriptor(key:"tracker_to_category.creationDate", ascending: false),
+                                        NSSortDescriptor(key:"tracker_to_category.id", ascending: false)]
         
         
         fetchRequest.predicate = giveTrackersPredicate()
         let fetchedResultsController = NSFetchedResultsController(
-                                        fetchRequest: fetchRequest,
-                                        managedObjectContext: context,
-                                        sectionNameKeyPath: "categoryId",
-                                        cacheName: nil)
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: "categoryId",
+            cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
         
@@ -104,7 +104,7 @@ final class TrackersDataProvider: NSObject {
          categoriesStore categoriesDataStore: CategoriesDataStore,
          executionsStore executionsDataStore: ExecutionsDataStore,
          delegate: TrackersDataProviderDelegate)
-        throws {
+    throws {
         guard let context = trackersDataStore.managedObjectContext else {
             throw TrackersDataProviderError.failedToInitializeContext
         }
@@ -115,7 +115,7 @@ final class TrackersDataProvider: NSObject {
         self.executionsDataStore = executionsDataStore
         super.init()
         print("Всего объектов в trackersFetchedResultsController: \(trackersFetchedResultsController.fetchedObjects?.count ?? 0)")
-
+        
         for section in 0..<numberOfSections {
             print("Объекты в секции \(section): \(numberOfRowsInSection(section))")
             if let firstTrackerInSection = trackersFetchedResultsController.object(at: IndexPath(item: 0, section: section)) as? TrackersRecord {
@@ -124,7 +124,7 @@ final class TrackersDataProvider: NSObject {
                 print("Не удалось получить первый трекер для секции \(section)")
             }
         }
-            
+        
     }
     
     
@@ -136,29 +136,29 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         insertedIndexes = IndexSet()
         deletedIndexes = IndexSet()
     }
-
+    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         if previousSectionCount != numberOfSections {
             shouldReloadData = true
         }
-
+        
         if shouldReloadData {
             delegate?.reloadData() // мы добавляем этот новый метод в протокол
         } else {
             guard let currentSection = currentSection else {return}
             delegate?.didUpdate(TrackersDataUpdate(
-                    section: currentSection,
-                    insertedIndexes: insertedIndexes ?? IndexSet(),
-                    deletedIndexes: deletedIndexes ?? IndexSet(),
-                    updatedIndexes: updatedIndexes ?? IndexSet()
-                )
+                section: currentSection,
+                insertedIndexes: insertedIndexes ?? IndexSet(),
+                deletedIndexes: deletedIndexes ?? IndexSet(),
+                updatedIndexes: updatedIndexes ?? IndexSet()
+            )
             )
         }
         shouldReloadData = false
         insertedIndexes = nil
         deletedIndexes = nil
     }
-
+    
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
@@ -177,7 +177,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             break
         }
     }
-
+    
     
     private func giveCategoriesPredicate() -> NSPredicate {
         if typedText.isEmpty {
@@ -188,7 +188,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                String(selectedDate.weekDayNum), typedText)
         }
     }
-
+    
     
     private func giveTrackersPredicate() -> NSPredicate {
         if typedText.isEmpty {
@@ -202,7 +202,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                #keyPath(TrackersCoreData.title), typedText)
         }
     }
-
+    
     
     private func reloadData() {
         print("Метод reloadData вызван.")
@@ -262,11 +262,14 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func giveMeAnyCategory() -> TrackerCategory?  {
-        guard let firstCategory = categoriesFetchedResultsController.fetchedObjects?.first else {
-              return nil
-          }
-          return TrackerCategory(id: firstCategory.id!, categoryTitle: firstCategory.title ?? "")
-      }
+        guard let firstCategory = categoriesFetchedResultsController.fetchedObjects?.first,
+              let id = firstCategory.id,
+              let title = firstCategory.title
+        else {
+            return nil
+        }
+        return TrackerCategory(id: id, categoryTitle: title)
+    }
     
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws {
         print("Добавление трекера в провайдере")
@@ -284,17 +287,17 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     func categoryTitle(for categoryId: UUID) -> String? {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
-            fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
-            fetchRequest.fetchLimit = 1
-            print("Запрос на категорию вызван")
-            do {
-                let categories = try context.fetch(fetchRequest)
-                print(categories)
-                return categories.first?.title
-            } catch let error as NSError {
-                print("Ошибка при извлечении категории: \(error)")
-                return nil
-            }
+        fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
+        fetchRequest.fetchLimit = 1
+        print("Запрос на категорию вызван")
+        do {
+            let categories = try context.fetch(fetchRequest)
+            print(categories)
+            return categories.first?.title
+        } catch let error as NSError {
+            print("Ошибка при извлечении категории: \(error)")
+            return nil
+        }
     }
     
     func clearAllCoreData() {
@@ -309,8 +312,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             print("Error deleting CategoriesCoreData: \(error.localizedDescription)")
         }
     }
-
-
+    
+    
     
     
 }
