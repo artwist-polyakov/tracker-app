@@ -6,25 +6,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     lazy var trackersDataStore: TrackersDataStore = {
         do {
-            return try DataStore() as! TrackersDataStore
+            return try DataStore() as TrackersDataStore
         } catch {
-            return NullStore() as! TrackersDataStore
+            return NullStore() as TrackersDataStore
         }
     }()
     
     lazy var categoriesDataStore: CategoriesDataStore = {
         do {
-            return try DataStore() as! CategoriesDataStore
+            return try DataStore() as CategoriesDataStore
         } catch {
-            return NullStore() as! CategoriesDataStore
+            return NullStore() as CategoriesDataStore
         }
     }()
 
     lazy var executionsDataStore: ExecutionsDataStore = {
         do {
-            return try DataStore() as! ExecutionsDataStore
+            return try DataStore() as ExecutionsDataStore
         } catch {
-            return NullStore() as! ExecutionsDataStore
+            return NullStore() as ExecutionsDataStore
         }
     }()
 
