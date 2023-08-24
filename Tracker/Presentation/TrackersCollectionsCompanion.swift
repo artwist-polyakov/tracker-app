@@ -56,17 +56,15 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         try? dataProvider?.addTracker(tracker, categoryId: categoryId, categoryTitle:categoryTitle)
     }
     
-    func giveMeAnyTrackercategory() -> TrackerCategory? {
-        if let firstCategoryObject = dataProvider?.object(at: IndexPath(item: 0, section: 0)) {
-               return TrackerCategory(id: firstCategoryObject.categoryId, categoryTitle: firstCategoryObject.title)
-           }
-        return nil
+    func giveMeAnyCategory() -> TrackerCategory? {
+        return dataProvider?.giveMeAnyCategory()
     }
     
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
         delegate.quantityTernar(quantity)
+        print("Число записей в секции \(section) ======== \(quantity)")
         return quantity
     }
     
@@ -176,9 +174,10 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
     
     func didUpdate(_ update: TrackersDataUpdate) {
         print("Метод didUpdate вызван.")
+        let currentSection = update.section
         viewController.collectionView?.performBatchUpdates{
-            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
-            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: currentSection) }
+            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: currentSection) }
             Swift.print("Вставка элементов по индексам: \(insertedIndexPaths)")
             Swift.print("Удаление элементов по индексам: \(deletedIndexPaths)")
             viewController.collectionView?.insertItems(at: insertedIndexPaths)

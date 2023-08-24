@@ -10,6 +10,7 @@ import CoreData
 
 // Эта структура будет использоваться для уведомления о любых изменениях в данных.
 struct TrackersDataUpdate {
+    let section: Int
     let insertedIndexes: IndexSet
     let deletedIndexes: IndexSet
     let updatedIndexes: IndexSet
@@ -32,6 +33,7 @@ protocol TrackersDataProviderProtocol {
     func setDate (date: SimpleDate)
     func setQuery (query: String)
     func categoryTitle(for categoryId: UUID) -> String?
+    func giveMeAnyCategory() -> TrackerCategory?
 }
 
 final class TrackersDataProvider: NSObject {
@@ -39,7 +41,7 @@ final class TrackersDataProvider: NSObject {
     enum TrackersDataProviderError: Error {
         case failedToInitializeContext
     }
-    
+    private var currentSection: Int?
     var selectedDate: SimpleDate = SimpleDate(date: Date()) {
         didSet {
             print("Меняю дату в DidSet")
@@ -67,7 +69,7 @@ final class TrackersDataProvider: NSObject {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
-        fetchRequest.predicate = giveCategoriesPredicate()
+//        fetchRequest.predicate = giveCategoriesPredicate()
         
         let fetchedResultsController = NSFetchedResultsController(
                                         fetchRequest: fetchRequest,
@@ -137,10 +139,12 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let currentSection = currentSection else {return}
         delegate?.didUpdate(TrackersDataUpdate(
-                insertedIndexes: insertedIndexes!,
-                deletedIndexes: deletedIndexes!,
-                updatedIndexes: updatedIndexes!
+                section: currentSection,
+                insertedIndexes: insertedIndexes ?? IndexSet(),
+                deletedIndexes: deletedIndexes ?? IndexSet() ,
+                updatedIndexes: updatedIndexes ?? IndexSet()
             )
         )
         insertedIndexes = nil
@@ -153,15 +157,18 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         case .delete:
             if let indexPath = indexPath {
                 deletedIndexes?.insert(indexPath.item)
+                currentSection = indexPath.section
             }
         case .insert:
             if let indexPath = newIndexPath {
                 insertedIndexes?.insert(indexPath.item)
+                currentSection = indexPath.section
             }
         default:
             break
         }
     }
+
     
     private func giveCategoriesPredicate() -> NSPredicate {
         let predicate = NSPredicate(format: "((ANY category_to_trackers.shedule CONTAINS %@) OR (ANY  category_to_trackers.shedule == '' )) AND ANY category_to_trackers.title CONTAINS[cd] %@",
@@ -234,6 +241,13 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     func addCategory(_ category: TrackerCategory) throws {
         try categoriesDataStore.add(category)
     }
+    
+    func giveMeAnyCategory() -> TrackerCategory?  {
+        guard let firstCategory = categoriesFetchedResultsController.fetchedObjects?.first else {
+              return nil
+          }
+          return TrackerCategory(id: firstCategory.id!, categoryTitle: firstCategory.title ?? "")
+      }
     
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws {
         print("Добавление трекера в провайдере")

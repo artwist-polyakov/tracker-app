@@ -17,6 +17,6 @@ final class TrackersCollectionsCompanionInteractor {
     }
     
     func giveMeAnyCategory() -> TrackerCategory? {
-        return companion?.giveMeAnyTrackercategory()
+        return companion?.giveMeAnyCategory()
     }
 }
