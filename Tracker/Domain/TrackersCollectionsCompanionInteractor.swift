@@ -15,5 +15,5 @@ final class TrackersCollectionsCompanionInteractor {
     
     func clearAllCoreData() {
         companion?.clearAllCoreData()
-    }
+    }    
 }

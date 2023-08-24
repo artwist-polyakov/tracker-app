@@ -22,7 +22,7 @@ protocol TrackersDataProviderProtocol {
     func object(at indexPath: IndexPath) -> TrackersRecord?
     func addCategory(_ category: TrackerCategory) throws
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws
-    func addExecution(_ execution: Execution) throws
+    func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws
     func deleteObject(at indexPath: IndexPath) throws
     func setDate (date: SimpleDate)
     func setQuery (query: String)
@@ -278,8 +278,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         try trackersDataStore.add(tracker, categoryId: categoryId, categoryTitle: categoryTitle)
     }
     
-    func addExecution(_ execution: Execution) throws {
-        try executionsDataStore.interactWith(execution)
+    func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws {
+        try executionsDataStore.interactWith(trackerId, date)
     }
     
     func deleteObject(at indexPath: IndexPath) throws {

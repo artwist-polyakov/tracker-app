@@ -16,6 +16,6 @@ extension NullStore: CategoriesDataStore {
 }
 
 extension NullStore: ExecutionsDataStore {
-    func interactWith(_ record: Execution) throws {}
+    func interactWith(_ record: UUID, _ date: SimpleDate) throws {}
 }
 

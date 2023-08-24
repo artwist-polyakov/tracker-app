@@ -83,11 +83,6 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
     }
     
-    func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date, text: String) {
-        let tracker = repository.getAllDataPlannedTo(date: SimpleDate(date:date), titleFilter: text).trackers[item]
-        repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))
-        self.viewController.collectionView?.reloadItems(at: [IndexPath(row: item, section: section)])        
-    }
     
     func handleClearAllData() {
         interactor?.clearAllCoreData()

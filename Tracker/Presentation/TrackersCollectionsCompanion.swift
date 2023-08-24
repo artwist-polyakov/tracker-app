@@ -58,6 +58,10 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         dataProvider?.clearAllCoreData()
     }
     
+    func interactWithExecution(trackerId: UUID, date: SimpleDate) {
+        try? dataProvider?.interactWith(trackerId, date)
+    }
+    
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
@@ -70,8 +74,10 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
         
         if let tracker = dataProvider?.object(at: indexPath) {
+            
             let days = tracker.daysDone
             let isDone = tracker.isChecked
+            print("Execution Для трекера в \(indexPath): days = \(days), isDone = \(isDone)")
             let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
             cell.configure(
                 text: tracker.title,
@@ -84,9 +90,12 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
         
         cell.onFunctionButtonTapped = { [weak self] in
             let selectdate = self?.selectedDate ?? Date()
-            let text = self?.typedText ?? ""
+            guard let id = self?.dataProvider?.object(at: indexPath)?.trackerId
+            else {
+                print("Поймал ошибку Execution")
+                return}
             if selectdate <= Date() {
-                self?.delegate.handleFunctionButtonTapped(at: indexPath.item, inSection: indexPath.section, date: selectdate, text: text)
+                self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate))
             } else {
                 self?.viewController.showFutureDateAlert()
             }
