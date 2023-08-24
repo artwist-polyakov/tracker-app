@@ -1,10 +1,3 @@
-//
-//  TrackersRecord.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 21.08.2023.
-//
-
 import Foundation
 
 protocol TrackersRecord {
@@ -15,6 +8,8 @@ protocol TrackersRecord {
     var color: Int { get }
     var icon: Int { get }
     var shedule: String { get }
+    var daysDone: Int { get }
+    var isChecked: Bool { get }
 }
 
 struct TrackersRecordImpl: TrackersRecord {
@@ -25,5 +20,26 @@ struct TrackersRecordImpl: TrackersRecord {
     let color: Int
     let icon: Int
     let shedule: String
+    let daysDone: Int
+    let isChecked: Bool
+    
+    init?(from coreDataObject: TrackersCoreData, daysDone: Int, isChecked: Bool) {
+            guard
+                let trackerId = coreDataObject.id,
+                let title = coreDataObject.title,
+                let creationDate = coreDataObject.creationDate,
+                let categoryId = coreDataObject.categoryId
+            else { return nil }
+            
+            self.trackerId = trackerId
+            self.title = title
+            self.creationDate = creationDate
+            self.categoryId = categoryId
+            self.color = Int(coreDataObject.color)
+            self.icon = Int(coreDataObject.icon)
+            self.shedule = coreDataObject.shedule ?? ""
+            self.daysDone = daysDone
+            self.isChecked = isChecked
+        }
 }
 

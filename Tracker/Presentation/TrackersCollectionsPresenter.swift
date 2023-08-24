@@ -1,18 +1,20 @@
-//
-//  TrackersCollectionsPresenter.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.08.2023.
-//
-
 import Foundation
 import UIKit
 class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
+    func setInteractor(interactor: TrackersCollectionsCompanionInteractor) {
+        self.interactor = interactor
+    }
+    
+    
     static let didReadyNotification = Notification.Name(rawValue: "ready")
     static let didNotReadyNotification = Notification.Name(rawValue: "not ready")
     let repository = TrackersRepositoryImpl.shared
-    
+    var interactor: TrackersCollectionsCompanionInteractor? = nil {
+        didSet {
+            print("Установлен интерактор")
+        }
+    }
     let cellIdentifier = "TrackerCollectionViewCell"
     var viewController: TrackersViewControllerProtocol
     
@@ -31,6 +33,15 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             guard let category = trackerCategoryToFlush
             else {print ("TrackerCategoryToFlush: Пусто") ; return}
             print("TrackerCategoryToFlush: \(category)")
+        }
+    }
+    
+    var trackerCategorynameToFlush: String? {
+        didSet {
+            notifyObservers()
+            guard let categoryName = trackerCategorynameToFlush
+            else {print ("trackerCategorynameToFlush: Пусто") ; return}
+            print("trackerCategorynameToFlush: \(categoryName)")
         }
     }
     var trackerTitleToFlush: String? {
@@ -72,10 +83,9 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
     }
     
-    func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date, text: String) {
-        let tracker = repository.getAllDataPlannedTo(date: SimpleDate(date:date), titleFilter: text).trackers[item]
-        repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))
-        self.viewController.collectionView?.reloadItems(at: [IndexPath(row: item, section: section)])        
+    
+    func handleClearAllData() {
+        interactor?.clearAllCoreData()
     }
     
 }
@@ -85,9 +95,14 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         return trackerSheduleToFlush.compactMap { Int(String($0)) }
     }
     
-    func giveMeSelectedCategory() -> TrackerCategory {
-        //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
-        return repository.getAllTrackers().categoryies[0]
+    func giveMeSelectedCategory() -> TrackerCategory? {
+        var result  = interactor?.giveMeAnyCategory()
+        if let category = interactor?.giveMeAnyCategory() {
+            result  = category
+        } else {
+            result = repository.getAllTrackers().categoryies[0]
+        }
+        return result
     }
     
     func didSelectTrackerCategory(_ category: UUID) {
@@ -114,6 +129,10 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerColorToFlush = color + 1 // Нумерация цветов начинается с 1
     }
     
+    func didSetTrackerCategoryName(_ categoryName: String) {
+        trackerCategorynameToFlush = categoryName
+    }
+    
     func clearAllFlushProperties() {
         trackerTypeToFlush = .notSet
         trackerTitleToFlush = nil
@@ -126,7 +145,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         guard let trackerTitle = trackerTitleToFlush,
               let trackerIcon = trackerIconToFlush,
               let trackerColor = trackerColorToFlush,
-              let trackseCategory = trackerCategoryToFlush
+              let trackseCategory = trackerCategoryToFlush,
+              let trackerCategoryName = trackerCategorynameToFlush
         else {
             print("Не все данные готовы")
             return }
@@ -138,6 +158,16 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
             trackerName: trackerTitle,
             icon: Mappers.iconToIntMapper(trackerIcon),
             plannedDaysOfWeek: trackerSheduleToFlush)
+        
+        
+        let tracker = Tracker(categoryId: trackseCategory,
+                              color: trackerColor,
+                              title: trackerTitle,
+                              icon: Mappers.iconToIntMapper(trackerIcon),
+                              isPlannedFor: trackerSheduleToFlush)
+        
+        print("Добравление трекера в презенторе \(tracker) ")
+        interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
         
         clearAllFlushProperties()
         viewController.collectionView?.reloadData()
@@ -158,13 +188,11 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     
     private func notifyObservers(){
         if isReadyToFlush() {
-            print("Уведомление отправлено что данные готовы")
             NotificationCenter.default.post(
                 name: TrackersCollectionsPresenter.didReadyNotification,
                 object: self,
                 userInfo: ["GO": true ])
         } else {
-            print("Уведомление отправлено что данные не готовы")
             NotificationCenter.default.post(
                 name: TrackersCollectionsPresenter.didNotReadyNotification,
                 object: self,

@@ -1,9 +1,3 @@
-//
-//  StatsViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 02.08.2023.
-//
 import UIKit
 
 class StatsViewController: UIViewController {

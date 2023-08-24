@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 27.07.2023.
-//
-
 import UIKit
 
 class TrackersViewController: UIViewController {
@@ -68,6 +61,8 @@ class TrackersViewController: UIViewController {
         tapGesture.delegate = self
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        self.view.addGestureRecognizer(longPressRecognizer)
         
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
@@ -105,7 +100,7 @@ class TrackersViewController: UIViewController {
             searchField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             searchField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             searchField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-
+            
         ])
         
         
@@ -147,8 +142,8 @@ class TrackersViewController: UIViewController {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        collectionPresenter.selectedDate = sender.date
-        collectionCompanion?.selectedDate = sender.date
+        collectionPresenter.selectedDate = SimpleDate(date: sender.date).date
+        collectionCompanion?.selectedDate = SimpleDate(date: sender.date).date
         print("Новая дата: \(sender.date)")
         collectionView?.reloadData()
     }
@@ -159,13 +154,21 @@ class TrackersViewController: UIViewController {
         collectionView?.reloadData()
     }
     
+    @objc func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state == UIGestureRecognizer.State.began {
+            showDeleteDataAlert()
+            
+        }
+    }
+    
+    
     func setupButtons() {
         addBarButtonItem = {
             let barButtonItem = UIBarButtonItem(
-            image: UIImage (named: "Add" ),
-            style: .plain,
-            target: self,
-            action: #selector (addButtonTapped)
+                image: UIImage (named: "Add" ),
+                style: .plain,
+                target: self,
+                action: #selector (addButtonTapped)
             )
             barButtonItem.tintColor = UIColor (named: "TrackerBlack")
             return barButtonItem
@@ -175,6 +178,18 @@ class TrackersViewController: UIViewController {
     func showFutureDateAlert() {
         let alertPresenter = AlertPresenter()
         let alert = AlertModel(title: "Не лги!", message: "Нельзя отметить выполненным трекер из будущего", primaryButtonText: "Простите!", primaryButtonCompletion: {})
+        alertPresenter.show(in: self, model:alert)
+    }
+    
+    func showDeleteDataAlert() {
+        let alertPresenter = AlertPresenter()
+        let alert = AlertModel(
+            title: "Очистка данных",
+            message: "Вы действительно хотите очистить все данные?",
+            primaryButtonText: "Отмена",
+            primaryButtonCompletion: {},
+            secondaryButtonText: "Удаляем",
+            secondaryButtonCompletion: {self.collectionPresenter.handleClearAllData()})
         alertPresenter.show(in: self, model:alert)
     }
     
@@ -212,7 +227,7 @@ extension TrackersViewController: TrackersViewControllerProtocol {
 
 extension TrackersViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-
+        
         if searchField.isFirstResponder {
             return true
         } else {
