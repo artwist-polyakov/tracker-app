@@ -65,17 +65,15 @@ extension DataStore: TrackersDataStore {
                 fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
                 let existingCategories = try context.fetch(fetchRequest)
                 
-                var finalCategory: CategoriesCoreData!
-                
-                // Если категория не существует, создадим новую
-                if existingCategories.isEmpty {
+                var finalCategory: CategoriesCoreData
+                if let firstCategory = existingCategories.first {
+                    finalCategory = firstCategory
+                } else {
                     let newCategory = CategoriesCoreData(context: context)
                     newCategory.id = UUID()
                     newCategory.title = categoryTitle
                     newCategory.creationDate = Date()
                     finalCategory = newCategory
-                } else {
-                    finalCategory = existingCategories.first
                 }
                 
                 let trackersCoreData = TrackersCoreData(context: context)

@@ -49,8 +49,12 @@ class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory()?.id)!)
-        delegate?.didSetTrackerCategoryName(((delegate?.giveMeSelectedCategory()?.categoryTitle)!))
+        if let categoryId = delegate?.giveMeSelectedCategory()?.id {
+            delegate?.didSelectTrackerCategory(categoryId)
+        }
+        if let categoryTitle = delegate?.giveMeSelectedCategory()?.categoryTitle {
+            delegate?.didSetTrackerCategoryName(categoryTitle)
+        }
         setupUI()
         layoutUI()
         menuTableView.reloadData()
