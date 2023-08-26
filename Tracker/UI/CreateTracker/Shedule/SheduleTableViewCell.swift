@@ -1,14 +1,7 @@
-//
-//  MenuTableViewCell.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 07.08.2023.
-//
-
 import Foundation
 import UIKit
 
-class SheduleTableViewCell: UITableViewCell {
+final class SheduleTableViewCell: UITableViewCell {
     var targetDay: String?
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()
@@ -37,6 +30,7 @@ class SheduleTableViewCell: UITableViewCell {
     }
     
     private func setupCell() {
+        self.selectionStyle = .none
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         titleLabel.textColor = UIColor(named: "TrackerBlack")
         

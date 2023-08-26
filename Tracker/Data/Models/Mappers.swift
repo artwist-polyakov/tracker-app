@@ -1,10 +1,3 @@
-//
-//  Mappers.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.08.2023.
-//
-
 struct Mappers {
     
     static func intToDaysGoneMapper (_ number: Int) -> String {
@@ -49,21 +42,31 @@ struct Mappers {
         return icons[icon] ?? 0
     }
     
-    static func giveMeAllWeekdaysNames() -> [String:Int] {
-        return ["понедельник":1,
-                "вторник":2,
-                "среда":3,
-                "четверг":4,
-                "пятница":5,
-                "суббота":6,
-                "воскресенье":7]
+    static func giveMeAllWeekdaysNames() -> [String:[Int]] {
+        
+        // отдаст массив: имя дня недели, номер дня недели в мире с
+        // воскр день 1, и сортировка дней недели в мире где первый день
+        // зависит от локали
+        
+        let shift = 1 // MARK: - тут будет Int(NSLocalizedString()) 0 для английского
+        return ["понедельник": shifter(2, shift),
+                "вторник": shifter(3, shift),
+                "среда": shifter(4, shift),
+                "четверг": shifter(5, shift),
+                "пятница": shifter(6, shift),
+                "суббота": shifter(7, shift),
+                "воскресенье": shifter(1, shift)]
+    }
+    
+    static private func shifter(_ pos: Int, _ shift: Int) -> [Int] {
+        return [pos,((pos+7)-shift)%8]
     }
     
     static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
         if weekdays.count == 7 {
             return "Каждый день"
         }
-        let short_names = ["понедельник":"Пн",
+        let shortNames = ["понедельник":"Пн",
                            "вторник":"Вт",
                            "среда":"Ср",
                            "четверг":"Чт",
@@ -71,11 +74,18 @@ struct Mappers {
                            "суббота":"Сб",
                            "воскресенье":"Вс"]
         
-        let sortedWeekdays = weekdays.sorted {
-            return giveMeAllWeekdaysNames()[$0.lowercased()]! < giveMeAllWeekdaysNames()[$1.lowercased()]!
+        let allWeekdaysNames = giveMeAllWeekdaysNames()
+        let sortedWeekdays = weekdays.sorted { weekday1, weekday2 in
+            guard let value1 = allWeekdaysNames[weekday1.lowercased()],
+                  let value2 = allWeekdaysNames[weekday2.lowercased()] else {
+                return false
+            }
+            return value1[1] < value2[1]
         }
         
-        let sortedShortNames = sortedWeekdays.map { short_names[$0.lowercased()]! }
+        let sortedShortNames = sortedWeekdays.compactMap { weekday -> String? in
+            return shortNames[weekday.lowercased()]
+        }
         
         return sortedShortNames.joined(separator: ", ")
         

@@ -1,13 +1,6 @@
-//
-//  ViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 27.07.2023.
-//
-
 import UIKit
 
-class TrackersViewController: UIViewController {
+final class TrackersViewController: UIViewController {
     
     var addBarButtonItem: UIBarButtonItem?
     var collectionView: UICollectionView?
@@ -35,7 +28,7 @@ class TrackersViewController: UIViewController {
         return label
     }()
     
-    let VoidImage: UIImageView = {
+    let voidImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "VoidImage")
         return image
@@ -68,6 +61,8 @@ class TrackersViewController: UIViewController {
         tapGesture.delegate = self
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        self.view.addGestureRecognizer(longPressRecognizer)
         
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
@@ -83,8 +78,9 @@ class TrackersViewController: UIViewController {
         collectionView?.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
         collectionView?.register(SupplementaryViewMain.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         
-        
-        view.addSubview(collectionView!)
+        if let collection = collectionView {
+            view.addSubview(collection)
+        }
         
         setupButtons()
         navigationItem.leftBarButtonItem = addBarButtonItem
@@ -105,33 +101,34 @@ class TrackersViewController: UIViewController {
             searchField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             searchField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             searchField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-
+            
         ])
         
         
         
-        view.addSubview(VoidImage)
-        VoidImage.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(voidImage)
+        voidImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            VoidImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            VoidImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            VoidImage.widthAnchor.constraint(equalToConstant: 80),
-            VoidImage.heightAnchor.constraint(equalToConstant: 80)
+            voidImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            voidImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            voidImage.widthAnchor.constraint(equalToConstant: 80),
+            voidImage.heightAnchor.constraint(equalToConstant: 80)
         ])
         
         view.addSubview(questionLabel)
         questionLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            questionLabel.topAnchor.constraint(equalTo: VoidImage.bottomAnchor, constant: 8),
+            questionLabel.topAnchor.constraint(equalTo: voidImage.bottomAnchor, constant: 8),
             questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         collectionView?.translatesAutoresizingMaskIntoConstraints = false
+        guard let collection = collectionView else { return }
         NSLayoutConstraint.activate([
-            collectionView!.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 16),
-            collectionView!.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            collectionView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
+              collection.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 16),
+              collection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+              collection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+              collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
@@ -147,8 +144,8 @@ class TrackersViewController: UIViewController {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        collectionPresenter.selectedDate = sender.date
-        collectionCompanion?.selectedDate = sender.date
+        collectionPresenter.selectedDate = SimpleDate(date: sender.date).date
+        collectionCompanion?.selectedDate = SimpleDate(date: sender.date).date
         print("Новая дата: \(sender.date)")
         collectionView?.reloadData()
     }
@@ -159,13 +156,21 @@ class TrackersViewController: UIViewController {
         collectionView?.reloadData()
     }
     
+    @objc func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
+        if gestureReconizer.state == UIGestureRecognizer.State.began {
+            showDeleteDataAlert()
+            
+        }
+    }
+    
+    
     func setupButtons() {
         addBarButtonItem = {
             let barButtonItem = UIBarButtonItem(
-            image: UIImage (named: "Add" ),
-            style: .plain,
-            target: self,
-            action: #selector (addButtonTapped)
+                image: UIImage (named: "Add" ),
+                style: .plain,
+                target: self,
+                action: #selector (addButtonTapped)
             )
             barButtonItem.tintColor = UIColor (named: "TrackerBlack")
             return barButtonItem
@@ -175,6 +180,22 @@ class TrackersViewController: UIViewController {
     func showFutureDateAlert() {
         let alertPresenter = AlertPresenter()
         let alert = AlertModel(title: "Не лги!", message: "Нельзя отметить выполненным трекер из будущего", primaryButtonText: "Простите!", primaryButtonCompletion: {})
+        alertPresenter.show(in: self, model:alert)
+    }
+    
+    func showDeleteDataAlert() {
+        let alertPresenter = AlertPresenter()
+        let alert = AlertModel(
+            title: "Очистка данных",
+            message: "Вы действительно хотите очистить все данные?",
+            primaryButtonText: "Отмена",
+            primaryButtonCompletion: {},
+            secondaryButtonText: "Удаляем",
+            secondaryButtonCompletion: {
+                self.collectionPresenter.handleClearAllData()
+                self.collectionPresenter.resetState()
+                self.collectionPresenter.quantityTernar(0)
+            })
         alertPresenter.show(in: self, model:alert)
     }
     
@@ -200,19 +221,30 @@ extension TrackersViewController: TrackersViewControllerProtocol {
     
     
     func showStartingBlock() {
-        VoidImage.isHidden = false
+        voidImage.isHidden = false
         questionLabel.isHidden = false
     }
     
     func hideStartingBlock() {
-        VoidImage.isHidden = true
+        voidImage.isHidden = true
         questionLabel.isHidden = true
+    }
+    
+    func updateStartingBlockState(_ state: PRESENTER_ERRORS) {
+        switch (state) {
+        case .DEFAULT:
+            voidImage.image = UIImage(named: "VoidImage")
+            questionLabel.text = "Что будем отслеживать?"
+        case .NOT_FOUND:
+            voidImage.image = UIImage(named: "NotFoundImage")
+            questionLabel.text = "Ничего не найдено"
+        }
     }
 }
 
 extension TrackersViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-
+        
         if searchField.isFirstResponder {
             return true
         } else {

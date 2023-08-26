@@ -1,17 +1,9 @@
-//
-//  TrackersViewControllerProtocol.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.08.2023.
-//
-
 import Foundation
 import UIKit
-protocol TrackersViewControllerProtocol {
-    
+protocol TrackersViewControllerProtocol: AnyObject {
     var collectionView: UICollectionView?  { get }
-    
     func showStartingBlock()
     func hideStartingBlock()
     func showFutureDateAlert()
+    func updateStartingBlockState (_ state: PRESENTER_ERRORS)
 }

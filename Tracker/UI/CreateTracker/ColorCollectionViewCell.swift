@@ -1,24 +1,18 @@
-//
-//  ColorCollectionViewCell.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 08.08.2023.
-//
-
 import UIKit
-class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+final class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var delegate: TrackerTypeDelegate?
     
     let numberOfColumns: CGFloat = 6
-    var collectionView: UICollectionView!
+    var collectionView: UICollectionView
     let colors: [UIColor] = (1...QUANTITY.COLLECTIONS_CELLS.rawValue).compactMap { UIColor(named: "\($0)") }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         collectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
         collectionView.dataSource = self
         collectionView.delegate = self

@@ -1,12 +1,6 @@
-//
-//  StatsViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 02.08.2023.
-//
 import UIKit
 
-class StatsViewController: UIViewController {
+final class StatsViewController: UIViewController {
     
     
     // Вызов конструктора суперкласса с nil параметрами.
@@ -18,8 +12,6 @@ class StatsViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

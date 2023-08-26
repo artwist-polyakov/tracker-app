@@ -1,13 +1,6 @@
-//
-//  TrackerTypeViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 06.08.2023.
-//
-
 import Foundation
 import UIKit
-class TrackerTypeViewController: UIViewController {
+final class TrackerTypeViewController: UIViewController {
     weak var delegate: TrackerTypeDelegate?
     let buttonsContainer = UIView()
     let habitButton = UIButton(type: .system)
@@ -17,7 +10,7 @@ class TrackerTypeViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.title = "Создание трекера"
-
+        
         setupButtons()
         layoutButtons()
     }

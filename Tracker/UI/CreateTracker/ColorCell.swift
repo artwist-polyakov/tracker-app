@@ -1,12 +1,6 @@
-//
-//  ColorCell.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 07.08.2023.
-//
-
 import UIKit
-class ColorCell: UICollectionViewCell {
+
+final class ColorCell: UICollectionViewCell {
     
     var isSelectedColor: Bool = false {
         didSet {

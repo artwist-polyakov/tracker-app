@@ -1,10 +1,3 @@
-//
-//  AlertPresenter.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 10.08.2023.
-//
-
 import UIKit
 final class AlertPresenter {
     

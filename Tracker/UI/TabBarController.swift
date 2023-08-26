@@ -1,10 +1,3 @@
-//
-//  TabBarController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 02.08.2023.
-//
-
 import UIKit
 
 final class TabBarController: UITabBarController {
@@ -21,14 +14,9 @@ final class TabBarController: UITabBarController {
         let trackersViewController = TrackersViewController()
         let trackersNavigationController = UINavigationController(rootViewController: trackersViewController)
         
-        
-        
         self.tabBar.tintColor = UIColor(named: "TrackerBlue")
         
-        
         self.tabBar.unselectedItemTintColor = UIColor(named: "TrackerGray")
-        
-        
         
         // присваиваем вью контроллерам иконки для таб бара
         statsViewController.tabBarItem = UITabBarItem(
@@ -47,6 +35,5 @@ final class TabBarController: UITabBarController {
         self.viewControllers = [trackersNavigationController, statsViewController]
         
         self.selectedIndex = 0
-        
     }
 }

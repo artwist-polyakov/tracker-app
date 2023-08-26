@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
-class CreateTrackerViewController: UIViewController {
+
+final class CreateTrackerViewController: UIViewController {
     private var didDataCollected: NSObjectProtocol?
     private var didDataNotCollected: NSObjectProtocol?
     weak var delegate: TrackerTypeDelegate?
@@ -24,7 +25,7 @@ class CreateTrackerViewController: UIViewController {
         label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-        }()
+    }()
     
     let trackerNameField = UITextField()
     var iconCollectionView: UICollectionView
@@ -49,7 +50,12 @@ class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        delegate?.didSelectTrackerCategory((delegate?.giveMeSelectedCategory().id)!)
+        if let categoryId = delegate?.giveMeSelectedCategory()?.id {
+            delegate?.didSelectTrackerCategory(categoryId)
+        }
+        if let categoryTitle = delegate?.giveMeSelectedCategory()?.categoryTitle {
+            delegate?.didSetTrackerCategoryName(categoryTitle)
+        }
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -59,44 +65,42 @@ class CreateTrackerViewController: UIViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         didDataCollected = NotificationCenter.default.addObserver(
-                    forName: TrackersCollectionsPresenter.didReadyNotification,
-                    object: nil,
-                    queue: .main
-                ) { [weak self] _ in
-                    guard let self = self
-                    else { return }
-                    print("ПОЛУЧИЛ УВЕДОМЛЕНИЕ ЧТО ДАННЫЕ ГОТОВЫ")
-                    checkCreateButtonReady()
-                }
+            forName: TrackersCollectionsPresenter.didReadyNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self
+            else { return }
+            checkCreateButtonReady()
+        }
         
         didDataNotCollected = NotificationCenter.default.addObserver(
-                    forName: TrackersCollectionsPresenter.didNotReadyNotification,
-                    object: nil,
-                    queue: .main
-                ) { [weak self] _ in
-                    guard let self = self
-                    else { return }
-                    print("ПОЛУЧИЛ УВЕДОМЛЕНИЕ ЧТО ДАННЫЕ НЕ ГОТОВЫ")
-                    checkCreateButtonReady()
-                }
+            forName: TrackersCollectionsPresenter.didNotReadyNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self
+            else { return }
+            checkCreateButtonReady()
+        }
         
     }
-
+    
     // MARK: - UI Setup
     private func setupUI() {
         // Настройка UITextField
         trackerNameField.placeholder = "Имя трекера"
         trackerNameField.backgroundColor = UIColor(named: "TrackerBackground")
         trackerNameField.attributedPlaceholder = NSAttributedString(
-                string: "Введите название трекера",
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
-            )
+            string: "Введите название трекера",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
+        )
         trackerNameField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         trackerNameField.clearButtonMode = .whileEditing
-            if let crossImage = UIImage(named: "Cross") {
-                trackerNameField.rightView = UIImageView(image: crossImage)
-                trackerNameField.rightViewMode = .whileEditing
-            }
+        if let crossImage = UIImage(named: "Cross") {
+            trackerNameField.rightView = UIImageView(image: crossImage)
+            trackerNameField.rightViewMode = .whileEditing
+        }
         
         iconCollectionView.register(IconCell.self, forCellWithReuseIdentifier: "IconCell")
         colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "ColorCell")
@@ -105,14 +109,15 @@ class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
+            
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory),
+                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
                 MenuItem(title: "Создать расписание", subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
-                    ]
+            ]
         case .irregularEvent:
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory().categoryTitle ?? "", action: handleSelectCategory)
-                    ]
+                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory)
+            ]
         case .notSet:
             menuItems = []
         }
@@ -155,15 +160,15 @@ class CreateTrackerViewController: UIViewController {
         trackerNameField.layer.cornerRadius = 16
         trackerNameField.clipsToBounds = true
         trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
-
+        
         clearButton.setImage(UIImage(named: "Cross"), for: .normal)
         clearButton.addTarget(self, action: #selector(clearTextField), for: .touchUpInside)
         trackerNameField.rightView = clearButton
         configureForLocale()
-    
+        
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         createButton.translatesAutoresizingMaskIntoConstraints = false
-            
+        
         NSLayoutConstraint.activate([
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
@@ -186,7 +191,7 @@ class CreateTrackerViewController: UIViewController {
             warningLabel.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 8),
             warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
-
+        
         menuTableView.backgroundColor = UIColor(named: "TrackerWhite")
         menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
@@ -204,7 +209,7 @@ class CreateTrackerViewController: UIViewController {
     
     private func configureForLocale() {
         let isRightToLeft = view.effectiveUserInterfaceLayoutDirection == .rightToLeft
-
+        
         if isRightToLeft {
             trackerNameField.textAlignment = .right
             trackerNameField.leftView = clearButton
@@ -239,7 +244,9 @@ class CreateTrackerViewController: UIViewController {
     @objc func dismissKeyboard() {
         trackerNameField.resignFirstResponder()
         isTextFieldFocused = false
-        }
+    }
+    
+    
     
     // MARK: - Actions
     private func handleSelectCategory() {
@@ -251,9 +258,17 @@ class CreateTrackerViewController: UIViewController {
         scheduleVC.daysChecked = self.shedule
         let weekdaysDictionary = Mappers.giveMeAllWeekdaysNames()
         scheduleVC.content = weekdaysDictionary.keys.map { $0.localizedCapitalized }
-        scheduleVC.content.sort(by: { weekdaysDictionary[$0.lowercased()]! < weekdaysDictionary[$1.lowercased()]! })
+        scheduleVC.content.sort(by: {
+            weekdaysDictionary[$0.lowercased()]?[1] ?? 0 < weekdaysDictionary[$1.lowercased()]?[1] ?? 0 })
         scheduleVC.completionDone = {
-            self.delegate?.didSetShedulleToFlush(scheduleVC.daysChecked)
+            var toFlush: [Int] = []
+            print(scheduleVC.daysChecked)
+            for day in scheduleVC.daysChecked {
+                if let records = weekdaysDictionary[day.lowercased()] {
+                    toFlush.append(records[0])
+                }
+            }
+            self.delegate?.didSetShedulleToFlush(toFlush)
             self.shedule = scheduleVC.daysChecked
             let newSubtitle = Mappers.sortedStringOfSetWeekdays(self.shedule)
             self.menuItems[1].subtitle = newSubtitle
@@ -261,7 +276,7 @@ class CreateTrackerViewController: UIViewController {
         }
         self.navigationController?.pushViewController(scheduleVC, animated: true)
     }
-
+    
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         isTextFieldFocused = true
@@ -307,13 +322,12 @@ class CreateTrackerViewController: UIViewController {
             self.title = "Неизвестный лейбл"
         }
     }
-
+    
 }
 
 // MARK: UITableViewDataSource, UITableViewDelegate
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("вызван numberOfRowsInSection для \(section)")
         switch section {
         case 0:
             return menuItems.count
@@ -323,10 +337,9 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             return 0
         }
     }
-
+    
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("numberOfSections вызван")
         return 3
     }
     
@@ -361,10 +374,10 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCollectionViewCell", for: indexPath) as! ColorCollectionViewCell
             cell.delegate = self.delegate
             return cell
-
-            default:
-                return UITableViewCell()
-            }
+            
+        default:
+            return UITableViewCell()
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -383,7 +396,6 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
                 let width = view.frame.width
                 return ceil(width / 6)
             }
-            print("heightForRowAt вызван для \(indexPath.section)")
             return 3*(collectionCellWidth+2) // высота для коллекций
         default:
             return 0
@@ -418,12 +430,12 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
         }
     }
     
-
+    
 }
 
 extension CreateTrackerViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-
+        
         if trackerNameField.isFirstResponder {
             return true
         } else {

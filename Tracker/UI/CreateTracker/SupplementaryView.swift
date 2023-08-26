@@ -1,13 +1,6 @@
-//
-//  SupplementaryView.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.08.2023.
-//
-
 import UIKit
 
-class SupplementaryView: UICollectionReusableView {
+final class SupplementaryView: UICollectionReusableView {
     
     let titleLabel: UILabel = {
         let label = UILabel()

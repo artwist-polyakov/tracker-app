@@ -1,22 +1,13 @@
-//
-//  ScheduleViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 09.08.2023.
-//
-
 import UIKit
 
-class ScheduleViewController: UIViewController {
+final class ScheduleViewController: UIViewController {
+    
     var daysChecked: Set<String> = []
     // MARK: - Properties
     var completionTurnOff: ((String) -> Void)?
     var completionTurnOn: ((String) -> Void)?
     var completionDone: (() -> Void)?
     var content: [String] = []
-    
-    
-    
     
     // Элементы UI
     let doneButton: UIButton = {
@@ -73,7 +64,7 @@ class ScheduleViewController: UIViewController {
     // MARK: - Layout
     private func layoutUI() {
         NSLayoutConstraint.activate([
-
+            
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),

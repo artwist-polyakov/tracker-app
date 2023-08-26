@@ -1,23 +1,33 @@
-//
-//  TrackersCollectionsPresenter.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.08.2023.
-//
-
 import Foundation
 import UIKit
-class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
+
+enum PRESENTER_ERRORS {
+    case NOT_FOUND
+    case DEFAULT
+}
+
+final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
+    
+    func setInteractor(interactor: TrackersCollectionsCompanionInteractor) {
+        self.interactor = interactor
+    }
+    
     
     static let didReadyNotification = Notification.Name(rawValue: "ready")
     static let didNotReadyNotification = Notification.Name(rawValue: "not ready")
     let repository = TrackersRepositoryImpl.shared
-    
+    var interactor: TrackersCollectionsCompanionInteractor? = nil
     let cellIdentifier = "TrackerCollectionViewCell"
-    var viewController: TrackersViewControllerProtocol
+    weak var viewController: TrackersViewControllerProtocol?
+    private var state: PRESENTER_ERRORS = PRESENTER_ERRORS.DEFAULT
+    var selectedDate: Date? {
+        didSet {
+            print("ОБНОВЛЯЮ ДАТУ")
+            state = PRESENTER_ERRORS.NOT_FOUND
+            print(state)
+        }
+    }
     
-    var selectedDate: Date?
-
     var trackerTypeToFlush: TrackerType = .notSet {
         didSet {
             notifyObservers()
@@ -25,12 +35,21 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
         }
     }
     
-    var trackerCategoryToFlush: UInt? {
+    var trackerCategoryToFlush: UUID? {
         didSet {
             notifyObservers()
             guard let category = trackerCategoryToFlush
             else {print ("TrackerCategoryToFlush: Пусто") ; return}
             print("TrackerCategoryToFlush: \(category)")
+        }
+    }
+    
+    var trackerCategorynameToFlush: String? {
+        didSet {
+            notifyObservers()
+            guard let categoryName = trackerCategorynameToFlush
+            else {print ("trackerCategorynameToFlush: Пусто") ; return}
+            print("trackerCategorynameToFlush: \(categoryName)")
         }
     }
     var trackerTitleToFlush: String? {
@@ -49,12 +68,10 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             print("trackerIconToFlush: \(icon)")
         }
     }
-    var trackerSheduleToFlush: Set<String>? = Set() {
+    var trackerSheduleToFlush: String = "" {
         didSet {
             notifyObservers()
-            guard let shedule = trackerSheduleToFlush
-            else {print ("trackerSheduleToFlush: Пусто") ; return}
-            print("trackerSheduleToFlush: \(shedule)")
+            print("trackerSheduleToFlush: \(trackerSheduleToFlush)")
         }
     }
     var trackerColorToFlush: Int? {
@@ -71,34 +88,39 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     
     func quantityTernar(_ quantity: Int) {
-        quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
+        print("Я в quantityTernar \(state)")
+        guard let vc = viewController else {return}
+        vc.updateStartingBlockState(state)
+        quantity > 0 ? vc.hideStartingBlock() : vc.showStartingBlock()
     }
     
-    func handleFunctionButtonTapped(at item: Int, inSection section: Int, date: Date, text: String) {
-        let trackerCategory = repository.getAllCategoriesPlannedTo(date: SimpleDate(date:date), titleFilter: text)[section]
-        let tracker = trackerCategory.trackers[item]
-        
-        repository.interactWithTrackerDoneForDate(trackerId: tracker.id, date: SimpleDate(date: date))
-        
-        //        viewController.collectionView?.reloadItems(at: [IndexPath(item: item, section: section)])
-        
-        // MARK: TODO продумать как разрешить коллизию, когда полностью исчезает коллеция
-        viewController.collectionView?.reloadData()
+    
+    func handleClearAllData() {
+        interactor?.clearAllCoreData()
+    }
+    
+    func resetState(){
+        state = PRESENTER_ERRORS.DEFAULT
     }
     
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
-    func giveMeSelectedDays() -> Set<String> {
-        return trackerSheduleToFlush ?? Set<String>()
+    func giveMeSelectedDays() -> [Int] {
+        return trackerSheduleToFlush.compactMap { Int(String($0)) }
     }
     
-    func giveMeSelectedCategory() -> TrackerCategory {
-        //        return trackerCategoryToFlush ?? TrackerCategory(id: UInt(Date().timeIntervalSince1970), categoryTitle: "", trackers: [])
-        return repository.getAllTrackers()[0]
+    func giveMeSelectedCategory() -> TrackerCategory? {
+        var result  = interactor?.giveMeAnyCategory()
+        if let category = interactor?.giveMeAnyCategory() {
+            result  = category
+        } else {
+            result = repository.getAllTrackers().categoryies[0]
+        }
+        return result
     }
     
-    func didSelectTrackerCategory(_ category: UInt) {
+    func didSelectTrackerCategory(_ category: UUID) {
         trackerCategoryToFlush = category
     }
     
@@ -114,50 +136,57 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerIconToFlush = icon
     }
     
-    func didSetShedulleToFlush(_ shedule: Set<String>) {
-        trackerSheduleToFlush = Set()
-        shedule.forEach { trackerSheduleToFlush?.insert($0.lowercased()) }
+    func didSetShedulleToFlush(_ shedule: [Int]) {
+        shedule.forEach { trackerSheduleToFlush += String($0)}
     }
     
     func didSetTrackerColorToFlush(_ color: Int) {
         trackerColorToFlush = color + 1 // Нумерация цветов начинается с 1
     }
     
+    func didSetTrackerCategoryName(_ categoryName: String) {
+        trackerCategorynameToFlush = categoryName
+    }
+    
     func clearAllFlushProperties() {
         trackerTypeToFlush = .notSet
         trackerTitleToFlush = nil
         trackerIconToFlush = nil
-        trackerSheduleToFlush = nil
+        trackerSheduleToFlush = ""
         trackerColorToFlush = nil
     }
     
     func realizeAllFlushProperties() {
-        if trackerSheduleToFlush == nil {
-            trackerSheduleToFlush = Set()
-        }
-        
-        
         guard let trackerTitle = trackerTitleToFlush,
               let trackerIcon = trackerIconToFlush,
-              let trackerShedule = trackerSheduleToFlush,
               let trackerColor = trackerColorToFlush,
-              let trackseCategory = trackerCategoryToFlush
+              let trackseCategory = trackerCategoryToFlush,
+              let trackerCategoryName = trackerCategorynameToFlush
         else {
             print("Не все данные готовы")
             return }
         
-        print("Записываю \(trackerTitle), \(trackerIcon), \(trackerShedule), \(trackerColor), \(trackseCategory)")
+        print("Записываю \(trackerTitle), \(trackerIcon), \(trackerSheduleToFlush), \(trackerColor), \(trackseCategory)")
         repository.addNewTrackerToCategory(
             color: trackerColor,
             categoryID: trackseCategory,
             trackerName: trackerTitle,
             icon: Mappers.iconToIntMapper(trackerIcon),
-            plannedDaysOfWeek: trackerShedule)
+            plannedDaysOfWeek: trackerSheduleToFlush)
+        
+        let tracker = Tracker(categoryId: trackseCategory,
+                              color: trackerColor,
+                              title: trackerTitle,
+                              icon: Mappers.iconToIntMapper(trackerIcon),
+                              isPlannedFor: trackerSheduleToFlush)
+        
+        interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
         
         clearAllFlushProperties()
-        viewController.collectionView?.reloadData()
-        
-        
+        guard let vc = viewController,
+              let cv = vc.collectionView
+        else {return}
+        cv.reloadData()
     }
     
     func isReadyToFlush() -> Bool {
@@ -166,20 +195,18 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         } else if trackerTypeToFlush == .irregularEvent {
             return trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerColorToFlush != nil
         } else {
-            return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != nil && trackerColorToFlush != nil
+            return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != "" && trackerColorToFlush != nil
         }
     }
     
     
     private func notifyObservers(){
         if isReadyToFlush() {
-            print("Уведомление отправлено что данные готовы")
             NotificationCenter.default.post(
                 name: TrackersCollectionsPresenter.didReadyNotification,
                 object: self,
                 userInfo: ["GO": true ])
         } else {
-            print("Уведомление отправлено что данные не готовы")
             NotificationCenter.default.post(
                 name: TrackersCollectionsPresenter.didNotReadyNotification,
                 object: self,

@@ -1,15 +1,54 @@
-//
-//  AppDelegate.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 27.07.2023.
-//
-
 import UIKit
+import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    lazy var trackersDataStore: TrackersDataStore = {
+        do {
+            return try DataStore() as TrackersDataStore
+        } catch {
+            return NullStore() as TrackersDataStore
+        }
+    }()
+    
+    lazy var categoriesDataStore: CategoriesDataStore = {
+        do {
+            return try DataStore() as CategoriesDataStore
+        } catch {
+            return NullStore() as CategoriesDataStore
+        }
+    }()
+    
+    lazy var executionsDataStore: ExecutionsDataStore = {
+        do {
+            return try DataStore() as ExecutionsDataStore
+        } catch {
+            return NullStore() as ExecutionsDataStore
+        }
+    }()
+    
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "Trackers")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        return container
+    }()
+    
+    func saveContext() {
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                context.rollback()
+            }
+        }
+    }
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

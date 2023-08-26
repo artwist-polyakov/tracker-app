@@ -1,14 +1,7 @@
-//
-//  TrackerCollectionViewCell.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.08.2023.
-//
-
 import Foundation
 import UIKit
 
-class TrackerCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell {
     
     var onFunctionButtonTapped: (() -> Void)?
     
@@ -21,20 +14,11 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    
-    //    let emojiLabel: UILabel = {
-    //        let label = UILabel()
-    //        label.text = "❤️"
-    //        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-    //        label.backgroundColor = .clear
-    //        return label
-    //    }()
-    
     let emojiButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor(white: 1, alpha: 0)
         button.layer.cornerRadius = 16
-        button.setTitle("❤️", for: .normal)
+        button.setTitle("", for: .normal)
         button.tintColor = UIColor.black // Замените на нужный цвет иконки.
         
         let backgroundView = UIView()

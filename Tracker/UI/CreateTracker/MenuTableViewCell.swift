@@ -1,14 +1,7 @@
-//
-//  MenuTableViewCell.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 07.08.2023.
-//
-
 import Foundation
 import UIKit
 
-class MenuTableViewCell: UITableViewCell {
+final class MenuTableViewCell: UITableViewCell {
     
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()

@@ -1,14 +1,7 @@
-//
-//  CategorySelectionViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 06.08.2023.
-//
-
 import Foundation
 import UIKit
 
-class CategorySelectionViewController: UITableViewController {
+final class CategorySelectionViewController: UITableViewController {
     
     var categories: [TrackerCategory]
     var selectedCategory: TrackerCategory?
@@ -58,7 +51,7 @@ class CategorySelectionViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Добавить", style: .default, handler: { [weak self] (_) in
             if let categoryName = alert.textFields?.first?.text, !categoryName.isEmpty {
                 self?.repository.addNewCategory(name: categoryName)
-                self?.categories = self?.repository.getAllTrackers() ?? []
+                self?.categories = self?.repository.getAllTrackers().categoryies ?? []
                 self?.tableView.reloadData()
             }
         }))

@@ -1,6 +1,6 @@
 import UIKit
 
-class SupplementaryViewMain: UICollectionReusableView {
+final class SupplementaryViewMain: UICollectionReusableView {
     
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -30,7 +30,7 @@ class SupplementaryViewMain: UICollectionReusableView {
         addSubview(footerView)
         footerView.translatesAutoresizingMaskIntoConstraints = false
         
-
+        
         titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 24).isActive = true
         
         NSLayoutConstraint.activate([
