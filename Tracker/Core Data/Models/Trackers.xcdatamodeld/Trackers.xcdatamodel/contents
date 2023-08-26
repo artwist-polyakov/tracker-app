@@ -4,12 +4,12 @@
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="category_to_trackers" toMany="YES" deletionRule="Cascade" destinationEntity="TrackersCoreData" inverseName="tracker_to_category" inverseEntity="TrackersCoreData"/>
+        <relationship name="categoryToTrackers" toMany="YES" deletionRule="Cascade" destinationEntity="TrackersCoreData" inverseName="trackerToCategory" inverseEntity="TrackersCoreData"/>
     </entity>
     <entity name="ExecutionsCoreData" representedClassName="ExecutionsCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="trackerId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <relationship name="execution_to_trackers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackersCoreData" inverseName="tracker_to_executions" inverseEntity="TrackersCoreData"/>
+        <relationship name="executionToTrackers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackersCoreData" inverseName="trackerToExecutions" inverseEntity="TrackersCoreData"/>
     </entity>
     <entity name="TrackersCoreData" representedClassName="TrackersCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="categoryId" attributeType="UUID" usesScalarValueType="NO"/>
@@ -19,7 +19,7 @@
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="shedule" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="tracker_to_category" maxCount="1" deletionRule="Nullify" destinationEntity="CategoriesCoreData" inverseName="category_to_trackers" inverseEntity="CategoriesCoreData"/>
-        <relationship name="tracker_to_executions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ExecutionsCoreData" inverseName="execution_to_trackers" inverseEntity="ExecutionsCoreData"/>
+        <relationship name="trackerToCategory" maxCount="1" deletionRule="Nullify" destinationEntity="CategoriesCoreData" inverseName="categoryToTrackers" inverseEntity="CategoriesCoreData"/>
+        <relationship name="trackerToExecutions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ExecutionsCoreData" inverseName="executionToTrackers" inverseEntity="ExecutionsCoreData"/>
     </entity>
 </model>

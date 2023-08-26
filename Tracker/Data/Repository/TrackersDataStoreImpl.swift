@@ -94,11 +94,11 @@ public final class TrackersDataStoreImpl: NSObject {
         let request = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         
         // Сортировка сначала по дате создания категории
-        let categoryDateSort = NSSortDescriptor(key: "category_id.creation_date", ascending: true)
+        let categoryDateSort = NSSortDescriptor(key: "trackerToCategory.creationDate", ascending: true)
         // Затем сортировка по UUID категории
-        let categoryUUIDSort = NSSortDescriptor(key: "category_id", ascending: true)
+        let categoryUUIDSort = NSSortDescriptor(key: "categoryId", ascending: true)
         // По желанию, можно добавить еще сортировку по title трекера или другим полям
-        let trackerCreationSort = NSSortDescriptor(key: "creation_date", ascending: true)
+        let trackerCreationSort = NSSortDescriptor(key: "creationDate", ascending: true)
         
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort, trackerCreationSort]
         
@@ -111,7 +111,7 @@ public final class TrackersDataStoreImpl: NSObject {
         let categoryUUIDSort = NSSortDescriptor(key: "id", ascending: true)
         
         // Предикат для отбора категорий, основываясь на их трекерах
-        request.predicate = NSPredicate(format: "ANY category_to_trackers.shedule CONTAINS %@ AND ANY category_to_trackers.title CONTAINS[cd] %@",
+        request.predicate = NSPredicate(format: "ANY categoryToTrackers.shedule CONTAINS %@ AND ANY categoryToTrackers.title CONTAINS[cd] %@",
                                         substring, searchQuery)
         
         request.sortDescriptors = [categoryDateSort, categoryUUIDSort]
@@ -125,7 +125,7 @@ public final class TrackersDataStoreImpl: NSObject {
     // MARK: - FETCH ALL TRACKERS IN CATEGORY
     private func fetchAllTrackersInCategory(_ categoryId: UUID, plannedDay substring: String, searchQuery: String) -> [TrackersCoreData] {
         let request = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
-        let trackerCreationSort = NSSortDescriptor(key: "creation_date", ascending: true)
+        let trackerCreationSort = NSSortDescriptor(key: "creationDate", ascending: true)
         
         // Предикат для поиска трекеров, которые:
         // 1) Принадлежат определенной категории

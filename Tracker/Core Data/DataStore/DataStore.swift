@@ -86,7 +86,7 @@ extension DataStore: TrackersDataStore {
                 trackersCoreData.id = UUID()
                 
                 // Установим отношение между трекером и категорией
-                trackersCoreData.tracker_to_category = finalCategory
+                trackersCoreData.trackerToCategory = finalCategory
                 do {
                     try context.save()
                 } catch let error as NSError {

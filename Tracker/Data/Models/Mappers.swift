@@ -66,7 +66,7 @@ struct Mappers {
         if weekdays.count == 7 {
             return "Каждый день"
         }
-        let short_names = ["понедельник":"Пн",
+        let shortNames = ["понедельник":"Пн",
                            "вторник":"Вт",
                            "среда":"Ср",
                            "четверг":"Чт",
@@ -84,7 +84,7 @@ struct Mappers {
         }
         
         let sortedShortNames = sortedWeekdays.compactMap { weekday -> String? in
-            return short_names[weekday.lowercased()]
+            return shortNames[weekday.lowercased()]
         }
         
         return sortedShortNames.joined(separator: ", ")

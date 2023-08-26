@@ -83,8 +83,8 @@ final class TrackersDataProvider: NSObject {
     private lazy var trackersFetchedResultsController:  NSFetchedResultsController<TrackersCoreData> = {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true),
-                                        NSSortDescriptor(key:"tracker_to_category.creationDate", ascending: false),
-                                        NSSortDescriptor(key:"tracker_to_category.id", ascending: false)]
+                                        NSSortDescriptor(key:"trackerToCategory.creationDate", ascending: false),
+                                        NSSortDescriptor(key:"trackerToCategory.id", ascending: false)]
         
         
         fetchRequest.predicate = giveTrackersPredicate()
@@ -167,10 +167,10 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     private func giveCategoriesPredicate() -> NSPredicate {
         if typedText.isEmpty {
-            return NSPredicate(format: "(ANY category_to_trackers.shedule CONTAINS %@) OR (ANY category_to_trackers.shedule == '')",
+            return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
                                String(selectedDate.weekDayNum))
         } else {
-            return NSPredicate(format: "((ANY category_to_trackers.shedule CONTAINS %@) OR (ANY category_to_trackers.shedule == '')) AND ANY category_to_trackers.title CONTAINS[cd] %@",
+            return NSPredicate(format: "((ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')) AND ANY categoryToTrackers.title CONTAINS[cd] %@",
                                String(selectedDate.weekDayNum), typedText)
         }
     }
@@ -219,7 +219,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? 0
-        let totalObjects = trackersFetchedResultsController.fetchedObjects?.count ?? 0
+//на случай дебага        let totalObjects = trackersFetchedResultsController.fetchedObjects?.count ?? 0
         return result
     }
     
