@@ -30,6 +30,7 @@ class SheduleTableViewCell: UITableViewCell {
     }
     
     private func setupCell() {
+        self.selectionStyle = .none
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         titleLabel.textColor = UIColor(named: "TrackerBlack")
         
