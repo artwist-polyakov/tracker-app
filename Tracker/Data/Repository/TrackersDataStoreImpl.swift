@@ -56,17 +56,18 @@ public final class TrackersDataStoreImpl: NSObject {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
         fetchRequest.resultType = .managedObjectIDResultType
+        
         do {
-            let existingExecutions = try context.fetch(fetchRequest) as! [NSManagedObjectID]
-            if existingExecutions.isEmpty {
-                attachExecution(toDate: date, trackerId: trackerId)
-            } else {
-                let objectId = existingExecutions.first!
-                detachExecution(byObjectId: objectId)
+                if let existingExecutions = try context.fetch(fetchRequest) as? [NSManagedObjectID],
+                    let objectId = existingExecutions.first
+                {
+                    detachExecution(byObjectId: objectId)
+                } else {
+                    attachExecution(toDate: date, trackerId: trackerId)
+                }
+            } catch {
+                print("FATAL ERROR: \(error)")
             }
-        } catch {
-            print("FATAL ERROR: \(error)")
-        }
     }
     
     

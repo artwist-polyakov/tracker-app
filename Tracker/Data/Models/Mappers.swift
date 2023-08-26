@@ -74,11 +74,18 @@ struct Mappers {
                            "суббота":"Сб",
                            "воскресенье":"Вс"]
         
-        let sortedWeekdays = weekdays.sorted {
-            return giveMeAllWeekdaysNames()[$0.lowercased()]![1] < giveMeAllWeekdaysNames()[$1.lowercased()]![1]
+        let allWeekdaysNames = giveMeAllWeekdaysNames()
+        let sortedWeekdays = weekdays.sorted { weekday1, weekday2 in
+            guard let value1 = allWeekdaysNames[weekday1.lowercased()],
+                  let value2 = allWeekdaysNames[weekday2.lowercased()] else {
+                return false
+            }
+            return value1[1] < value2[1]
         }
         
-        let sortedShortNames = sortedWeekdays.map { short_names[$0.lowercased()]! }
+        let sortedShortNames = sortedWeekdays.compactMap { weekday -> String? in
+            return short_names[weekday.lowercased()]
+        }
         
         return sortedShortNames.joined(separator: ", ")
         

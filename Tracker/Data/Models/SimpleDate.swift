@@ -21,9 +21,14 @@ struct SimpleDate: Hashable {
     init(date: Date) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: date)
-        year = components.year!
-        month = components.month!
-        day = components.day!
+        guard let y = components.year,
+             let m = components.month,
+             let d = components.day else {
+           fatalError("Ошибка при извлечении компонентов даты")
+       }
+        year = y
+        month = m
+        day = d
     }
     
     var date: Date {
@@ -36,10 +41,11 @@ struct SimpleDate: Hashable {
         components.second = 0 // Устанавливаем секунды в 0
         components.timeZone = TimeZone.current // Учет текущей временной зоны
         
-        // Конвертация даты в ваш локальный часовой пояс
-        let localDate = Calendar.current.date(from: components)!
+        guard let localDate = Calendar.current.date(from: components) else {
+            print("Ошибка при создании даты")
+            return Date()
+        }
         let utcDate = localDate.addingTimeInterval(TimeInterval(TimeZone.current.secondsFromGMT()))
-        
         return utcDate
     }
 }

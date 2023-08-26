@@ -257,12 +257,15 @@ class CreateTrackerViewController: UIViewController {
         scheduleVC.daysChecked = self.shedule
         let weekdaysDictionary = Mappers.giveMeAllWeekdaysNames()
         scheduleVC.content = weekdaysDictionary.keys.map { $0.localizedCapitalized }
-        scheduleVC.content.sort(by: { weekdaysDictionary[$0.lowercased()]![1] < weekdaysDictionary[$1.lowercased()]![1] })
+        scheduleVC.content.sort(by: {
+            weekdaysDictionary[$0.lowercased()]?[1] ?? 0 < weekdaysDictionary[$1.lowercased()]?[1] ?? 0 })
         scheduleVC.completionDone = {
             var toFlush: [Int] = []
             print(scheduleVC.daysChecked)
             for day in scheduleVC.daysChecked {
-                toFlush.append(weekdaysDictionary[day.lowercased()]![0])
+                if let records = weekdaysDictionary[day.lowercased()] {
+                    toFlush.append(records[0])
+                }
             }
             self.delegate?.didSetShedulleToFlush(toFlush)
             self.shedule = scheduleVC.daysChecked

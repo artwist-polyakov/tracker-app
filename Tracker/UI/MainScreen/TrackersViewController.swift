@@ -78,8 +78,9 @@ class TrackersViewController: UIViewController {
         collectionView?.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: "TrackerCollectionViewCell")
         collectionView?.register(SupplementaryViewMain.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         
-        
-        view.addSubview(collectionView!)
+        if let collection = collectionView {
+            view.addSubview(collection)
+        }
         
         setupButtons()
         navigationItem.leftBarButtonItem = addBarButtonItem
@@ -122,11 +123,12 @@ class TrackersViewController: UIViewController {
         ])
         
         collectionView?.translatesAutoresizingMaskIntoConstraints = false
+        guard let collection = collectionView else { return }
         NSLayoutConstraint.activate([
-            collectionView!.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 16),
-            collectionView!.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            collectionView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
+              collection.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 16),
+              collection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+              collection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+              collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
