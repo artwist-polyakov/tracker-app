@@ -76,7 +76,16 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             
             let days = tracker.daysDone
             let isDone = tracker.isChecked
-            let color = (UIColor(named: "\(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue))") ?? UIColor(named: "1"))!
+            let computedColorName = "\(1 + ((tracker.color - 1) % QUANTITY.COLLECTIONS_CELLS.rawValue))"
+            let color: UIColor = {
+                guard let color = UIColor(named: computedColorName) else {
+                    assertionFailure("ERROR: COLOR \(1+((tracker.color-1) % QUANTITY.COLLECTIONS_CELLS.rawValue)) NOT FOUND")
+                    return .systemGray
+                }
+                return color
+            }()
+                
+
             cell.configure(
                 text: tracker.title,
                 emoji: Mappers.intToIconMapper(tracker.icon),
