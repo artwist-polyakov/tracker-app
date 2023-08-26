@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-protocol TrackersViewControllerProtocol {
+protocol TrackersViewControllerProtocol: AnyObject {
     var collectionView: UICollectionView?  { get }
     func showStartingBlock()
     func hideStartingBlock()

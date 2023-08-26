@@ -12,7 +12,7 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     let repository = TrackersRepositoryImpl.shared
     var interactor: TrackersCollectionsCompanionInteractor? = nil
     let cellIdentifier = "TrackerCollectionViewCell"
-    var viewController: TrackersViewControllerProtocol
+    weak var viewController: TrackersViewControllerProtocol?
     
     var selectedDate: Date?
     
@@ -76,7 +76,8 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     
     func quantityTernar(_ quantity: Int) {
-        quantity > 0 ? viewController.hideStartingBlock() : viewController.showStartingBlock()
+        guard let vc = viewController else {return}
+        quantity > 0 ? vc.hideStartingBlock() : vc.showStartingBlock()
     }
     
     
@@ -164,7 +165,10 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
         
         clearAllFlushProperties()
-        viewController.collectionView?.reloadData()
+        guard let vc = viewController,
+              let cv = vc.collectionView
+        else {return}
+        cv.reloadData()
     }
     
     func isReadyToFlush() -> Bool {
