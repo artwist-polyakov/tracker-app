@@ -112,7 +112,9 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 9 - 16 * 2) / 2
+        let paddingSpace = 9
+        let availableWidth = Int(collectionView.frame.width) - paddingSpace
+        let width = availableWidth / 2
         return CGSize(width: width, height: 148)
     }
     
@@ -125,7 +127,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 16)
+        return UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
     }
     
     
