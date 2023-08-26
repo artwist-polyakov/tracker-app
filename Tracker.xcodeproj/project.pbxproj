@@ -22,7 +22,6 @@
 		AF9B4AFA2A913C77007EC298 /* TrackersRepositoryImplCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AF92A913C77007EC298 /* TrackersRepositoryImplCoreData.swift */; };
 		AF9B4AFC2A913DE1007EC298 /* TrackersDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFB2A913DE1007EC298 /* TrackersDataStore.swift */; };
 		AF9B4AFE2A913DEB007EC298 /* NullStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFD2A913DEB007EC298 /* NullStore.swift */; };
-		AF9B4B022A91470A007EC298 /* TrackersDataStoreImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4B012A91470A007EC298 /* TrackersDataStoreImpl.swift */; };
 		AFBF95C02A938174007D4C7C /* Execution.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBF95BF2A938174007D4C7C /* Execution.swift */; };
 		AFBF95C22A93828F007D4C7C /* TrackersSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBF95C12A93828F007D4C7C /* TrackersSearchResponse.swift */; };
 		AFCA55A42A7AB01A00D9A851 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */; };
@@ -79,7 +78,6 @@
 		AF9B4AF92A913C77007EC298 /* TrackersRepositoryImplCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRepositoryImplCoreData.swift; sourceTree = "<group>"; };
 		AF9B4AFB2A913DE1007EC298 /* TrackersDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataStore.swift; sourceTree = "<group>"; };
 		AF9B4AFD2A913DEB007EC298 /* NullStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullStore.swift; sourceTree = "<group>"; };
-		AF9B4B012A91470A007EC298 /* TrackersDataStoreImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataStoreImpl.swift; sourceTree = "<group>"; };
 		AFBF95BF2A938174007D4C7C /* Execution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution.swift; sourceTree = "<group>"; };
 		AFBF95C12A93828F007D4C7C /* TrackersSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersSearchResponse.swift; sourceTree = "<group>"; };
 		AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
@@ -275,7 +273,6 @@
 				AFCA55D62A7F96C000D9A851 /* TrackersRepositoryImpl.swift */,
 				AF9B4AF92A913C77007EC298 /* TrackersRepositoryImplCoreData.swift */,
 				AF9B4AFD2A913DEB007EC298 /* NullStore.swift */,
-				AF9B4B012A91470A007EC298 /* TrackersDataStoreImpl.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -449,7 +446,6 @@
 				AFCA55E92A81575C00D9A851 /* IconCell.swift in Sources */,
 				AFCA55EF2A8235BA00D9A851 /* IconCollectionViewCell.swift in Sources */,
 				AFCA55E52A8135BF00D9A851 /* MenuItem.swift in Sources */,
-				AF9B4B022A91470A007EC298 /* TrackersDataStoreImpl.swift in Sources */,
 				AF9332422A72B59300BA0DB8 /* SceneDelegate.swift in Sources */,
 				AFCA55D12A7E5BF300D9A851 /* TrackersCollectionsCompanionDelegate.swift in Sources */,
 				AFCA55E72A81364100D9A851 /* MenuTableViewCell.swift in Sources */,
