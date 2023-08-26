@@ -1,6 +1,6 @@
 import UIKit
 
-class TrackersViewController: UIViewController {
+final class TrackersViewController: UIViewController {
     
     var addBarButtonItem: UIBarButtonItem?
     var collectionView: UICollectionView?

@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-class TrackerTypeViewController: UIViewController {
+final class TrackerTypeViewController: UIViewController {
     weak var delegate: TrackerTypeDelegate?
     let buttonsContainer = UIView()
     let habitButton = UIButton(type: .system)

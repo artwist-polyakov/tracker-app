@@ -1,4 +1,5 @@
 import Foundation
+
 final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
     
     static let shared = TrackersRepositoryImpl()

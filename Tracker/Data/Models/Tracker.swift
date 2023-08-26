@@ -1,4 +1,5 @@
 import Foundation
+
 struct Tracker {
     let id: UUID
     var categoryId: UUID

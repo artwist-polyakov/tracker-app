@@ -1,6 +1,6 @@
 import UIKit
 
-class SupplementaryView: UICollectionReusableView {
+final class SupplementaryView: UICollectionReusableView {
     
     let titleLabel: UILabel = {
         let label = UILabel()

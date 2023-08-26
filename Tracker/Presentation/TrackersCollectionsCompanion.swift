@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     private let trackersCollectionCompanionInteractor = TrackersCollectionsCompanionInteractor.shared
     private lazy var dataProvider: TrackersDataProviderProtocol? = {
         let trackersDataStore = (UIApplication.shared.delegate as! AppDelegate).trackersDataStore

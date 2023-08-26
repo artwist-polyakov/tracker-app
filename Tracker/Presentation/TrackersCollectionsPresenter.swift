@@ -6,7 +6,7 @@ enum PRESENTER_ERRORS {
     case DEFAULT
 }
 
-class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
+final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
     func setInteractor(interactor: TrackersCollectionsCompanionInteractor) {
         self.interactor = interactor

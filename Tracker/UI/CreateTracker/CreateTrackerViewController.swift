@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
-class CreateTrackerViewController: UIViewController {
+
+final class CreateTrackerViewController: UIViewController {
     private var didDataCollected: NSObjectProtocol?
     private var didDataNotCollected: NSObjectProtocol?
     weak var delegate: TrackerTypeDelegate?

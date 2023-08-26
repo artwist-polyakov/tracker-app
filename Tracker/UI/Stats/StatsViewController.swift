@@ -1,6 +1,6 @@
 import UIKit
 
-class StatsViewController: UIViewController {
+final class StatsViewController: UIViewController {
     
     
     // Вызов конструктора суперкласса с nil параметрами.

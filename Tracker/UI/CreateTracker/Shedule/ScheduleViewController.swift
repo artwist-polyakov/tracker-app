@@ -1,6 +1,7 @@
 import UIKit
 
-class ScheduleViewController: UIViewController {
+final class ScheduleViewController: UIViewController {
+    
     var daysChecked: Set<String> = []
     // MARK: - Properties
     var completionTurnOff: ((String) -> Void)?

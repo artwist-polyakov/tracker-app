@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class TrackerCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell {
     
     var onFunctionButtonTapped: (() -> Void)?
     

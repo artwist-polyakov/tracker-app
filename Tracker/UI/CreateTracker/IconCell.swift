@@ -1,6 +1,6 @@
 import UIKit
 
-class IconCell: UICollectionViewCell {
+final class IconCell: UICollectionViewCell {
     
     let label: UILabel = {
         let lbl = UILabel()
@@ -13,6 +13,7 @@ class IconCell: UICollectionViewCell {
     var cellWidth: CGFloat = 0 {
         didSet {
             let fontSize = cellWidth * (4/5)
+//            let fontSize = CGFloat(32)
             label.font = UIFont.systemFont(ofSize: fontSize, weight: .regular)
         }
     }
@@ -45,7 +46,7 @@ class IconCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            self.contentView.backgroundColor = isSelected ? UIColor(named: "TrackerGray") : .clear
+            self.contentView.backgroundColor = isSelected ? UIColor(named: "TrackerLightgray") : .clear
         }
     }
     

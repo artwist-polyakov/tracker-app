@@ -1,6 +1,6 @@
 import Foundation
 
-class TrackerCategory {
+final class TrackerCategory {
     let id: UUID
     var categoryTitle: String
     

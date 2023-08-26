@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class CategorySelectionViewController: UITableViewController {
+final class CategorySelectionViewController: UITableViewController {
     
     var categories: [TrackerCategory]
     var selectedCategory: TrackerCategory?

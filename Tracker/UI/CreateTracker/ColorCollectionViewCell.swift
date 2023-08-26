@@ -1,5 +1,6 @@
 import UIKit
-class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+final class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var delegate: TrackerTypeDelegate?
     
     let numberOfColumns: CGFloat = 6

@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class MenuTableViewCell: UITableViewCell {
+final class MenuTableViewCell: UITableViewCell {
     
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()

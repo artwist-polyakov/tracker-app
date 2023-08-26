@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class SheduleTableViewCell: UITableViewCell {
+final class SheduleTableViewCell: UITableViewCell {
     var targetDay: String?
     let titleLabel = UILabel()
     let subtitleLabel = UILabel()

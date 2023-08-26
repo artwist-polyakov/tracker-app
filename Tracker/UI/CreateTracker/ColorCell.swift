@@ -1,5 +1,6 @@
 import UIKit
-class ColorCell: UICollectionViewCell {
+
+final class ColorCell: UICollectionViewCell {
     
     var isSelectedColor: Bool = false {
         didSet {
