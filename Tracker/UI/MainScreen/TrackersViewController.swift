@@ -191,7 +191,11 @@ class TrackersViewController: UIViewController {
             primaryButtonText: "Отмена",
             primaryButtonCompletion: {},
             secondaryButtonText: "Удаляем",
-            secondaryButtonCompletion: {self.collectionPresenter.handleClearAllData()})
+            secondaryButtonCompletion: {
+                self.collectionPresenter.handleClearAllData()
+                self.collectionPresenter.resetState()
+                self.collectionPresenter.quantityTernar(0)
+            })
         alertPresenter.show(in: self, model:alert)
     }
     
@@ -224,6 +228,17 @@ extension TrackersViewController: TrackersViewControllerProtocol {
     func hideStartingBlock() {
         VoidImage.isHidden = true
         questionLabel.isHidden = true
+    }
+    
+    func updateStartingBlockState(_ state: PRESENTER_ERRORS) {
+        switch (state) {
+        case .DEFAULT:
+            VoidImage.image = UIImage(named: "VoidImage")
+            questionLabel.text = "Что будем отслеживать?"
+        case .NOT_FOUND:
+            VoidImage.image = UIImage(named: "NotFoundImage")
+            questionLabel.text = "Ничего не найдено"
+        }
     }
 }
 

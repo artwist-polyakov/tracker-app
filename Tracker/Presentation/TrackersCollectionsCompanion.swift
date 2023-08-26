@@ -157,7 +157,10 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return dataProvider?.numberOfSections ?? 0
+        print("NUMBER OF SECTIONS")
+        let count = self.dataProvider?.numberOfSections ?? 0
+        self.delegate?.quantityTernar(count)
+        return count
     }
 }
 
@@ -167,6 +170,9 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.reloadItems(at: indexPaths)
+        let count = self.dataProvider?.numberOfSections ?? 0
+        print("RELOAD ITEMS\(count)")
+        self.delegate?.quantityTernar(count)
     }
     
     
@@ -179,6 +185,9 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
             cv.insertItems(at: insertedIndexPaths)
             cv.deleteItems(at: deletedIndexPaths)
+        } completion: { _ in
+            let count = self.dataProvider?.numberOfSections ?? 0
+            self.delegate?.quantityTernar(count)
         }
     }
     
@@ -187,6 +196,9 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.reloadData()
+        let count = self.dataProvider?.numberOfSections ?? 0
+        print("RELOAD \(count)")
+        self.delegate?.quantityTernar(count)
     }
 }
 

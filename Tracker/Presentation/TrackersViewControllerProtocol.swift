@@ -5,4 +5,5 @@ protocol TrackersViewControllerProtocol: AnyObject {
     func showStartingBlock()
     func hideStartingBlock()
     func showFutureDateAlert()
+    func updateStartingBlockState (_ state: PRESENTER_ERRORS)
 }

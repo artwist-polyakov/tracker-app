@@ -1,5 +1,11 @@
 import Foundation
 import UIKit
+
+enum PRESENTER_ERRORS {
+    case NOT_FOUND
+    case DEFAULT
+}
+
 class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
     func setInteractor(interactor: TrackersCollectionsCompanionInteractor) {
@@ -13,8 +19,14 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     var interactor: TrackersCollectionsCompanionInteractor? = nil
     let cellIdentifier = "TrackerCollectionViewCell"
     weak var viewController: TrackersViewControllerProtocol?
-    
-    var selectedDate: Date?
+    private var state: PRESENTER_ERRORS = PRESENTER_ERRORS.DEFAULT
+    var selectedDate: Date? {
+        didSet {
+            print("ОБНОВЛЯЮ ДАТУ")
+            state = PRESENTER_ERRORS.NOT_FOUND
+            print(state)
+        }
+    }
     
     var trackerTypeToFlush: TrackerType = .notSet {
         didSet {
@@ -76,13 +88,19 @@ class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     
     func quantityTernar(_ quantity: Int) {
+        print("Я в quantityTernar \(state)")
         guard let vc = viewController else {return}
+        vc.updateStartingBlockState(state)
         quantity > 0 ? vc.hideStartingBlock() : vc.showStartingBlock()
     }
     
     
     func handleClearAllData() {
         interactor?.clearAllCoreData()
+    }
+    
+    func resetState(){
+        state = PRESENTER_ERRORS.DEFAULT
     }
     
 }
