@@ -1,7 +1,7 @@
 import Foundation
 final class TrackersCollectionsCompanionInteractor {
     static let shared = TrackersCollectionsCompanionInteractor()
-    var companion: TrackersCollectionsCompanion? = nil
+    weak var companion: TrackersCollectionsCompanion? = nil
     private init() {}
     
     func addTracker(tracker:Tracker, categoryId: UUID, categoryTitle: String) {
