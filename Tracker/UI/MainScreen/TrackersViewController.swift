@@ -28,7 +28,7 @@ final class TrackersViewController: UIViewController {
         return label
     }()
     
-    let VoidImage: UIImageView = {
+    let voidImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "VoidImage")
         return image
@@ -106,19 +106,19 @@ final class TrackersViewController: UIViewController {
         
         
         
-        view.addSubview(VoidImage)
-        VoidImage.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(voidImage)
+        voidImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            VoidImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            VoidImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            VoidImage.widthAnchor.constraint(equalToConstant: 80),
-            VoidImage.heightAnchor.constraint(equalToConstant: 80)
+            voidImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            voidImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            voidImage.widthAnchor.constraint(equalToConstant: 80),
+            voidImage.heightAnchor.constraint(equalToConstant: 80)
         ])
         
         view.addSubview(questionLabel)
         questionLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            questionLabel.topAnchor.constraint(equalTo: VoidImage.bottomAnchor, constant: 8),
+            questionLabel.topAnchor.constraint(equalTo: voidImage.bottomAnchor, constant: 8),
             questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
@@ -221,22 +221,22 @@ extension TrackersViewController: TrackersViewControllerProtocol {
     
     
     func showStartingBlock() {
-        VoidImage.isHidden = false
+        voidImage.isHidden = false
         questionLabel.isHidden = false
     }
     
     func hideStartingBlock() {
-        VoidImage.isHidden = true
+        voidImage.isHidden = true
         questionLabel.isHidden = true
     }
     
     func updateStartingBlockState(_ state: PRESENTER_ERRORS) {
         switch (state) {
         case .DEFAULT:
-            VoidImage.image = UIImage(named: "VoidImage")
+            voidImage.image = UIImage(named: "VoidImage")
             questionLabel.text = "Что будем отслеживать?"
         case .NOT_FOUND:
-            VoidImage.image = UIImage(named: "NotFoundImage")
+            voidImage.image = UIImage(named: "NotFoundImage")
             questionLabel.text = "Ничего не найдено"
         }
     }
