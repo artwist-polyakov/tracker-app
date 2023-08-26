@@ -25,7 +25,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     
     let repository = TrackersRepositoryImpl.shared
     let cellIdentifier = "TrackerCollectionViewCell"
-    var delegate: TrackersCollectionsCompanionDelegate
+    weak var delegate: TrackersCollectionsCompanionDelegate?
     var selectedDate: Date? {
         didSet {
             dataProvider?.setDate(date: SimpleDate(date: self.selectedDate ?? SimpleDate(date: Date()).date))
@@ -36,7 +36,7 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             dataProvider?.setQuery(query: typedText ?? "")
         }
     }
-    var viewController: TrackersViewControllerProtocol
+    weak var viewController: TrackersViewControllerProtocol?
     
     init(vc: TrackersViewControllerProtocol, delegate: TrackersCollectionsCompanionDelegate) {
         self.viewController = vc
@@ -65,7 +65,8 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
-        delegate.quantityTernar(quantity)
+        guard let servant = delegate else {return quantity}
+        servant.quantityTernar(quantity)
         return quantity
     }
     
@@ -102,10 +103,10 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
             if selectdate <= SimpleDate(date:Date()).date {
                 self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate), indexPath: indexPath)
             } else {
-                self?.viewController.showFutureDateAlert()
+                guard let vc = self?.viewController else {return}
+                vc.showFutureDateAlert()
             }
         }
-        
         return cell
     }
     
@@ -162,21 +163,30 @@ class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UIColl
 
 extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
     func reloadItems(at indexPaths: [IndexPath]) {
-        viewController.collectionView?.reloadItems(at: indexPaths)
+        guard let vc = viewController,
+              let cv = vc.collectionView
+        else {return}
+        cv.reloadItems(at: indexPaths)
     }
     
     
     func didUpdate(_ update: TrackersDataUpdate) {
-        viewController.collectionView?.performBatchUpdates {
+        guard let vc = viewController,
+              let cv = vc.collectionView
+        else {return}
+        cv.performBatchUpdates {
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
-            viewController.collectionView?.insertItems(at: insertedIndexPaths)
-            viewController.collectionView?.deleteItems(at: deletedIndexPaths)
+            cv.insertItems(at: insertedIndexPaths)
+            cv.deleteItems(at: deletedIndexPaths)
         }
     }
     
     func reloadData() {
-        viewController.collectionView?.reloadData()
+        guard let vc = viewController,
+              let cv = vc.collectionView
+        else {return}
+        cv.reloadData()
     }
 }
 
