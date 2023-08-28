@@ -33,6 +33,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     var typedText: String? {
         didSet {
+            delegate?.setState(state: typedText == "" ? PRESENTER_ERRORS.LETS_PLAN : PRESENTER_ERRORS.NOT_FOUND)
             dataProvider?.setQuery(query: typedText ?? "")
         }
     }

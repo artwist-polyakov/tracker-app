@@ -3,6 +3,7 @@ import UIKit
 
 enum PRESENTER_ERRORS {
     case NOT_FOUND
+    case LETS_PLAN
     case DEFAULT
 }
 
@@ -10,6 +11,10 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
     func setInteractor(interactor: TrackersCollectionsCompanionInteractor) {
         self.interactor = interactor
+    }
+    
+    func setState(state: PRESENTER_ERRORS) {
+        self.state = state
     }
     
     
@@ -20,13 +25,7 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     let cellIdentifier = "TrackerCollectionViewCell"
     weak var viewController: TrackersViewControllerProtocol?
     private var state: PRESENTER_ERRORS = PRESENTER_ERRORS.DEFAULT
-    var selectedDate: Date? {
-        didSet {
-            print("ОБНОВЛЯЮ ДАТУ")
-            state = PRESENTER_ERRORS.NOT_FOUND
-            print(state)
-        }
-    }
+    var selectedDate: Date?
     
     var trackerTypeToFlush: TrackerType = .notSet {
         didSet {
