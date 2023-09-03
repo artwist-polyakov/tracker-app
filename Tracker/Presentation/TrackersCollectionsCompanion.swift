@@ -59,6 +59,14 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         dataProvider?.clearAllCoreData()
     }
     
+    func giveMeAllCategories () -> [TrackerCategory]? {
+        return dataProvider?.giveMeAllCategories()
+    }
+    
+    func addCategory (category: TrackerCategory) {
+        try? dataProvider?.addCategory(category)
+    }
+    
     func interactWithExecution(trackerId: UUID, date: SimpleDate, indexPath: IndexPath) {
         try? dataProvider?.interactWith(trackerId, date, indexPath: indexPath)
     }

@@ -30,6 +30,7 @@ protocol TrackersDataProviderProtocol {
     func categoryTitle(for categoryId: UUID) -> String?
     func giveMeAnyCategory() -> TrackerCategory?
     func clearAllCoreData()
+    func giveMeAllCategories() -> [TrackerCategory]
 }
 
 final class TrackersDataProvider: NSObject {
@@ -291,6 +292,24 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     
-    
+    func giveMeAllCategories() -> [TrackerCategory] {
+        // Используем fetchRequest, чтобы получить все категории
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        
+        do {
+            let categoriesCoreData = try context.fetch(fetchRequest)
+            
+            return categoriesCoreData.compactMap { coreDataCategory in
+                guard let id = coreDataCategory.id, let title = coreDataCategory.title else { return nil }
+                return TrackerCategory(id: id, categoryTitle: title)
+            }
+            
+        } catch let error as NSError {
+            print("Ошибка при извлечении всех категорий: \(error)")
+            return []
+        }
+    }
+
     
 }

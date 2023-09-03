@@ -250,7 +250,8 @@ final class CreateTrackerViewController: UIViewController {
     
     // MARK: - Actions
     private func handleSelectCategory() {
-        // Переход к экрану выбора категории
+        let categoryVC = CategorySelectionViewController()
+        self.navigationController?.pushViewController(categoryVC, animated: true)
     }
     
     private func handleCreateSchedule() {

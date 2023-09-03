@@ -14,5 +14,14 @@ final class TrackersCollectionsCompanionInteractor {
     
     func clearAllCoreData() {
         companion?.clearAllCoreData()
-    }    
+    }
+    
+    func giveMeAllCategories() -> [TrackerCategory]? {
+        return companion?.giveMeAllCategories()
+    }
+    
+    func addCategory(name: String) {
+        let category = TrackerCategory(id: UUID(), categoryTitle: name)
+        companion?.addCategory(category: category)
+    }
 }
