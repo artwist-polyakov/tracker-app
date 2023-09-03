@@ -34,6 +34,9 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor(named: "TrackerWhite")
+        self.navigationItem.hidesBackButton = true
+        self.title = "Новая категория"
         nameField.delegate = self
         nameField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         addButton.isEnabled = false
