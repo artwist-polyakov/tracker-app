@@ -10,16 +10,21 @@ import UIKit
 class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     private let repository = OnboardingRepository()
     lazy var pages: [UIViewController] = {
-        return repository.getOnboardingData().map { OnboardingPageViewController(data: $0, repository: repository, completion: showNextOrClose) }
+        return repository.getOnboardingData().map {
+            OnboardingPageViewController(
+                data: $0,
+                repository: repository,
+                completion: showNextOrClose) }
     }()
     
     lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
-
-        pageControl.currentPageIndicatorTintColor = .brown
-        pageControl.pageIndicatorTintColor = .orange
+        
+        let color = UIColor(named: "#1A1B22") ?? .black
+        pageControl.currentPageIndicatorTintColor = color
+        pageControl.pageIndicatorTintColor = color.withAlphaComponent(0.3)
 
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
