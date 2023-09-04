@@ -69,7 +69,6 @@ final class CategorySelectionViewController: UIViewController {
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: "CategoryCell")
-//        addLongPressGesture()
     }
     
     // MARK: - UI Setup
@@ -174,6 +173,23 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         navigationController?.popViewController(animated: true)
     }
     
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        longtappedCategory = interactor.giveMeAllCategories()?[indexPath.row]
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
+                let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
+                    // Обработка нажатия на "Редактировать"
+                    print("Редактировать кнопка была нажата")
+                }
+                
+                let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) { [weak self] action in
+                    // Обработка нажатия на "Удалить"
+                    self?.removeCategory()
+                }
+                
+                return UIMenu(title: "", children: [editAction, deleteAction])
+            }
+        }
+
     @objc func addCategory() {
         let newCategoryViewController = NewCategoryViewController()
         self.navigationController?.pushViewController(newCategoryViewController, animated: true)
@@ -188,28 +204,6 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         }
     }
     
-    @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {
-        let point = gesture.location(in: tableView)
-        guard let indexPath = tableView.indexPathForRow(at: point), gesture.state == .began else { return }
-        
-        let selectedCell = tableView.cellForRow(at: indexPath) as! CategoryTableViewCell
-        longtappedCategory = selectedCell.targetCategory
-        
-        // Создание контекстного меню
-        let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
-            // Обработка нажатия на "Редактировать"
-            print("Редактировать кнопка была нажата")
-        }
-        
-        let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) { [weak self] action in
-            // Обработка нажатия на "Удалить"
-            self?.removeCategory()
-        }
-        
-        let menu = UIMenu(title: "", children: [editAction, deleteAction])
-//        selectedCell.contextMenuInteraction = UIContextMenuInteraction(delegate: nil)
-//        selectedCell.showContextMenu(menu, sourceView: selectedCell, sourceRect: selectedCell.bounds, animated: true)
-    }
 }
 
 
