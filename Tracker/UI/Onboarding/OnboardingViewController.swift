@@ -14,7 +14,7 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
             OnboardingPageViewController(
                 data: $0,
                 repository: repository,
-                completion: showNextOrClose) }
+                completion: skipOnboarding) }
     }()
     
     lazy var pageControl: UIPageControl = {
@@ -82,18 +82,10 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
 
     
 
-    private func showNextOrClose() {
-        if let currentViewController = viewControllers?.first,
-           let currentIndex = pages.firstIndex(of: currentViewController),
-           currentIndex + 1 < pages.count {
-            let nextViewController = pages[currentIndex + 1]
-            setViewControllers([nextViewController], direction: .forward, animated: true, completion: nil)
-        } else {
-            // Закрыть Onboarding и показать TabBarController
-            let window = UIApplication.shared.windows.first
-            window?.rootViewController = TabBarController()
-            window?.makeKeyAndVisible()
-        }
+    private func skipOnboarding() {
+        let window = UIApplication.shared.windows.first
+        window?.rootViewController = TabBarController()
+        window?.makeKeyAndVisible()
     }
 }
 

@@ -24,4 +24,9 @@ final class TrackersCollectionsCompanionInteractor {
         let category = TrackerCategory(id: UUID(), categoryTitle: name)
         companion?.addCategory(category: category)
     }
+    
+    func removeCategory(category: TrackerCategory) {
+        companion?.deleteCategory(category: category)
+    }
+    
 }

@@ -68,7 +68,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func deleteCategory (category: TrackerCategory) {
-        try? dataProvider?.deleteCategory(category)
+        try? dataProvider?.deleteCategory(category: category)
     }
     
     

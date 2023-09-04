@@ -25,6 +25,7 @@ class OnboardingPageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        repository.makeOnboardingCompleted(title: data.title)
         setupView()
     }
 
@@ -76,7 +77,6 @@ class OnboardingPageViewController: UIViewController {
     }
 
     @objc private func didTapButton() {
-        repository.makeOnboardingCompleted(title: data.title)
         completion()
     }
 }
