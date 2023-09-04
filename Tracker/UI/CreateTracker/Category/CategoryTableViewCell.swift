@@ -6,6 +6,7 @@ final class CategoryTableViewCell: UITableViewCell {
     let titleLabel = UILabel()
     let separatorView = UIView()
     let checkmarkImageView = UIImageView(image: UIImage(named: "Done"))
+    var targetCategory: TrackerCategory?
     static let cellHeight: CGFloat = 75
     private var titleCenterYConstraint: NSLayoutConstraint?
     private var titleTopConstraint: NSLayoutConstraint?
@@ -20,6 +21,7 @@ final class CategoryTableViewCell: UITableViewCell {
     }
     
     private func setupCell() {
+        self.selectionStyle = .none
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         titleLabel.textColor = UIColor(named: "TrackerBlack")
         

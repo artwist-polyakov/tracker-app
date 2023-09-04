@@ -2,11 +2,18 @@ import Foundation
 import UIKit
 
 final class CategorySelectionViewController: UIViewController {
+    var delegate: TrackerTypeDelegate? = nil
+    var selectedCategory: TrackerCategory? {
+        didSet {
+            tableView.reloadData()
+            guard let delegate = delegate,
+                  let selectedCategory = selectedCategory else {return}
+            delegate.didSelectTrackerCategory(selectedCategory.id)
+        }
+    }
     
-    var selectedCategory: TrackerCategory?
     let interactor = TrackersCollectionsCompanionInteractor.shared
 
-    
     let questionLabel: UILabel = {
         let label = UILabel()
         label.text = "Привычки и события можно\nобъединить по смыслу"
@@ -95,7 +102,7 @@ final class CategorySelectionViewController: UIViewController {
     }
 }
     
-    // MARK: - Table view data source
+    // MARK: - UITableViewDataSource, UITableViewDelegate
 extension CategorySelectionViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -105,9 +112,54 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        cell.textLabel?.text = interactor.giveMeAllCategories()?[indexPath.row].categoryTitle
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! CategoryTableViewCell
+        cell.backgroundColor = UIColor(named: "TrackerBackground")
+        cell.layer.cornerRadius = 16
+        cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
+        cell.checkmarkImageView.isHidden = true
+        cell.targetCategory = interactor.giveMeAllCategories()?[indexPath.row]
+        if let cat = cell.targetCategory?.categoryTitle {
+            cell.textLabel?.text = cat
+        
+        }
+        let quantity = interactor.giveMeAllCategories()?.count ?? 0
+        if indexPath.row == quantity - 1 {
+            cell.separatorView.isHidden = true
+        } else {
+            cell.separatorView.isHidden = false
+        }
+        
+        roundCornersForCell(cell, in: tableView, at: indexPath)
+        
+        if let selectedCategory = selectedCategory {
+            if cell.targetCategory?.id == selectedCategory.id {
+                cell.checkmarkImageView.isHidden = false
+            }
+        }
+        
         return cell
+    }
+    
+    func roundCornersForCell(_ cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {
+        cell.layer.cornerRadius = 0
+        cell.clipsToBounds = false
+        
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        
+        if indexPath.row == 0 && totalRows == 1 {
+            // Если в секции всего одна ячейка
+            cell.layer.cornerRadius = 16
+        } else if indexPath.row == 0 {
+            // Если это первая ячейка
+            cell.roundCorners([.topLeft, .topRight], radius: 16)
+        } else if indexPath.row == totalRows - 1 {
+            // Если это последняя ячейка
+            cell.roundCorners([.bottomLeft, .bottomRight], radius: 16)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CategoryTableViewCell.cellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -119,6 +171,16 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         
         let newCategoryViewController = NewCategoryViewController()
         self.navigationController?.pushViewController(newCategoryViewController, animated: true)
+    }
+    
+    @objc func removeCategory() {
+        let interactor = TrackersCollectionsCompanionInteractor.shared
+        if let category = selectedCategory {
+            interactor.removeCategory(category)
+            selectedCategory = nil
+            tableView.reloadData()
+        }
+    
     }
 }
 

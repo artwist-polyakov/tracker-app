@@ -31,6 +31,7 @@ protocol TrackersDataProviderProtocol {
     func giveMeAnyCategory() -> TrackerCategory?
     func clearAllCoreData()
     func giveMeAllCategories() -> [TrackerCategory]
+    func deleteCategory(category: TrackerCategory)
 }
 
 final class TrackersDataProvider: NSObject {
@@ -308,6 +309,28 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         } catch let error as NSError {
             print("Ошибка при извлечении всех категорий: \(error)")
             return []
+        }
+    }
+    
+    func deleteCategory(category: TrackerCategory) {
+        // 1. Создаем запрос на извлечение
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
+        fetchRequest.fetchLimit = 1
+
+        do {
+            // 2. Пытаемся получить объекты, соответствующие нашему запросу
+            let fetchedCategories = try context.fetch(fetchRequest)
+            if let categoryToDelete = fetchedCategories.first {
+                // 3. Удаляем объект из контекста
+                context.delete(categoryToDelete)
+                
+                // 4. Сохраняем изменения контекста
+                try context.save()
+                delegate?.reloadData()
+            }
+        } catch let error as NSError {
+            print("Ошибка при удалении категории: \(error.localizedDescription)")
         }
     }
 
