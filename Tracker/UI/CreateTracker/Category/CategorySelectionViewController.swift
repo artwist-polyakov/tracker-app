@@ -177,12 +177,17 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         longtappedCategory = interactor.giveMeAllCategories()?[indexPath.row]
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
                 let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
-                    // Обработка нажатия на "Редактировать"
+                    guard let longtappedCategory = self.longtappedCategory else { return }
+                    let editCategoryViewController = NewCategoryViewController()
+                    editCategoryViewController.pageType = .edit(cat: longtappedCategory)
+                    editCategoryViewController.delegate = self
+                    
+                    self.navigationController?.pushViewController(editCategoryViewController, animated: true)
                     print("Редактировать кнопка была нажата")
                 }
                 
                 let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) { [weak self] action in
-                    // Обработка нажатия на "Удалить"
+
                     self?.removeCategory()
                 }
                 

@@ -41,6 +41,7 @@ import Foundation
 import UIKit
 class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     var clearButton = UIButton()
+    
     var nameField: UISearchTextField = {
         let field = UISearchTextField()
         field.text = ""
@@ -48,9 +49,24 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         field.textColor = UIColor(named: "TrackerGray")
         return field
     }()
+    
     var isTextFieldFocused: Bool = false
     
-    var pageType: SingleCategoryPageType = .create
+    var pageType: SingleCategoryPageType = .create {
+        didSet {
+            switch pageType {
+            case .create:
+                nameField.attributedPlaceholder = NSAttributedString(
+                    string: "Введите название категории",
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
+                )
+            case .edit(let cat):
+                nameField.text = cat.categoryTitle
+                enteredName = cat.categoryTitle
+            }
+            
+        }
+    }
     var enteredName: String = ""
     
     // Элементы UI
@@ -93,7 +109,6 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             addButton.isEnabled = true
             addButton.backgroundColor = UIColor(named: "TrackerBlack")
             nameField.textColor = UIColor(named: "TrackerBlack")
-            print("КЕЙС ДЕФОЛТ")
         }
     }
     
@@ -169,6 +184,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             nameField.leftViewMode = .never
             nameField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: nameField.frame.height))
             nameField.rightViewMode = .always
+            
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         } else {
             nameField.textAlignment = .left
@@ -193,6 +209,8 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             let category = TrackerCategory(id: UUID(), categoryTitle: enteredName)
             pageType.completion(category)
         case .edit(let cat):
+            let category = cat
+            category.categoryTitle = enteredName
             pageType.completion(cat)
         }
         delegate?.tableView.reloadData()
@@ -203,7 +221,6 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     @objc func textFieldDidChange(_ textField: UITextField) {
         isTextFieldFocused  = true
         enteredName = textField.text ?? ""
-
         checkSaveButtonReady()
     }
     

@@ -336,7 +336,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func editCategory(category: TrackerCategory) {
-        
+        print("РЕДАКТИРОВАНИЕ КАТЕГОРИИ ВЫЗВАНО")
+        print("category: \(category.categoryTitle)")
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
         fetchRequest.fetchLimit = 1

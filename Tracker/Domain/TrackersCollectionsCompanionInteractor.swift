@@ -30,6 +30,8 @@ final class TrackersCollectionsCompanionInteractor {
     }
     
     func editCategory(category: TrackerCategory, newName: String) {
+        print("editCategory")
+        print("ИНТЕРАКТОР: старая \(category.categoryTitle), новая \(newName)")
         let newCategory = TrackerCategory(id: category.id, categoryTitle: newName)
         companion?.editCategory(category: newCategory)
     }
