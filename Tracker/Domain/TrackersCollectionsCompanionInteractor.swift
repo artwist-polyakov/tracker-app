@@ -29,4 +29,10 @@ final class TrackersCollectionsCompanionInteractor {
         companion?.deleteCategory(category: category)
     }
     
+    func editCategory(category: TrackerCategory, newName: String) {
+        let newCategory = TrackerCategory(id: category.id, categoryTitle: newName)
+        companion?.editCategory(category: newCategory)
+    }
+    
+    
 }

@@ -71,6 +71,11 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         try? dataProvider?.deleteCategory(category: category)
     }
     
+    func editCategory (category: TrackerCategory) {
+        try? dataProvider?.editCategory(category: category)
+    }
+    
+    
     
     func interactWithExecution(trackerId: UUID, date: SimpleDate, indexPath: IndexPath) {
         try? dataProvider?.interactWith(trackerId, date, indexPath: indexPath)

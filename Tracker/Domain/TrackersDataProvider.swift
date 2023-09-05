@@ -32,6 +32,7 @@ protocol TrackersDataProviderProtocol {
     func clearAllCoreData()
     func giveMeAllCategories() -> [TrackerCategory]
     func deleteCategory(category: TrackerCategory)
+    func editCategory(category: TrackerCategory)
 }
 
 final class TrackersDataProvider: NSObject {
@@ -333,6 +334,26 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             print("Ошибка при удалении категории: \(error.localizedDescription)")
         }
     }
-
     
+    func editCategory(category: TrackerCategory) {
+        
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
+        fetchRequest.fetchLimit = 1
+
+        do {
+            
+            let fetchedCategories = try context.fetch(fetchRequest)
+            if let categoryToEdit = fetchedCategories.first {
+                
+                categoryToEdit.title = category.categoryTitle
+                
+                
+                try context.save()
+                delegate?.reloadData()
+            }
+        } catch let error as NSError {
+            print("Ошибка при редактировании категории: \(error.localizedDescription)")
+        }
+    }
 }

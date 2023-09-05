@@ -196,7 +196,6 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
     
     @objc func removeCategory() {
-        let interactor = TrackersCollectionsCompanionInteractor.shared
         if let category = longtappedCategory {
             interactor.removeCategory(category: category)
             selectedCategory = nil
