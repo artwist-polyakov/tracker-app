@@ -64,6 +64,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func addCategory (category: TrackerCategory) {
+        print("КОМПАНЬОН — добавляю категорию \(category)")
         try? dataProvider?.addCategory(category)
     }
     

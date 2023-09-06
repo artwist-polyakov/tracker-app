@@ -125,12 +125,15 @@ extension DataStore: TrackersDataStore {
 
 extension DataStore: CategoriesDataStore {
     func add(_ record: TrackerCategory) throws {
+        print("ДАТА СТОР — добавляю категорию \(record)")
         try performSync { context in
             Result {
                 let categoriesCoreData = CategoriesCoreData(context: context)
                 categoriesCoreData.title = record.categoryTitle
                 categoriesCoreData.creationDate = Date()
+                categoriesCoreData.id = record.id
                 try context.save()
+                print("ДАТА СТОР УСПЕШНОЕ СОХРАНЕНИЕ НОВОЙ КАТЕГОРИИ")
             }
         }
     }

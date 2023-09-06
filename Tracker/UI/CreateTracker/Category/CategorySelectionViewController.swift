@@ -197,6 +197,7 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
 
     @objc func addCategory() {
         let newCategoryViewController = NewCategoryViewController()
+        newCategoryViewController.delegate = self
         self.navigationController?.pushViewController(newCategoryViewController, animated: true)
     }
     

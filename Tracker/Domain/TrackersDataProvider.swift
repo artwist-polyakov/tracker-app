@@ -241,6 +241,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func addCategory(_ category: TrackerCategory) throws {
+        print("ДАТА ПРОВАЙДЕР — добавляю категорию \(category)")
         try categoriesDataStore.add(category)
     }
     
