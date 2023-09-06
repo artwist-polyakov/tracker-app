@@ -8,12 +8,12 @@ final class CategorySelectionViewController: UIViewController {
             tableView.reloadData()
             guard let delegate = delegate,
                   let selectedCategory = selectedCategory else {return}
-            delegate.didSelectTrackerCategory(selectedCategory.id)
+            delegate.didSelectTrackerCategory(selectedCategory)
         }
     }
     
     var longtappedCategory: TrackerCategory? = nil
-    
+    var completionDone: (() -> Void)? = nil
     let interactor = TrackersCollectionsCompanionInteractor.shared
 
     let questionLabel: UILabel = {
@@ -169,9 +169,11 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if selectedCategory?.id != interactor.giveMeAllCategories()?[indexPath.row].id {
             selectedCategory = interactor.giveMeAllCategories()?[indexPath.row]
         } else {
+            completionDone?()
             navigationController?.popViewController(animated: true)
         }
     }

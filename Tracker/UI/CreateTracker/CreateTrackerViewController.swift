@@ -50,12 +50,7 @@ final class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        if let categoryId = delegate?.giveMeSelectedCategory()?.id {
-            delegate?.didSelectTrackerCategory(categoryId)
-        }
-        if let categoryTitle = delegate?.giveMeSelectedCategory()?.categoryTitle {
-            delegate?.didSetTrackerCategoryName(categoryTitle)
-        }
+
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -237,8 +232,12 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     
-    func changeSheduleMenuSubtitle(_ newTitle:String){
+    func changeSheduleMenuSubtitle(){
         menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+    }
+    
+    func changeCategoryMenuSubtitle(){
+        menuTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
     }
     
     @objc func dismissKeyboard() {
@@ -251,6 +250,16 @@ final class CreateTrackerViewController: UIViewController {
     // MARK: - Actions
     private func handleSelectCategory() {
         let categoryVC = CategorySelectionViewController()
+        categoryVC.completionDone = {
+            guard let category = categoryVC.selectedCategory else {
+                self.menuItems[0].subtitle = ""
+                self.menuItems[0].title = "Выбрать категорию"
+                return }
+            self.delegate?.didSelectTrackerCategory(category)
+            self.menuItems[0].subtitle = category.categoryTitle
+            self.menuItems[0].title = "Категория"
+            self.changeCategoryMenuSubtitle()
+        }
         self.navigationController?.pushViewController(categoryVC, animated: true)
     }
     
@@ -273,7 +282,10 @@ final class CreateTrackerViewController: UIViewController {
             self.shedule = scheduleVC.daysChecked
             let newSubtitle = Mappers.sortedStringOfSetWeekdays(self.shedule)
             self.menuItems[1].subtitle = newSubtitle
-            self.changeSheduleMenuSubtitle(newSubtitle)
+            if toFlush.count > 0 {
+                self.menuItems[1].title = "Расписание"
+            }
+            self.changeSheduleMenuSubtitle()
         }
         self.navigationController?.pushViewController(scheduleVC, animated: true)
     }

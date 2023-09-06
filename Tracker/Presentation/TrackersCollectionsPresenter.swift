@@ -110,18 +110,20 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func giveMeSelectedCategory() -> TrackerCategory? {
-        var result  = interactor?.giveMeAnyCategory()
-        if let category = interactor?.giveMeAnyCategory() {
-            result  = category
+        if let id = trackerCategoryToFlush,
+           let title = trackerCategorynameToFlush {
+            return TrackerCategory(id: id, categoryTitle: title)
         } else {
-            result = repository.getAllTrackers().categoryies[0]
+            return nil
         }
-        return result
     }
     
-    func didSelectTrackerCategory(_ category: UUID) {
-        trackerCategoryToFlush = category
+    func didSelectTrackerCategory(_ category: TrackerCategory) {
+        trackerCategoryToFlush = category.id
+        trackerCategorynameToFlush = category.categoryTitle
+    
     }
+    
     
     func didSelectTrackerType(_ type: TrackerType) {
         trackerTypeToFlush = type
