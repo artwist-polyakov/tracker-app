@@ -194,7 +194,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             let category = TrackerCategory(id: UUID(), categoryTitle: enteredName)
             pageType.completion(category)
             delegate?.updateViewModel()
-            delegate?.setInteractionAtCategory(category: category)
+            delegate?.markNewCategoryAsSelected()
         case .edit(let cat):
             let category = cat
             category.categoryTitle = enteredName

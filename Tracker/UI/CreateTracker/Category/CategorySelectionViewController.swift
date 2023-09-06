@@ -113,16 +113,17 @@ final class CategorySelectionViewController: UIViewController {
         viewModel.updateState()
     }
     
-    func setInteractionAtCategory(category: TrackerCategory) {
+    func markNewCategoryAsSelected() {
         guard let categories = categories else { return }
-        print("Я ВЗАИМОДЕЙСТВУЮ С КАТЕГОРИЕЙ")
-        for (index, cat) in categories.enumerated() {
-            if cat.id == category.id {
-                print(index)
-                print(cat)
-                viewModel.handleNavigation(action: .select(category: cat, pos: index))
-            }
+        let position = categories.count - 1
+        var paths: [IndexPath] = []
+        if  let previousPosition = self.selectedIndex {
+            paths.append(IndexPath(row: previousPosition, section: 0))
         }
+        self.selectedIndex = position
+        paths.append(IndexPath(row: position, section: 0))
+        self.tableView.reloadRows(at: paths, with: .automatic)
+        viewModel.handleNavigation(action: .select(category: categories[position], pos: position))
     }
     
     
