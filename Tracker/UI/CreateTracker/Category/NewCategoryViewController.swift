@@ -1,42 +1,3 @@
-//
-//  NewCategoryViewController.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.09.2023.
-//
-
-enum SingleCategoryPageType {
-    case create
-    case edit(cat: TrackerCategory)
-    
-    private var interactor: TrackersCollectionsCompanionInteractor? {
-            return TrackersCollectionsCompanionInteractor.shared
-        }
-    
-    var title: String {
-        switch self {
-        case .create:
-            return "Новая категория"
-        case .edit:
-            return "Редактирование категории"
-        }
-    }
-    
-    var completion: ((TrackerCategory) -> Void) {
-            switch self {
-            case .create:
-                return { category in
-                    self.interactor?.addCategory(name: category.categoryTitle)
-                }
-            case .edit(let cat):
-                return { category in
-                    self.interactor?.editCategory(category: cat, newName: category.categoryTitle)
-                }
-            }
-        }
-}
-
-
 import Foundation
 import UIKit
 class NewCategoryViewController: UIViewController, UITextFieldDelegate {
@@ -51,6 +12,17 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     }()
     
     var isTextFieldFocused: Bool = false
+    
+    let warningLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Ограничение 27 символов"
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.textColor = UIColor(named: "TrackerRed")
+        label.textAlignment = .center
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     var pageType: SingleCategoryPageType = .create {
         didSet {
@@ -105,10 +77,17 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             addButton.isEnabled = false
             nameField.textColor = UIColor(named: "TrackerGray")
             addButton.backgroundColor = UIColor(named: "TrackerGray")
-        default:
+            warningLabel.isHidden = true
+        case 1...27:
             addButton.isEnabled = true
             addButton.backgroundColor = UIColor(named: "TrackerBlack")
             nameField.textColor = UIColor(named: "TrackerBlack")
+            warningLabel.isHidden = true
+        default:
+            addButton.isEnabled = false
+            addButton.backgroundColor = UIColor(named: "TrackerBlack")
+            addButton.backgroundColor = UIColor(named: "TrackerGray")
+            warningLabel.isHidden = false
         }
     }
     
@@ -141,7 +120,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         addButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         view.addSubview(nameField)
         view.addSubview(addButton)
-        
+        view.addSubview(warningLabel)
     }
     
     // MARK: - Layout
@@ -171,6 +150,8 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             nameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             nameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            warningLabel.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 8),
+            warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 
         ])
     }
@@ -229,4 +210,35 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         enteredName = ""
         checkSaveButtonReady()
     }
+}
+
+enum SingleCategoryPageType {
+    case create
+    case edit(cat: TrackerCategory)
+    
+    private var interactor: TrackersCollectionsCompanionInteractor? {
+            return TrackersCollectionsCompanionInteractor.shared
+        }
+    
+    var title: String {
+        switch self {
+        case .create:
+            return "Новая категория"
+        case .edit:
+            return "Редактирование категории"
+        }
+    }
+    
+    var completion: ((TrackerCategory) -> Void) {
+            switch self {
+            case .create:
+                return { category in
+                    self.interactor?.addCategory(name: category.categoryTitle)
+                }
+            case .edit(let cat):
+                return { category in
+                    self.interactor?.editCategory(category: cat, newName: category.categoryTitle)
+                }
+            }
+        }
 }
