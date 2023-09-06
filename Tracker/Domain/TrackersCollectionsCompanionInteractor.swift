@@ -12,6 +12,10 @@ final class TrackersCollectionsCompanionInteractor {
         return companion?.giveMeAnyCategory()
     }
     
+    func giveMeCategoryById(id: UUID) -> TrackerCategory? {
+        return companion?.giveMeCategoryById(id: id)
+    }
+    
     func clearAllCoreData() {
         companion?.clearAllCoreData()
     }

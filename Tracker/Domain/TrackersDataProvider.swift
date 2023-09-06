@@ -33,6 +33,7 @@ protocol TrackersDataProviderProtocol {
     func giveMeAllCategories() -> [TrackerCategory]
     func deleteCategory(category: TrackerCategory)
     func editCategory(category: TrackerCategory)
+    func giveMeCategoryById(id: UUID) -> TrackerCategory?
 }
 
 final class TrackersDataProvider: NSObject {
@@ -251,6 +252,25 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             return nil
         }
         return TrackerCategory(id: id, categoryTitle: title)
+    }
+    
+    func giveMeCategoryById(id: UUID) -> TrackerCategory?  {
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as NSUUID)
+        fetchRequest.fetchLimit = 1
+        do {
+            let categories = try context.fetch(fetchRequest)
+            guard let category = categories.first,
+                  let id = category.id,
+                  let title = category.title
+            else {
+                return nil
+            }
+            return TrackerCategory(id: id, categoryTitle: title)
+        } catch let error as NSError {
+            print("Error performing categoriesFetchedResultsController: \(error)")
+            return nil
+        }
     }
     
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws {
