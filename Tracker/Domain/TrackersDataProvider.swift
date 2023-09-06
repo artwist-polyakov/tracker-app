@@ -332,24 +332,37 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func deleteCategory(category: TrackerCategory) {
-        // 1. Создаем запрос на извлечение
+        if isLastCategory(categoryId: category.id) {
+                // Если это последняя категория, просто очистите все данные
+                clearAllCoreData()
+                return
+            }
+        
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
         fetchRequest.fetchLimit = 1
 
         do {
-            // 2. Пытаемся получить объекты, соответствующие нашему запросу
             let fetchedCategories = try context.fetch(fetchRequest)
             if let categoryToDelete = fetchedCategories.first {
-                // 3. Удаляем объект из контекста
                 context.delete(categoryToDelete)
-                
-                // 4. Сохраняем изменения контекста
                 try context.save()
                 delegate?.reloadData()
             }
         } catch let error as NSError {
             print("Ошибка при удалении категории: \(error.localizedDescription)")
+        }
+    }
+    
+    private func isLastCategory(categoryId: UUID) -> Bool {
+        let fetchRequest: NSFetchRequest<CategoriesCoreData> = NSFetchRequest(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id != %@", categoryId as NSUUID)
+        do {
+            let remainingCategories = try context.fetch(fetchRequest)
+            return remainingCategories.isEmpty
+        } catch {
+            print("Ошибка при проверке: \(error)")
+            return false
         }
     }
     

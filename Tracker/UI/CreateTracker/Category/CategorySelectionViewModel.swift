@@ -34,6 +34,7 @@ final class CategorySelectionViewModel {
     
     func updateState() {
         categories = interactor.giveMeAllCategories() ?? []
+        print(categories)
         if categories.isEmpty {
             state = .emptyResult
         } else {
@@ -41,7 +42,7 @@ final class CategorySelectionViewModel {
         }
     }
     
-    func handleNavigation(action: interactionType) {
+    func handleNavigation(action: InteractionType) {
         switch action {
         case .add:
             navigationState = .addCategory

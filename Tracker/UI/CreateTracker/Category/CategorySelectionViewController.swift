@@ -3,7 +3,7 @@ import UIKit
 
 final class CategorySelectionViewController: UIViewController {
     var delegate: TrackerTypeDelegate? = nil
-    private var categories: [TrackerCategory]?
+    private var categories: [TrackerCategory]? = nil
     private var longtappedCategory: TrackerCategory? = nil
     var completionDone: ((TrackerCategory?) -> Void)? = nil
     
@@ -165,6 +165,7 @@ final class CategorySelectionViewController: UIViewController {
             let state = self.viewModel.state
             switch state {
             case .emptyResult:
+                self.categories = nil
                 self.showStartingBlock()
             case .showResult(let categories):
                 self.categories = categories
@@ -267,7 +268,7 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
 }
 
-enum interactionType {
+enum InteractionType {
     case add
     case edit(category: TrackerCategory)
     case remove(category: TrackerCategory)
