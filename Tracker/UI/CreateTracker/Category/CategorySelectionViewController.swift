@@ -6,16 +6,15 @@ final class CategorySelectionViewController: UIViewController {
     var selectedCategory: TrackerCategory? {
         didSet {
             tableView.reloadData()
-            guard let delegate = delegate,
-                  let selectedCategory = selectedCategory else {return}
+            guard let delegate = delegate else {return}
             delegate.didSelectTrackerCategory(selectedCategory)
         }
     }
-    
+    private var categories: [TrackerCategory]?
     var longtappedCategory: TrackerCategory? = nil
     var completionDone: (() -> Void)? = nil
     let interactor = TrackersCollectionsCompanionInteractor.shared
-
+    
     let questionLabel: UILabel = {
         let label = UILabel()
         label.text = "Привычки и события можно\nобъединить по смыслу"
@@ -59,11 +58,9 @@ final class CategorySelectionViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.title = "Категория"
-        
-        
+        fetchCategories()
         setupUI()
         layoutUI()
-        
         addButton.addTarget(self, action: #selector(addCategory), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
@@ -93,26 +90,28 @@ final class CategorySelectionViewController: UIViewController {
         ])
     }
     
-    func showStartingBlock() {
+    private func showStartingBlock() {
         voidImage.isHidden = false
         questionLabel.isHidden = false
     }
     
-    func hideStartingBlock() {
+    private func hideStartingBlock() {
         voidImage.isHidden = true
         questionLabel.isHidden = true
     }
     
+    func fetchCategories() {
+        categories = interactor.giveMeAllCategories()
+    }
     
     
-
 }
-    
-    // MARK: - UITableViewDataSource, UITableViewDelegate
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension CategorySelectionViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let quantity = interactor.giveMeAllCategories()?.count ?? 0
+        let quantity = categories?.count ?? 0
         quantity == 0 ? showStartingBlock() : hideStartingBlock()
         return quantity
     }
@@ -123,12 +122,12 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         cell.layer.cornerRadius = 16
         cell.titleLabel.textColor = UIColor(named: "TrackerBlack")
         cell.checkmarkImageView.isHidden = true
-        cell.targetCategory = interactor.giveMeAllCategories()?[indexPath.row]
+        cell.targetCategory = categories?[indexPath.row]
         if let cat = cell.targetCategory?.categoryTitle {
             cell.textLabel?.text = cat
-        
+            
         }
-        let quantity = interactor.giveMeAllCategories()?.count ?? 0
+        let quantity = categories?.count ?? 0
         if indexPath.row == quantity - 1 {
             cell.separatorView.isHidden = true
         } else {
@@ -170,8 +169,8 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if selectedCategory?.id != interactor.giveMeAllCategories()?[indexPath.row].id {
-            selectedCategory = interactor.giveMeAllCategories()?[indexPath.row]
+        if selectedCategory?.id != categories?[indexPath.row].id {
+            selectedCategory = categories?[indexPath.row]
         } else {
             completionDone?()
             navigationController?.popViewController(animated: true)
@@ -179,27 +178,27 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        longtappedCategory = interactor.giveMeAllCategories()?[indexPath.row]
-            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
-                let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
-                    guard let longtappedCategory = self.longtappedCategory else { return }
-                    let editCategoryViewController = NewCategoryViewController()
-                    editCategoryViewController.pageType = .edit(cat: longtappedCategory)
-                    editCategoryViewController.delegate = self
-                    
-                    self.navigationController?.pushViewController(editCategoryViewController, animated: true)
-                    print("Редактировать кнопка была нажата")
-                }
+        longtappedCategory = categories?[indexPath.row]
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
+            let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
+                guard let longtappedCategory = self.longtappedCategory else { return }
+                let editCategoryViewController = NewCategoryViewController()
+                editCategoryViewController.pageType = .edit(cat: longtappedCategory)
+                editCategoryViewController.delegate = self
                 
-                let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) { [weak self] action in
-
-                    self?.removeCategory()
-                }
-                
-                return UIMenu(title: "", children: [editAction, deleteAction])
+                self.navigationController?.pushViewController(editCategoryViewController, animated: true)
+                print("Редактировать кнопка была нажата")
             }
+            
+            let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) { [weak self] action in
+                
+                self?.removeCategory()
+            }
+            
+            return UIMenu(title: "", children: [editAction, deleteAction])
         }
-
+    }
+    
     @objc func addCategory() {
         let newCategoryViewController = NewCategoryViewController()
         newCategoryViewController.delegate = self
@@ -210,6 +209,7 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         if let category = longtappedCategory {
             interactor.removeCategory(category: category)
             selectedCategory = nil
+            fetchCategories()
             tableView.reloadData()
         }
     }

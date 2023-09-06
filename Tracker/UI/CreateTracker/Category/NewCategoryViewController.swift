@@ -200,6 +200,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             pageType.completion(cat)
             delegate?.selectedCategory = cat
         }
+        delegate?.fetchCategories()
         delegate?.tableView.reloadData()
         navigationController?.popViewController(animated: true)
     }

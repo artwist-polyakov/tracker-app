@@ -118,10 +118,14 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         }
     }
     
-    func didSelectTrackerCategory(_ category: TrackerCategory) {
-        trackerCategoryToFlush = category.id
-        trackerCategorynameToFlush = category.categoryTitle
-    
+    func didSelectTrackerCategory(_ category: TrackerCategory?) {
+        if let category = category {
+            trackerCategoryToFlush = category.id
+            trackerCategorynameToFlush = category.categoryTitle
+        } else {
+            trackerCategoryToFlush = nil
+            trackerCategorynameToFlush = nil
+        }
     }
     
     
@@ -155,6 +159,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerIconToFlush = nil
         trackerSheduleToFlush = ""
         trackerColorToFlush = nil
+        trackerCategoryToFlush = nil
+        trackerCategorynameToFlush = nil
     }
     
     func realizeAllFlushProperties() {
