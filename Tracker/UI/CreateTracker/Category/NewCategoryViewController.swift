@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 class NewCategoryViewController: UIViewController, UITextFieldDelegate {
-    var clearButton = UIButton()
+    private var clearButton = UIButton()
     
     var nameField: UISearchTextField = {
         let field = UISearchTextField()
@@ -11,9 +11,9 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         return field
     }()
     
-    var isTextFieldFocused: Bool = false
+    private var isTextFieldFocused: Bool = false
     
-    let warningLabel: UILabel = {
+    private let warningLabel: UILabel = {
         let label = UILabel()
         label.text = "Ограничение 27 символов"
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
@@ -39,10 +39,10 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             
         }
     }
-    var enteredName: String = ""
+    private var enteredName: String = ""
     
     // Элементы UI
-    let addButton: UIButton = {
+    private let addButton: UIButton = {
         let button = UIButton()
 
         button.setTitle("Добавить категорию", for: .normal)
@@ -66,12 +66,16 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         self.title = pageType.title
         nameField.delegate = self
         nameField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.delegate = self
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
         setupUI()
         layoutUI()
 
     }
     
-    func checkSaveButtonReady() {
+    private func checkSaveButtonReady() {
         switch enteredName.count {
         case 0:
             addButton.isEnabled = false
@@ -214,6 +218,23 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+extension NewCategoryViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        
+        if nameField.isFirstResponder {
+            return true
+        } else {
+            if let control = touch.view as? UIControl, control.isEnabled && isTextFieldFocused {
+                control.sendActions(for: .touchUpInside)
+            }
+            return false
+        }
+    }
+}
+
+
+
+
 enum SingleCategoryPageType {
     case create
     case edit(cat: TrackerCategory)
@@ -244,3 +265,5 @@ enum SingleCategoryPageType {
             }
         }
 }
+
+

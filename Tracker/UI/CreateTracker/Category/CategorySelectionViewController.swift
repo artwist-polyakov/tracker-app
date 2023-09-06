@@ -169,8 +169,11 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCategory = interactor.giveMeAllCategories()?[indexPath.row]
-        navigationController?.popViewController(animated: true)
+        if selectedCategory?.id != interactor.giveMeAllCategories()?[indexPath.row].id {
+            selectedCategory = interactor.giveMeAllCategories()?[indexPath.row]
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
