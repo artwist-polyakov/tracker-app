@@ -11,9 +11,11 @@ final class CategorySelectionViewController: UIViewController {
         }
     }
     private var categories: [TrackerCategory]?
-    var longtappedCategory: TrackerCategory? = nil
+    private var longtappedCategory: TrackerCategory? = nil
     var completionDone: (() -> Void)? = nil
     let interactor = TrackersCollectionsCompanionInteractor.shared
+    
+    private let viewModel = CategorySelectionViewModel()
     
     let questionLabel: UILabel = {
         let label = UILabel()
@@ -104,7 +106,48 @@ final class CategorySelectionViewController: UIViewController {
         categories = interactor.giveMeAllCategories()
     }
     
-    
+    private func bind() {
+        viewModel.navigationClosure = { [weak self] in
+            guard let self = self else { return }
+            let state = self.viewModel.navigationState
+            switch state {
+            case .removeCategory:
+                self.tableView.reloadData()
+            case .addCategory:
+                let newCategoryViewController = NewCategoryViewController()
+                newCategoryViewController.delegate = self
+                self.navigationController?.pushViewController(newCategoryViewController, animated: true)
+            case .editcategory(let category):
+                let editCategoryViewController = NewCategoryViewController()
+                editCategoryViewController.pageType = .edit(cat: category)
+                editCategoryViewController.delegate = self
+                self.navigationController?.pushViewController(editCategoryViewController, animated: true)
+            case .categoryApproved(let category):
+                self.delegate?.didSelectTrackerCategory(category)
+                self.navigationController?.popViewController(animated: true)
+            default:
+                break
+            }
+        }
+        
+        viewModel.stateClosure = { [weak self] in
+            guard let self = self else { return }
+            let state = self.viewModel.state
+            switch state {
+            case .emptyResult:
+                self.showStartingBlock()
+            case .showResult(let categories):
+                self.categories = categories
+                self.hideStartingBlock()
+                self.tableView.reloadData()
+            default:
+                viewModel.updateState()
+            }
+            
+            
+        }
+        
+    }
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
@@ -213,7 +256,14 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
             tableView.reloadData()
         }
     }
-    
 }
+
+enum interactionType {
+    case add
+    case edit(category: TrackerCategory)
+    case remove(category: TrackerCategory)
+    case select(category: TrackerCategory)
+}
+
 
 
