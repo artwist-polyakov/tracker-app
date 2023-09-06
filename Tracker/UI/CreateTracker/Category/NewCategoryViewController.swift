@@ -193,15 +193,14 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         case .create:
             let category = TrackerCategory(id: UUID(), categoryTitle: enteredName)
             pageType.completion(category)
-            delegate?.selectedCategory = category
+            delegate?.updateViewModel()
+            delegate?.setInteractionAtCategory(category: category)
         case .edit(let cat):
             let category = cat
             category.categoryTitle = enteredName
             pageType.completion(cat)
-            delegate?.selectedCategory = cat
+            delegate?.updateViewModel()
         }
-        delegate?.fetchCategories()
-        delegate?.tableView.reloadData()
         navigationController?.popViewController(animated: true)
     }
     

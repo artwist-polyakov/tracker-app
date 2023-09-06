@@ -250,8 +250,9 @@ final class CreateTrackerViewController: UIViewController {
     // MARK: - Actions
     private func handleSelectCategory() {
         let categoryVC = CategorySelectionViewController()
-        categoryVC.completionDone = {
-            guard let category = categoryVC.selectedCategory else {
+        categoryVC.completionDone = { [weak self] category in
+            guard let self = self else { return }
+            guard let category = category else {
                 self.menuItems[0].subtitle = ""
                 self.menuItems[0].title = "Выбрать категорию"
                 return }
@@ -423,7 +424,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView() // Возвращает пустое представление
+        return UIView()
     }
     
     func roundCornersForCell(_ cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {

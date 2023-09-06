@@ -42,7 +42,6 @@ struct SimpleDate: Hashable {
         components.timeZone = TimeZone.current // Учет текущей временной зоны
         
         guard let localDate = Calendar.current.date(from: components) else {
-            print("Ошибка при создании даты")
             return Date()
         }
         let utcDate = localDate.addingTimeInterval(TimeInterval(TimeZone.current.secondsFromGMT()))

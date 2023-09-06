@@ -146,7 +146,6 @@ final class TrackersViewController: UIViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         collectionPresenter.selectedDate = SimpleDate(date: sender.date).date
         collectionCompanion?.selectedDate = SimpleDate(date: sender.date).date
-        print("Новая дата: \(sender.date)")
         collectionView?.reloadData()
     }
     

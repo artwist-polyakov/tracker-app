@@ -26,8 +26,7 @@ final class TrackersCollectionsCompanionInteractor {
     
     func addCategory(name: String) {
         let category = TrackerCategory(id: UUID(), categoryTitle: name)
-        print("addCategory")
-        print("ИНТЕРАКТОР — добавляю категоию \(category) ")
+
         companion?.addCategory(category: category)
     }
     
@@ -36,8 +35,7 @@ final class TrackersCollectionsCompanionInteractor {
     }
     
     func editCategory(category: TrackerCategory, newName: String) {
-        print("editCategory")
-        print("ИНТЕРАКТОР: старая \(category.categoryTitle), новая \(newName)")
+
         let newCategory = TrackerCategory(id: category.id, categoryTitle: newName)
         companion?.editCategory(category: newCategory)
     }

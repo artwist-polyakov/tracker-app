@@ -1,10 +1,3 @@
-//
-//  OnboardingRepository.swift
-//  Tracker
-//
-//  Created by Александр Поляков on 03.09.2023.
-//
-
 import Foundation
 class OnboardingRepository: OnboardingRepositoryProtocol {
     private let userDefaults: UserDefaults = .standard

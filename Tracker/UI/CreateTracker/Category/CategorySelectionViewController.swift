@@ -3,17 +3,9 @@ import UIKit
 
 final class CategorySelectionViewController: UIViewController {
     var delegate: TrackerTypeDelegate? = nil
-    var selectedCategory: TrackerCategory? {
-        didSet {
-            tableView.reloadData()
-            guard let delegate = delegate else {return}
-            delegate.didSelectTrackerCategory(selectedCategory)
-        }
-    }
     private var categories: [TrackerCategory]?
     private var longtappedCategory: TrackerCategory? = nil
-    var completionDone: (() -> Void)? = nil
-    let interactor = TrackersCollectionsCompanionInteractor.shared
+    var completionDone: ((TrackerCategory?) -> Void)? = nil
     
     private let viewModel = CategorySelectionViewModel()
     
@@ -21,6 +13,7 @@ final class CategorySelectionViewController: UIViewController {
         let label = UILabel()
         label.text = "Привычки и события можно\nобъединить по смыслу"
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.textAlignment = .center
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -52,7 +45,7 @@ final class CategorySelectionViewController: UIViewController {
         return tv
     }()
     
-    var categoryChecked: TrackerCategory? = nil
+    var selectedIndex: Int? = nil
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -60,14 +53,14 @@ final class CategorySelectionViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.title = "Категория"
-        fetchCategories()
         setupUI()
         layoutUI()
+        bind()
         addButton.addTarget(self, action: #selector(addCategory), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorStyle = .none
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: "CategoryCell")
+        viewModel.updateState()
     }
     
     // MARK: - UI Setup
@@ -88,8 +81,18 @@ final class CategorySelectionViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 38),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.bottomAnchor.constraint(equalTo: addButton.topAnchor, constant: -38)
+            tableView.bottomAnchor.constraint(equalTo: addButton.topAnchor, constant: -38),
+            
+            voidImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            voidImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            voidImage.widthAnchor.constraint(equalToConstant: 80),
+            voidImage.heightAnchor.constraint(equalToConstant: 80),
+            
+            questionLabel.topAnchor.constraint(equalTo: voidImage.bottomAnchor, constant: 8),
+            questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            
         ])
+        tableView.separatorStyle = .none
     }
     
     private func showStartingBlock() {
@@ -102,9 +105,27 @@ final class CategorySelectionViewController: UIViewController {
         questionLabel.isHidden = true
     }
     
-    func fetchCategories() {
-        categories = interactor.giveMeAllCategories()
+    func howMuchIsTheCategories() -> Int {
+        return categories?.count ?? 0
     }
+    
+    func updateViewModel() {
+        viewModel.updateState()
+    }
+    
+    func setInteractionAtCategory(category: TrackerCategory) {
+        guard let categories = categories else { return }
+        print("Я ВЗАИМОДЕЙСТВУЮ С КАТЕГОРИЕЙ")
+        for (index, cat) in categories.enumerated() {
+            if cat.id == category.id {
+                print(index)
+                print(cat)
+                viewModel.handleNavigation(action: .select(category: cat, pos: index))
+            }
+        }
+    }
+    
+    
     
     private func bind() {
         viewModel.navigationClosure = { [weak self] in
@@ -124,7 +145,16 @@ final class CategorySelectionViewController: UIViewController {
                 self.navigationController?.pushViewController(editCategoryViewController, animated: true)
             case .categoryApproved(let category):
                 self.delegate?.didSelectTrackerCategory(category)
+                self.completionDone?(category)
                 self.navigationController?.popViewController(animated: true)
+            case .categorySelected(_ , let position):
+                var paths: [IndexPath] = []
+                if  let previousPosition = self.selectedIndex {
+                    paths.append(IndexPath(row: previousPosition, section: 0))
+                }
+                self.selectedIndex = position
+                paths.append(IndexPath(row: position, section: 0))
+                self.tableView.reloadRows(at: paths, with: .automatic)
             default:
                 break
             }
@@ -155,7 +185,6 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let quantity = categories?.count ?? 0
-        quantity == 0 ? showStartingBlock() : hideStartingBlock()
         return quantity
     }
     
@@ -179,12 +208,11 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         
         roundCornersForCell(cell, in: tableView, at: indexPath)
         
-        if let selectedCategory = selectedCategory {
-            if cell.targetCategory?.id == selectedCategory.id {
+        if let selectedIndex = selectedIndex {
+            if indexPath.row == selectedIndex  {
                 cell.checkmarkImageView.isHidden = false
             }
         }
-        
         return cell
     }
     
@@ -211,13 +239,8 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if selectedCategory?.id != categories?[indexPath.row].id {
-            selectedCategory = categories?[indexPath.row]
-        } else {
-            completionDone?()
-            navigationController?.popViewController(animated: true)
-        }
+        guard let categories = categories else { return }
+        viewModel.handleNavigation(action: .select(category: categories[indexPath.row], pos: indexPath.row))
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -225,17 +248,12 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
             let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
                 guard let longtappedCategory = self.longtappedCategory else { return }
-                let editCategoryViewController = NewCategoryViewController()
-                editCategoryViewController.pageType = .edit(cat: longtappedCategory)
-                editCategoryViewController.delegate = self
-                
-                self.navigationController?.pushViewController(editCategoryViewController, animated: true)
-                print("Редактировать кнопка была нажата")
+                self.viewModel.handleNavigation(action: .edit(category: longtappedCategory))
             }
             
-            let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) { [weak self] action in
-                
-                self?.removeCategory()
+            let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) {action in
+                guard let longtappedCategory = self.longtappedCategory else { return }
+                self.viewModel.handleNavigation(action: .remove(category: longtappedCategory))
             }
             
             return UIMenu(title: "", children: [editAction, deleteAction])
@@ -247,22 +265,13 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         newCategoryViewController.delegate = self
         self.navigationController?.pushViewController(newCategoryViewController, animated: true)
     }
-    
-    @objc func removeCategory() {
-        if let category = longtappedCategory {
-            interactor.removeCategory(category: category)
-            selectedCategory = nil
-            fetchCategories()
-            tableView.reloadData()
-        }
-    }
 }
 
 enum interactionType {
     case add
     case edit(category: TrackerCategory)
     case remove(category: TrackerCategory)
-    case select(category: TrackerCategory)
+    case select(category: TrackerCategory, pos: Int)
 }
 
 

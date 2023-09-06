@@ -201,12 +201,12 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         do {
             try categoriesFetchedResultsController.performFetch()
         } catch let error as NSError  {
-            print("Error performing categoriesFetchedResultsController: \(error)")
+            print("Ошибка при получении categoriesFetchedResultsController: \(error)")
         }
         do {
             try trackersFetchedResultsController.performFetch()
         } catch let error as NSError  {
-            print("Error performing trackersFetchedResultsController: \(error)")
+            print("Ошибка при получении trackersFetchedResultsController: \(error)")
         }
     }
 }
@@ -223,7 +223,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? 0
-//на случай дебага        let totalObjects = trackersFetchedResultsController.fetchedObjects?.count ?? 0
         return result
     }
     
@@ -241,7 +240,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func addCategory(_ category: TrackerCategory) throws {
-        print("ДАТА ПРОВАЙДЕР — добавляю категорию \(category)")
         try categoriesDataStore.add(category)
     }
     
@@ -269,7 +267,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             }
             return TrackerCategory(id: id, categoryTitle: title)
         } catch let error as NSError {
-            print("Error performing categoriesFetchedResultsController: \(error)")
+            print("Ошибка при получении categoriesFetchedResultsController: \(error)")
             return nil
         }
     }
@@ -310,13 +308,12 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             context.reset()
             delegate?.reloadData()
         } catch let error as NSError {
-            print("Error deleting CategoriesCoreData: \(error.localizedDescription)")
+            print("Ошибка при удалении CategoriesCoreData: \(error.localizedDescription)")
         }
     }
     
     
     func giveMeAllCategories() -> [TrackerCategory] {
-        // Используем fetchRequest, чтобы получить все категории
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
@@ -357,8 +354,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func editCategory(category: TrackerCategory) {
-        print("РЕДАКТИРОВАНИЕ КАТЕГОРИИ ВЫЗВАНО")
-        print("category: \(category.categoryTitle)")
+
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
         fetchRequest.fetchLimit = 1

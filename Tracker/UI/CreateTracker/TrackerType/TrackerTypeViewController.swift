@@ -65,14 +65,12 @@ final class TrackerTypeViewController: UIViewController {
         ])
     }
     
-    
     @objc private func handleHabitButton() {
         delegate?.didSelectTrackerType(.habit)
         let createTrackerViewController = CreateTrackerViewController()
         createTrackerViewController.delegate = delegate
         createTrackerViewController.selectedTrackerType = .habit
         navigationController?.pushViewController(createTrackerViewController, animated: true)
-        // Переход к экрану создания трекера с выбором "Привычка"
     }
     
     @objc private func handleIrregularEventButton() {
@@ -81,6 +79,5 @@ final class TrackerTypeViewController: UIViewController {
         createTrackerViewController.delegate = delegate
         createTrackerViewController.selectedTrackerType = .irregularEvent
         navigationController?.pushViewController(createTrackerViewController, animated: true)
-        // Переход к экрану создания трекера с выбором "Нерегулярное событие"
     }
 }

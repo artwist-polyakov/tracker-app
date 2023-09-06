@@ -41,7 +41,6 @@ final class SheduleTableViewCell: UITableViewCell {
         addSubview(labelsContainer)
         labelsContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        // Добавление titleLabel и subtitleLabel в контейнер
         labelsContainer.addSubview(titleLabel)
         labelsContainer.addSubview(subtitleLabel)
         

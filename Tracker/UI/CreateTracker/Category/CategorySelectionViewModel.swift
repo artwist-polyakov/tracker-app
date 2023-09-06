@@ -10,7 +10,7 @@ enum navigationState {
     case removeCategory(_ category: TrackerCategory)
     case addCategory
     case editcategory(_ category: TrackerCategory)
-    case categorySelected(_ category: TrackerCategory)
+    case categorySelected(_ category: TrackerCategory, _ pos: Int)
     case categoryApproved(_ category: TrackerCategory)
 }
 
@@ -46,15 +46,17 @@ final class CategorySelectionViewModel {
         case .add:
             navigationState = .addCategory
         case .remove(let category):
+            interactor.removeCategory(category: category)
+            self.updateState()
             navigationState = .removeCategory(category)
         case .edit(let category):
             navigationState = .editcategory(category)
-        case .select(let category):
+        case .select(let category, let pos):
             switch navigationState {
-            case .categorySelected(let currentCategory) where currentCategory.id == category.id:
+            case .categorySelected(let currentCategory, _) where currentCategory.id == category.id:
                 navigationState = .categoryApproved(category)
             default:
-                navigationState = .categorySelected(category)
+                navigationState = .categorySelected(category, pos)
             }
         }
     }
