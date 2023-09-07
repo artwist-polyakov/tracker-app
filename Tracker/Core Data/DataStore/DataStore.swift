@@ -60,7 +60,6 @@ extension DataStore: TrackersDataStore {
     func add(_ record: Tracker, categoryId: UUID, categoryTitle: String) throws {
         try performSync { context in
             Result {
-                // Проверяем, существует ли уже категория с указанным categoryId
                 let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
                 fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
                 let existingCategories = try context.fetch(fetchRequest)
@@ -85,7 +84,6 @@ extension DataStore: TrackersDataStore {
                 trackersCoreData.color = Int16(record.color)
                 trackersCoreData.id = UUID()
                 
-                // Установим отношение между трекером и категорией
                 trackersCoreData.trackerToCategory = finalCategory
                 do {
                     try context.save()
@@ -100,14 +98,14 @@ extension DataStore: TrackersDataStore {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         fetchRequest.predicate = NSPredicate(format: "trackerId == %@", trackerId as NSUUID)
         let count = try? context.count(for: fetchRequest)
-        return count ?? 0
+        return count ?? .zero
     }
     
     func hasExecutionForDate(for trackerId: UUID, date: SimpleDate) -> Bool {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         fetchRequest.predicate = NSPredicate(format: "trackerId == %@ AND date == %@", trackerId as NSUUID, date.date as NSDate)
         let count = try? context.count(for: fetchRequest)
-        return count ?? 0 > 0
+        return count ?? .zero > .zero
     }
     
     
@@ -130,6 +128,7 @@ extension DataStore: CategoriesDataStore {
                 let categoriesCoreData = CategoriesCoreData(context: context)
                 categoriesCoreData.title = record.categoryTitle
                 categoriesCoreData.creationDate = Date()
+                categoriesCoreData.id = record.id
                 try context.save()
             }
         }
@@ -138,7 +137,6 @@ extension DataStore: CategoriesDataStore {
 
 extension DataStore: ExecutionsDataStore {
     func interactWith(_ record: UUID, _ date: SimpleDate) throws {
-        // Попробуем получить существующие выполнения для данного трекера и даты
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date.date as NSDate, #keyPath(ExecutionsCoreData.trackerId), record as NSUUID)
         fetchRequest.resultType = .managedObjectIDResultType
@@ -153,7 +151,7 @@ extension DataStore: ExecutionsDataStore {
                 }
             }
         } catch {
-            print("FATAL ERROR: \(error)")
+            print("ФАТАЛЬНАЯ ОШИБКА: \(error)")
             throw error
         }
     }

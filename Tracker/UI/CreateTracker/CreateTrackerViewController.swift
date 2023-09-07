@@ -50,12 +50,7 @@ final class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        if let categoryId = delegate?.giveMeSelectedCategory()?.id {
-            delegate?.didSelectTrackerCategory(categoryId)
-        }
-        if let categoryTitle = delegate?.giveMeSelectedCategory()?.categoryTitle {
-            delegate?.didSetTrackerCategoryName(categoryTitle)
-        }
+
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -237,8 +232,12 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     
-    func changeSheduleMenuSubtitle(_ newTitle:String){
+    func changeSheduleMenuSubtitle(){
         menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+    }
+    
+    func changeCategoryMenuSubtitle(){
+        menuTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
     }
     
     @objc func dismissKeyboard() {
@@ -250,7 +249,20 @@ final class CreateTrackerViewController: UIViewController {
     
     // MARK: - Actions
     private func handleSelectCategory() {
-        // Переход к экрану выбора категории
+        let category = delegate?.giveMeSelectedCategory()
+        let categoryVC = CategorySelectionViewController(categorySelected: category)
+        categoryVC.completionDone = { [weak self] category in
+            guard let self = self else { return }
+            guard let category = category else {
+                self.menuItems[0].subtitle = ""
+                self.menuItems[0].title = "Выбрать категорию"
+                return }
+            self.delegate?.didSelectTrackerCategory(category)
+            self.menuItems[0].subtitle = category.categoryTitle
+            self.menuItems[0].title = "Категория"
+            self.changeCategoryMenuSubtitle()
+        }
+        self.navigationController?.pushViewController(categoryVC, animated: true)
     }
     
     private func handleCreateSchedule() {
@@ -272,7 +284,10 @@ final class CreateTrackerViewController: UIViewController {
             self.shedule = scheduleVC.daysChecked
             let newSubtitle = Mappers.sortedStringOfSetWeekdays(self.shedule)
             self.menuItems[1].subtitle = newSubtitle
-            self.changeSheduleMenuSubtitle(newSubtitle)
+            if toFlush.count > 0 {
+                self.menuItems[1].title = "Расписание"
+            }
+            self.changeSheduleMenuSubtitle()
         }
         self.navigationController?.pushViewController(scheduleVC, animated: true)
     }
@@ -389,7 +404,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 0:
+        case .zero:
             return MenuTableViewCell.cellHeight
         case 1, 2:
             var collectionCellWidth: CGFloat {
@@ -398,19 +413,19 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             }
             return 3*(collectionCellWidth+2) // высота для коллекций
         default:
-            return 0
+            return .zero
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section > 0 {
+        if section > .zero {
             return 12
         }
-        return 0
+        return .zero
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView() // Возвращает пустое представление
+        return UIView()
     }
     
     func roundCornersForCell(_ cell: UITableViewCell, in tableView: UITableView, at indexPath: IndexPath) {

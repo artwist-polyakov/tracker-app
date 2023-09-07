@@ -9,3 +9,9 @@ final class TrackerCategory {
         self.categoryTitle = categoryTitle
     }
 }
+
+extension TrackerCategory: Equatable {
+    static func == (lhs: TrackerCategory, rhs: TrackerCategory) -> Bool {
+        return lhs.id == rhs.id
+    }
+}

@@ -30,6 +30,10 @@ protocol TrackersDataProviderProtocol {
     func categoryTitle(for categoryId: UUID) -> String?
     func giveMeAnyCategory() -> TrackerCategory?
     func clearAllCoreData()
+    func giveMeAllCategories() -> [TrackerCategory]
+    func deleteCategory(category: TrackerCategory)
+    func editCategory(category: TrackerCategory)
+    func giveMeCategoryById(id: UUID) -> TrackerCategory?
 }
 
 final class TrackersDataProvider: NSObject {
@@ -49,8 +53,7 @@ final class TrackersDataProvider: NSObject {
         }
     }
     
-    
-    private var previousSectionCount: Int = 0
+    private var previousSectionCount: Int = .zero
     private var shouldReloadData: Bool = false
     
     weak var delegate: TrackersDataProviderDelegate?
@@ -197,12 +200,12 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         do {
             try categoriesFetchedResultsController.performFetch()
         } catch let error as NSError  {
-            print("Error performing categoriesFetchedResultsController: \(error)")
+            print("Ошибка при получении categoriesFetchedResultsController: \(error)")
         }
         do {
             try trackersFetchedResultsController.performFetch()
         } catch let error as NSError  {
-            print("Error performing trackersFetchedResultsController: \(error)")
+            print("Ошибка при получении trackersFetchedResultsController: \(error)")
         }
     }
 }
@@ -218,13 +221,12 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     
     var numberOfSections: Int {
-        let result = trackersFetchedResultsController.sections?.count ?? 0
-//на случай дебага        let totalObjects = trackersFetchedResultsController.fetchedObjects?.count ?? 0
+        let result = trackersFetchedResultsController.sections?.count ?? .zero
         return result
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
+        let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? .zero
         return result
     }
     
@@ -248,6 +250,25 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             return nil
         }
         return TrackerCategory(id: id, categoryTitle: title)
+    }
+    
+    func giveMeCategoryById(id: UUID) -> TrackerCategory?  {
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as NSUUID)
+        fetchRequest.fetchLimit = 1
+        do {
+            let categories = try context.fetch(fetchRequest)
+            guard let category = categories.first,
+                  let id = category.id,
+                  let title = category.title
+            else {
+                return nil
+            }
+            return TrackerCategory(id: id, categoryTitle: title)
+        } catch let error as NSError {
+            print("Ошибка при получении categoriesFetchedResultsController: \(error)")
+            return nil
+        }
     }
     
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws {
@@ -286,11 +307,83 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             context.reset()
             delegate?.reloadData()
         } catch let error as NSError {
-            print("Error deleting CategoriesCoreData: \(error.localizedDescription)")
+            print("Ошибка при удалении CategoriesCoreData: \(error.localizedDescription)")
         }
     }
     
     
+    func giveMeAllCategories() -> [TrackerCategory] {
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        
+        do {
+            let categoriesCoreData = try context.fetch(fetchRequest)
+            
+            return categoriesCoreData.compactMap { coreDataCategory in
+                guard let id = coreDataCategory.id, let title = coreDataCategory.title else { return nil }
+                return TrackerCategory(id: id, categoryTitle: title)
+            }
+            
+        } catch let error as NSError {
+            print("Ошибка при извлечении всех категорий: \(error)")
+            return []
+        }
+    }
     
+    func deleteCategory(category: TrackerCategory) {
+        if isLastCategory(categoryId: category.id) {
+                // Если это последняя категория, просто очистите все данные
+                clearAllCoreData()
+                return
+            }
+        
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
+        fetchRequest.fetchLimit = 1
+
+        do {
+            let fetchedCategories = try context.fetch(fetchRequest)
+            if let categoryToDelete = fetchedCategories.first {
+                context.delete(categoryToDelete)
+                try context.save()
+                delegate?.reloadData()
+            }
+        } catch let error as NSError {
+            print("Ошибка при удалении категории: \(error.localizedDescription)")
+        }
+    }
     
+    private func isLastCategory(categoryId: UUID) -> Bool {
+        let fetchRequest: NSFetchRequest<CategoriesCoreData> = NSFetchRequest(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id != %@", categoryId as NSUUID)
+        do {
+            let remainingCategories = try context.fetch(fetchRequest)
+            return remainingCategories.isEmpty
+        } catch {
+            print("Ошибка при проверке: \(error)")
+            return false
+        }
+    }
+    
+    func editCategory(category: TrackerCategory) {
+
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
+        fetchRequest.fetchLimit = 1
+
+        do {
+            
+            let fetchedCategories = try context.fetch(fetchRequest)
+            if let categoryToEdit = fetchedCategories.first {
+                
+                categoryToEdit.title = category.categoryTitle
+                
+                
+                try context.save()
+                delegate?.reloadData()
+            }
+        } catch let error as NSError {
+            print("Ошибка при редактировании категории: \(error.localizedDescription)")
+        }
+    }
 }

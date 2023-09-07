@@ -1,12 +1,12 @@
 import Foundation
 import UIKit
 
-final class MenuTableViewCell: UITableViewCell {
+final class CategoryTableViewCell: UITableViewCell {
     
     let titleLabel = UILabel()
-    let subtitleLabel = UILabel()
     let separatorView = UIView()
-    let chevronImageView = UIImageView(image: UIImage(named: "Chevron"))
+    let checkmarkImageView = UIImageView(image: UIImage(named: "Done"))
+    var targetCategory: TrackerCategory?
     static let cellHeight: CGFloat = 75
     private var titleCenterYConstraint: NSLayoutConstraint?
     private var titleTopConstraint: NSLayoutConstraint?
@@ -25,24 +25,18 @@ final class MenuTableViewCell: UITableViewCell {
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         titleLabel.textColor = UIColor(named: "TrackerBlack")
         
-        subtitleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        subtitleLabel.textColor = UIColor(named: "TrackerGray")
-        
         let labelsContainer = UIView()
         addSubview(labelsContainer)
         labelsContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        // Добавление titleLabel и subtitleLabel в контейнер
         labelsContainer.addSubview(titleLabel)
-        labelsContainer.addSubview(subtitleLabel)
-        chevronImageView.tintColor = UIColor(named: "TrackerGray")
+        checkmarkImageView.tintColor = UIColor(named: "TrackerGray")
         self.backgroundColor = UIColor(white: 1, alpha: 0)
         
-        addSubview(chevronImageView)
+        addSubview(checkmarkImageView)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+        checkmarkImageView.translatesAutoresizingMaskIntoConstraints = false
         
         separatorView.backgroundColor = UIColor(named: "TrackerGray")
         addSubview(separatorView)
@@ -59,13 +53,8 @@ final class MenuTableViewCell: UITableViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
             
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
-            subtitleLabel.leadingAnchor.constraint(equalTo: labelsContainer.leadingAnchor),
-            subtitleLabel.trailingAnchor.constraint(equalTo: labelsContainer.trailingAnchor),
-            subtitleLabel.bottomAnchor.constraint(equalTo: labelsContainer.bottomAnchor),
-            
-            chevronImageView.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
-            chevronImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            checkmarkImageView.centerYAnchor.constraint(equalTo: labelsContainer.centerYAnchor),
+            checkmarkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
         
         NSLayoutConstraint.activate([

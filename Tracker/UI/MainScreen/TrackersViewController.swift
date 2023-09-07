@@ -146,7 +146,6 @@ final class TrackersViewController: UIViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         collectionPresenter.selectedDate = SimpleDate(date: sender.date).date
         collectionCompanion?.selectedDate = SimpleDate(date: sender.date).date
-        print("Новая дата: \(sender.date)")
         collectionView?.reloadData()
     }
     
@@ -232,12 +231,12 @@ extension TrackersViewController: TrackersViewControllerProtocol {
     
     func updateStartingBlockState(_ state: PRESENTER_ERRORS) {
         switch (state) {
-        case .DEFAULT:
-            voidImage.image = UIImage(named: "VoidImage")
-            questionLabel.text = "Что будем отслеживать?"
         case .NOT_FOUND:
             voidImage.image = UIImage(named: "NotFoundImage")
             questionLabel.text = "Ничего не найдено"
+        default:
+            voidImage.image = UIImage(named: "VoidImage")
+            questionLabel.text = "Что будем отслеживать?"
         }
     }
 }

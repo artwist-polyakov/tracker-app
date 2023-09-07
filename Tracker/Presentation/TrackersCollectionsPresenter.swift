@@ -3,6 +3,7 @@ import UIKit
 
 enum PRESENTER_ERRORS {
     case NOT_FOUND
+    case LETS_PLAN
     case DEFAULT
 }
 
@@ -10,6 +11,10 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     
     func setInteractor(interactor: TrackersCollectionsCompanionInteractor) {
         self.interactor = interactor
+    }
+    
+    func setState(state: PRESENTER_ERRORS) {
+        self.state = state
     }
     
     
@@ -20,66 +25,43 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     let cellIdentifier = "TrackerCollectionViewCell"
     weak var viewController: TrackersViewControllerProtocol?
     private var state: PRESENTER_ERRORS = PRESENTER_ERRORS.DEFAULT
-    var selectedDate: Date? {
-        didSet {
-            print("ОБНОВЛЯЮ ДАТУ")
-            state = PRESENTER_ERRORS.NOT_FOUND
-            print(state)
-        }
-    }
+    var selectedDate: Date?
     
     var trackerTypeToFlush: TrackerType = .notSet {
         didSet {
             notifyObservers()
-            print("TrackerTypeToFlush: \(trackerTypeToFlush)")
         }
     }
     
     var trackerCategoryToFlush: UUID? {
         didSet {
             notifyObservers()
-            guard let category = trackerCategoryToFlush
-            else {print ("TrackerCategoryToFlush: Пусто") ; return}
-            print("TrackerCategoryToFlush: \(category)")
         }
     }
     
     var trackerCategorynameToFlush: String? {
         didSet {
             notifyObservers()
-            guard let categoryName = trackerCategorynameToFlush
-            else {print ("trackerCategorynameToFlush: Пусто") ; return}
-            print("trackerCategorynameToFlush: \(categoryName)")
         }
     }
     var trackerTitleToFlush: String? {
         didSet {
             notifyObservers()
-            guard let title = trackerTitleToFlush
-            else {print ("trackerTitleToFlush: Пусто") ; return}
-            print("trackerTitleToFlush: \(title)")
         }
     }
     var trackerIconToFlush: String? {
         didSet {
             notifyObservers()
-            guard let icon = trackerIconToFlush
-            else {print ("trackerIconToFlush: Пусто") ; return}
-            print("trackerIconToFlush: \(icon)")
         }
     }
     var trackerSheduleToFlush: String = "" {
         didSet {
             notifyObservers()
-            print("trackerSheduleToFlush: \(trackerSheduleToFlush)")
         }
     }
     var trackerColorToFlush: Int? {
         didSet {
             notifyObservers()
-            guard let color = trackerColorToFlush
-            else {print ("trackerColorToFlush: Пусто") ; return}
-            print("trackerColorToFlush: \(color)")
         }
     }
     
@@ -88,12 +70,10 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     
     func quantityTernar(_ quantity: Int) {
-        print("Я в quantityTernar \(state)")
         guard let vc = viewController else {return}
         vc.updateStartingBlockState(state)
-        quantity > 0 ? vc.hideStartingBlock() : vc.showStartingBlock()
+        quantity > .zero ? vc.hideStartingBlock() : vc.showStartingBlock()
     }
-    
     
     func handleClearAllData() {
         interactor?.clearAllCoreData()
@@ -111,18 +91,24 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func giveMeSelectedCategory() -> TrackerCategory? {
-        var result  = interactor?.giveMeAnyCategory()
-        if let category = interactor?.giveMeAnyCategory() {
-            result  = category
+        if let id = trackerCategoryToFlush,
+           let title = trackerCategorynameToFlush {
+            return TrackerCategory(id: id, categoryTitle: title)
         } else {
-            result = repository.getAllTrackers().categoryies[0]
+            return nil
         }
-        return result
     }
     
-    func didSelectTrackerCategory(_ category: UUID) {
-        trackerCategoryToFlush = category
+    func didSelectTrackerCategory(_ category: TrackerCategory?) {
+        if let category = category {
+            trackerCategoryToFlush = category.id
+            trackerCategorynameToFlush = category.categoryTitle
+        } else {
+            trackerCategoryToFlush = nil
+            trackerCategorynameToFlush = nil
+        }
     }
+    
     
     func didSelectTrackerType(_ type: TrackerType) {
         trackerTypeToFlush = type
@@ -154,6 +140,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerIconToFlush = nil
         trackerSheduleToFlush = ""
         trackerColorToFlush = nil
+        trackerCategoryToFlush = nil
+        trackerCategorynameToFlush = nil
     }
     
     func realizeAllFlushProperties() {
@@ -162,11 +150,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
               let trackerColor = trackerColorToFlush,
               let trackseCategory = trackerCategoryToFlush,
               let trackerCategoryName = trackerCategorynameToFlush
-        else {
-            print("Не все данные готовы")
-            return }
+        else { return }
         
-        print("Записываю \(trackerTitle), \(trackerIcon), \(trackerSheduleToFlush), \(trackerColor), \(trackseCategory)")
         repository.addNewTrackerToCategory(
             color: trackerColor,
             categoryID: trackseCategory,

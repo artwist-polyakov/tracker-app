@@ -33,6 +33,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     var typedText: String? {
         didSet {
+            delegate?.setState(state: typedText == "" ? PRESENTER_ERRORS.LETS_PLAN : PRESENTER_ERRORS.NOT_FOUND)
             dataProvider?.setQuery(query: typedText ?? "")
         }
     }
@@ -58,13 +59,34 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         dataProvider?.clearAllCoreData()
     }
     
+    func giveMeAllCategories () -> [TrackerCategory]? {
+        return dataProvider?.giveMeAllCategories()
+    }
+    
+    func addCategory (category: TrackerCategory) {
+        try? dataProvider?.addCategory(category)
+    }
+    
+    func deleteCategory (category: TrackerCategory) {
+        dataProvider?.deleteCategory(category: category)
+    }
+    
+    func editCategory (category: TrackerCategory) {
+        dataProvider?.editCategory(category: category)
+    }
+    
+    func giveMeCategoryById(id: UUID) -> TrackerCategory? {
+        return dataProvider?.giveMeCategoryById(id: id)
+    }
+    
+    
     func interactWithExecution(trackerId: UUID, date: SimpleDate, indexPath: IndexPath) {
         try? dataProvider?.interactWith(trackerId, date, indexPath: indexPath)
     }
     
-    // UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
+        let quantity = dataProvider?.numberOfRowsInSection(section) ?? .zero
         guard let servant = delegate else {return quantity}
         servant.quantityTernar(quantity)
         return quantity
@@ -159,8 +181,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        print("NUMBER OF SECTIONS")
-        let count = self.dataProvider?.numberOfSections ?? 0
+        let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
         return count
     }
@@ -172,8 +193,7 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.reloadItems(at: indexPaths)
-        let count = self.dataProvider?.numberOfSections ?? 0
-        print("RELOAD ITEMS\(count)")
+        let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
     }
     
@@ -188,7 +208,7 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
             cv.insertItems(at: insertedIndexPaths)
             cv.deleteItems(at: deletedIndexPaths)
         } completion: { _ in
-            let count = self.dataProvider?.numberOfSections ?? 0
+            let count = self.dataProvider?.numberOfSections ?? .zero
             self.delegate?.quantityTernar(count)
         }
     }
@@ -196,10 +216,9 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
     func reloadData() {
         guard let vc = viewController,
               let cv = vc.collectionView
-        else {return}
+        else { return }
         cv.reloadData()
-        let count = self.dataProvider?.numberOfSections ?? 0
-        print("RELOAD \(count)")
+        let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
     }
 }
