@@ -16,14 +16,18 @@ final class TrackersViewController: UIViewController {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("trackers",
+                                       value: "Нет значения",
+                                       comment: "Заголовок приложения")
         label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         return label
     }()
     
     let questionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
+        label.text = NSLocalizedString("emptyState.title",
+                                       value: "Нет значения",
+                                       comment: "Сообщение при пустом экране")
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
     }()
@@ -36,7 +40,9 @@ final class TrackersViewController: UIViewController {
     
     var searchField: UISearchTextField = {
         let field = UISearchTextField()
-        field.text = "Поиск"
+        field.text = NSLocalizedString("search",
+                                       value: "Нет значения",
+                                       comment: "Плейсхолдер для поиска")
         field.backgroundColor = UIColor(named: "TrackerSearchFieldColor")
         field.textColor = UIColor(named: "TrackerGray")
         return field
