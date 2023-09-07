@@ -45,8 +45,9 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     }
     
     func setNewCategorySelected() {
-        let pos = howManyCategories()
-        navigationState = .categorySelected(pos-1)
+        let pos = howManyCategories() - 1
+        navigationState = .categorySelected(pos)
+        currentSelectionPos = pos
     }
     
     func setCategorySelected(category: TrackerCategory) {
