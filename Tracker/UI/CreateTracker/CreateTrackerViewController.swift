@@ -249,7 +249,8 @@ final class CreateTrackerViewController: UIViewController {
     
     // MARK: - Actions
     private func handleSelectCategory() {
-        let categoryVC = CategorySelectionViewController()
+        let category = delegate?.giveMeSelectedCategory()
+        let categoryVC = CategorySelectionViewController(categorySelected: category)
         categoryVC.completionDone = { [weak self] category in
             guard let self = self else { return }
             guard let category = category else {

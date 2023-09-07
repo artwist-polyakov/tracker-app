@@ -12,7 +12,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     }()
     
     private var isTextFieldFocused: Bool = false
-    
+    var viewModelDelegate: CategorySelectionViewModelDelegate? = nil
     private let warningLabel: UILabel = {
         let label = UILabel()
         label.text = "Ограничение 27 символов"
@@ -55,7 +55,6 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    weak var delegate: CategorySelectionViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -193,13 +192,13 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         case .create:
             let category = TrackerCategory(id: UUID(), categoryTitle: enteredName)
             pageType.completion(category)
-            delegate?.updateViewModel()
-            delegate?.markNewCategoryAsSelected()
+            viewModelDelegate?.refreshState()
+            viewModelDelegate?.setNewCategorySelected()
         case .edit(let cat):
             let category = cat
             category.categoryTitle = enteredName
             pageType.completion(cat)
-            delegate?.updateViewModel()
+            viewModelDelegate?.refreshState()
         }
         navigationController?.popViewController(animated: true)
     }

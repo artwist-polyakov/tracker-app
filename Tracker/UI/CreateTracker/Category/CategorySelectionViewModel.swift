@@ -3,14 +3,14 @@ import Foundation
 enum categoriesResultState {
     case start
     case emptyResult
-    case showResult(categories: [TrackerCategory])
+    case showResult(categories: [TrackerCategory], update: [Int]? = nil)
 }
 
 enum categoriesNavigationState {
     case removeCategory(_ category: TrackerCategory)
     case addCategory
     case editcategory(_ category: TrackerCategory)
-    case categorySelected(_ category: TrackerCategory)
+    case categorySelected(_ pos: Int)
     case categoryApproved(_ category: TrackerCategory)
 }
 
@@ -30,6 +30,9 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
         }
     }
     
+    private(set) var updatingRows:[Int] = []
+    private var currentSelectionPos: Int? = nil
+    
     private let interactor = TrackersCollectionsCompanionInteractor.shared
     
     func refreshState() {
@@ -42,26 +45,65 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
         }
     }
     
-    func setNavigationState(state: categoriesNavigationState) {
-        navigationState = state
+    func setNewCategorySelected() {
+        let pos = howManyCategories()
+        navigationState = .categorySelected(pos-1)
+    }
+    
+    func setCategorySelected(category: TrackerCategory) {
+        refreshState()
+        if let pos = categories.firstIndex(of: category) {
+            print(pos)
+            navigationState = .categorySelected(pos)
+            currentSelectionPos = pos
+        }
+    }
+    
+    func howManyCategories() -> Int {
+        return categories.count
+    }
+    
+    func giveMeCategory(pos: Int) -> TrackerCategory? {
+        if pos >= categories.count {
+            return nil
+        }
+        return categories[pos]
+    }
+    
+    func isNotCheckedCategory(pos: Int) -> Bool {
+        return pos != currentSelectionPos
     }
     
     func handleNavigation(action: InteractionType) {
         switch action {
         case .add:
             navigationState = .addCategory
-        case .remove(let category):
+        case .remove(let pos):
+            if pos >= categories.count {
+                return
+            }
+            let category = categories[pos]
             interactor.removeCategory(category: category)
             self.refreshState()
             navigationState = .removeCategory(category)
-        case .edit(let category):
+        case .edit(let pos):
+            if pos >= categories.count {
+                return
+            }
+            let category = categories[pos]
             navigationState = .editcategory(category)
-        case .select(let category):
+        case .select(let posView):
             switch navigationState {
-            case .categorySelected(let currentCategory) where currentCategory == category:
-                navigationState = .categoryApproved(category)
+            case .categorySelected(let posModel) where posModel == posView:
+                navigationState = .categoryApproved(categories[posModel])
             default:
-                navigationState = .categorySelected(category)
+                navigationState = .categorySelected(posView)
+                var paths = [posView]
+                if let oldPath = currentSelectionPos {
+                    paths.append(oldPath)
+                }
+                currentSelectionPos = posView
+                state = .showResult(categories: categories, update: paths)
             }
         }
     }
