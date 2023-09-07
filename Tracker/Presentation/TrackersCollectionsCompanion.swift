@@ -68,15 +68,15 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func deleteCategory (category: TrackerCategory) {
-        try? dataProvider?.deleteCategory(category: category)
+        dataProvider?.deleteCategory(category: category)
     }
     
     func editCategory (category: TrackerCategory) {
-        try? dataProvider?.editCategory(category: category)
+        dataProvider?.editCategory(category: category)
     }
     
     func giveMeCategoryById(id: UUID) -> TrackerCategory? {
-        return try? dataProvider?.giveMeCategoryById(id: id)
+        return dataProvider?.giveMeCategoryById(id: id)
     }
     
     
