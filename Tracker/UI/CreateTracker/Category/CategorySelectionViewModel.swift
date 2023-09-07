@@ -105,7 +105,4 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
             }
         }
     }
-
-    
-    
 }

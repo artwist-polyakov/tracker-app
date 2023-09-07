@@ -3,7 +3,7 @@ import UIKit
 
 final class CategorySelectionViewController: UIViewController {
     var delegate: TrackerTypeDelegate? = nil
-
+    
     var completionDone: ((TrackerCategory?) -> Void)? = nil
     
     private let viewModel = CategorySelectionViewModel()
@@ -54,7 +54,7 @@ final class CategorySelectionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -162,10 +162,7 @@ final class CategorySelectionViewController: UIViewController {
             default:
                 viewModel.refreshState()
             }
-            
-            
         }
-        
     }
 }
 

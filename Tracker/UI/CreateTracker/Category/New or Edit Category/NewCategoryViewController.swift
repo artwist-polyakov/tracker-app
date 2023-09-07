@@ -44,7 +44,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     // Элементы UI
     private let addButton: UIButton = {
         let button = UIButton()
-
+        
         button.setTitle("Добавить категорию", for: .normal)
         button.backgroundColor = UIColor(named: "TrackerBlack")
         button.setTitleColor(.white, for: .normal)
@@ -71,7 +71,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         view.addGestureRecognizer(tapGesture)
         setupUI()
         layoutUI()
-
+        
     }
     
     private func checkSaveButtonReady() {
@@ -98,14 +98,14 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     private func setupUI() {
         // Настройка UITextField
         switch pageType {
-            case .create:
+        case .create:
             nameField.attributedPlaceholder = NSAttributedString(
                 string: "Введите название трекера",
                 attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
             )
-            case .edit(let cat):
-                nameField.text = cat.categoryTitle
-            }
+        case .edit(let cat):
+            nameField.text = cat.categoryTitle
+        }
         nameField.backgroundColor = UIColor(named: "TrackerBackground")
         
         nameField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -155,7 +155,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             nameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             warningLabel.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 8),
             warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-
+            
         ])
     }
     
@@ -239,8 +239,8 @@ enum SingleCategoryPageType {
     case edit(cat: TrackerCategory)
     
     private var interactor: TrackersCollectionsCompanionInteractor? {
-            return TrackersCollectionsCompanionInteractor.shared
-        }
+        return TrackersCollectionsCompanionInteractor.shared
+    }
     
     var title: String {
         switch self {
@@ -252,17 +252,17 @@ enum SingleCategoryPageType {
     }
     
     var completion: ((TrackerCategory) -> Void) {
-            switch self {
-            case .create:
-                return { category in
-                    self.interactor?.addCategory(name: category.categoryTitle)
-                }
-            case .edit(let cat):
-                return { category in
-                    self.interactor?.editCategory(category: cat, newName: category.categoryTitle)
-                }
+        switch self {
+        case .create:
+            return { category in
+                self.interactor?.addCategory(name: category.categoryTitle)
+            }
+        case .edit(let cat):
+            return { category in
+                self.interactor?.editCategory(category: cat, newName: category.categoryTitle)
             }
         }
+    }
 }
 
 
