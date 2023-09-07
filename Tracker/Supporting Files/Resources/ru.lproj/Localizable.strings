@@ -1,11 +1,3 @@
-/* 
-  Localizable.strings
-  Tracker
-
-  Created by Александр Поляков on 07.09.2023.
-  
-*/
-
 emptyState.title = "Что будем отслеживать?";
 delete = "Удалить";
 delete.this = "Удаляем";
@@ -21,7 +13,7 @@ dont.lie = "Не лги!";
 dont.lie.message = "Нельзя отметить выполненным трекер из будущего";
 clear.data = "Очистка данных";
 clear.data.agreement = "Вы действительно хотите очистить все данные?";
-sorry = "Простите!"
+sorry = "Простите!";
 trackers.title = "Создание трекера";
 trackers.category = "Категория";
 trackers.shedule = "Расписание";
