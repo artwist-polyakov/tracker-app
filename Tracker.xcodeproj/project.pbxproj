@@ -24,8 +24,8 @@
 		AF5D5B422A93FD8600498D80 /* CoreDataHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B412A93FD8600498D80 /* CoreDataHelpers.swift */; };
 		AF5D5B612A9546DF00498D80 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B602A9546DF00498D80 /* DataStore.swift */; };
 		AF5D5B632A960A3400498D80 /* TrackersCollectionsCompanionInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B622A960A3400498D80 /* TrackersCollectionsCompanionInteractor.swift */; };
-		AF8CAE092AAA19E800FEDDF6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AF8CAE0B2AAA19E800FEDDF6 /* Localizable.strings */; };
-		AF8CAE112AAA2B0900FEDDF6 /* LocalizableStrings.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = AF8CAE132AAA2B0900FEDDF6 /* LocalizableStrings.stringsdict */; };
+		AF8CAE1A2AAA57F900FEDDF6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AF8CAE1C2AAA57F900FEDDF6 /* Localizable.strings */; };
+		AF8CAE2A2AAA59B500FEDDF6 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = AF8CAE2C2AAA59B500FEDDF6 /* Localizable.stringsdict */; };
 		AF9332402A72B59300BA0DB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF93323F2A72B59300BA0DB8 /* AppDelegate.swift */; };
 		AF9332422A72B59300BA0DB8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9332412A72B59300BA0DB8 /* SceneDelegate.swift */; };
 		AF9332492A72B59400BA0DB8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF9332482A72B59400BA0DB8 /* Assets.xcassets */; };
@@ -88,14 +88,14 @@
 		AF5D5B412A93FD8600498D80 /* CoreDataHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelpers.swift; sourceTree = "<group>"; };
 		AF5D5B602A9546DF00498D80 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		AF5D5B622A960A3400498D80 /* TrackersCollectionsCompanionInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionsCompanionInteractor.swift; sourceTree = "<group>"; };
-		AF8CAE0A2AAA19E800FEDDF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		AF8CAE0C2AAA1A1D00FEDDF6 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
-		AF8CAE0D2AAA1A2500FEDDF6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		AF8CAE0E2AAA1A3200FEDDF6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		AF8CAE122AAA2B0900FEDDF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/LocalizableStrings.stringsdict; sourceTree = "<group>"; };
-		AF8CAE142AAA2B0E00FEDDF6 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ar; path = ar.lproj/LocalizableStrings.stringsdict; sourceTree = "<group>"; };
-		AF8CAE152AAA2B1300FEDDF6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = de.lproj/LocalizableStrings.stringsdict; sourceTree = "<group>"; };
-		AF8CAE162AAA2B1600FEDDF6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/LocalizableStrings.stringsdict; sourceTree = "<group>"; };
+		AF8CAE1B2AAA57F900FEDDF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AF8CAE1D2AAA57FD00FEDDF6 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AF8CAE1E2AAA57FD00FEDDF6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AF8CAE1F2AAA57FE00FEDDF6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AF8CAE2B2AAA59B500FEDDF6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		AF8CAE2D2AAA59B800FEDDF6 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ar; path = ar.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		AF8CAE2E2AAA59B900FEDDF6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = de.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		AF8CAE2F2AAA59BA00FEDDF6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		AF93323C2A72B59300BA0DB8 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF93323F2A72B59300BA0DB8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AF9332412A72B59300BA0DB8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -249,8 +249,7 @@
 		AF8CAE032AAA0DD400FEDDF6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AF8CAE0B2AAA19E800FEDDF6 /* Localizable.strings */,
-				AF8CAE132AAA2B0900FEDDF6 /* LocalizableStrings.stringsdict */,
+				AF8CAE1C2AAA57F900FEDDF6 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -258,6 +257,7 @@
 		AF9332332A72B59300BA0DB8 = {
 			isa = PBXGroup;
 			children = (
+				AF8CAE2C2AAA59B500FEDDF6 /* Localizable.stringsdict */,
 				AF93323E2A72B59300BA0DB8 /* Tracker */,
 				AF93323D2A72B59300BA0DB8 /* Products */,
 			);
@@ -452,8 +452,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF93324C2A72B59400BA0DB8 /* LaunchScreen.storyboard in Resources */,
-				AF8CAE092AAA19E800FEDDF6 /* Localizable.strings in Resources */,
-				AF8CAE112AAA2B0900FEDDF6 /* LocalizableStrings.stringsdict in Resources */,
+				AF8CAE2A2AAA59B500FEDDF6 /* Localizable.stringsdict in Resources */,
+				AF8CAE1A2AAA57F900FEDDF6 /* Localizable.strings in Resources */,
 				AF9332492A72B59400BA0DB8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -528,26 +528,27 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		AF8CAE0B2AAA19E800FEDDF6 /* Localizable.strings */ = {
+		AF8CAE1C2AAA57F900FEDDF6 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AF8CAE0A2AAA19E800FEDDF6 /* en */,
-				AF8CAE0C2AAA1A1D00FEDDF6 /* ar */,
-				AF8CAE0D2AAA1A2500FEDDF6 /* ru */,
-				AF8CAE0E2AAA1A3200FEDDF6 /* de */,
+				AF8CAE1B2AAA57F900FEDDF6 /* en */,
+				AF8CAE1D2AAA57FD00FEDDF6 /* ar */,
+				AF8CAE1E2AAA57FD00FEDDF6 /* de */,
+				AF8CAE1F2AAA57FE00FEDDF6 /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		AF8CAE132AAA2B0900FEDDF6 /* LocalizableStrings.stringsdict */ = {
+		AF8CAE2C2AAA59B500FEDDF6 /* Localizable.stringsdict */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AF8CAE122AAA2B0900FEDDF6 /* en */,
-				AF8CAE142AAA2B0E00FEDDF6 /* ar */,
-				AF8CAE152AAA2B1300FEDDF6 /* de */,
-				AF8CAE162AAA2B1600FEDDF6 /* ru */,
+				AF8CAE2B2AAA59B500FEDDF6 /* en */,
+				AF8CAE2D2AAA59B800FEDDF6 /* ar */,
+				AF8CAE2E2AAA59B900FEDDF6 /* de */,
+				AF8CAE2F2AAA59BA00FEDDF6 /* ru */,
 			);
-			name = LocalizableStrings.stringsdict;
+			name = Localizable.stringsdict;
+			path = "Tracker/Supporting Files/Resources";
 			sourceTree = "<group>";
 		};
 		AF93324A2A72B59400BA0DB8 /* LaunchScreen.storyboard */ = {
