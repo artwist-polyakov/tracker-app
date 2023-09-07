@@ -115,6 +115,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
                 sheetColor: color,
                 quantityText: String.localizedStringWithFormat(
                     NSLocalizedString("daysStrike",
+                                      value: "Строки нет %d",
                                       comment: "Число дней с завершенными трекерами"),
                     days
                 ),
