@@ -37,7 +37,6 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     
     func refreshState() {
         categories = interactor.giveMeAllCategories() ?? []
-        print(categories)
         if categories.isEmpty {
             state = .emptyResult
         } else {
@@ -53,7 +52,6 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     func setCategorySelected(category: TrackerCategory) {
         refreshState()
         if let pos = categories.firstIndex(of: category) {
-            print(pos)
             navigationState = .categorySelected(pos)
             currentSelectionPos = pos
         }
