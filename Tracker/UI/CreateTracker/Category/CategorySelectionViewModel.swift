@@ -1,30 +1,30 @@
 import Foundation
 
-enum resultState {
+enum categoriesResultState {
     case start
     case emptyResult
     case showResult(categories: [TrackerCategory])
 }
 
-enum navigationState {
+enum categoriesNavigationState {
     case removeCategory(_ category: TrackerCategory)
     case addCategory
     case editcategory(_ category: TrackerCategory)
-    case categorySelected(_ category: TrackerCategory, _ pos: Int)
+    case categorySelected(_ category: TrackerCategory)
     case categoryApproved(_ category: TrackerCategory)
 }
 
-final class CategorySelectionViewModel {
+final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     
     private var categories: [TrackerCategory] = []
     var stateClosure: () -> Void = {}
     var navigationClosure: () -> Void = {}
-    private(set) var state: resultState = .start {
+    private(set) var state: categoriesResultState = .start {
         didSet {
             stateClosure()
         }
     }
-    private(set) var navigationState: navigationState? = nil {
+    private(set) var navigationState: categoriesNavigationState? = nil {
         didSet {
             navigationClosure()
         }
@@ -32,7 +32,7 @@ final class CategorySelectionViewModel {
     
     private let interactor = TrackersCollectionsCompanionInteractor.shared
     
-    func updateState() {
+    func refreshState() {
         categories = interactor.giveMeAllCategories() ?? []
         print(categories)
         if categories.isEmpty {
@@ -42,22 +42,26 @@ final class CategorySelectionViewModel {
         }
     }
     
+    func setNavigationState(state: categoriesNavigationState) {
+        navigationState = state
+    }
+    
     func handleNavigation(action: InteractionType) {
         switch action {
         case .add:
             navigationState = .addCategory
         case .remove(let category):
             interactor.removeCategory(category: category)
-            self.updateState()
+            self.refreshState()
             navigationState = .removeCategory(category)
         case .edit(let category):
             navigationState = .editcategory(category)
-        case .select(let category, let pos):
+        case .select(let category):
             switch navigationState {
-            case .categorySelected(let currentCategory, _) where currentCategory.id == category.id:
+            case .categorySelected(let currentCategory) where currentCategory == category:
                 navigationState = .categoryApproved(category)
             default:
-                navigationState = .categorySelected(category, pos)
+                navigationState = .categorySelected(category)
             }
         }
     }

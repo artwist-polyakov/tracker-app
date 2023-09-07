@@ -4,6 +4,8 @@ import UIKit
 final class CategorySelectionViewController: UIViewController {
     var delegate: TrackerTypeDelegate? = nil
     private var categories: [TrackerCategory]? = nil
+    private var selectedCategory: TrackerCategory? = nil
+    
     private var longtappedCategory: TrackerCategory? = nil
     var completionDone: ((TrackerCategory?) -> Void)? = nil
     
@@ -45,7 +47,7 @@ final class CategorySelectionViewController: UIViewController {
         return tv
     }()
     
-    var selectedIndex: Int? = nil
+//    var selectedIndex: Int? = nil
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -60,7 +62,7 @@ final class CategorySelectionViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: "CategoryCell")
-        viewModel.updateState()
+        viewModel.refreshState()
     }
     
     // MARK: - UI Setup
@@ -110,20 +112,28 @@ final class CategorySelectionViewController: UIViewController {
     }
     
     func updateViewModel() {
-        viewModel.updateState()
+        viewModel.refreshState()
     }
     
     func markNewCategoryAsSelected() {
+        
         guard let categories = categories else { return }
         let position = categories.count - 1
         var paths: [IndexPath] = []
-        if  let previousPosition = self.selectedIndex {
+        if  let previouscategory = self.selectedCategory,
+            let categories = self.categories,
+            let previousPosition = categories.firstIndex(of: previouscategory)
+        {
             paths.append(IndexPath(row: previousPosition, section: 0))
         }
-        self.selectedIndex = position
-        paths.append(IndexPath(row: position, section: 0))
-        self.tableView.reloadRows(at: paths, with: .automatic)
-        viewModel.handleNavigation(action: .select(category: categories[position], pos: position))
+        
+        if let category = categories.last
+        {
+            self.selectedCategory = category
+            paths.append(IndexPath(row: position, section: 0))
+            self.tableView.reloadRows(at: paths, with: .automatic)
+            viewModel.setNavigationState(state: .categorySelected(category))
+        }
     }
     
     
@@ -148,14 +158,21 @@ final class CategorySelectionViewController: UIViewController {
                 self.delegate?.didSelectTrackerCategory(category)
                 self.completionDone?(category)
                 self.navigationController?.popViewController(animated: true)
-            case .categorySelected(_ , let position):
+            case .categorySelected(let category):
                 var paths: [IndexPath] = []
-                if  let previousPosition = self.selectedIndex {
+                if  let previouscategory = self.selectedCategory,
+                    let categories = self.categories,
+                    let previousPosition = categories.firstIndex(of: previouscategory)
+                {
                     paths.append(IndexPath(row: previousPosition, section: 0))
                 }
-                self.selectedIndex = position
-                paths.append(IndexPath(row: position, section: 0))
-                self.tableView.reloadRows(at: paths, with: .automatic)
+                self.selectedCategory = category
+                if let categories = self.categories,
+                   let selectedCategoryPosition = categories.firstIndex(of: category) {
+                    paths.append(IndexPath(row: selectedCategoryPosition, section: 0))
+                    self.tableView.reloadRows(at: paths, with: .automatic)
+                }
+                
             default:
                 break
             }
@@ -173,7 +190,7 @@ final class CategorySelectionViewController: UIViewController {
                 self.hideStartingBlock()
                 self.tableView.reloadData()
             default:
-                viewModel.updateState()
+                viewModel.refreshState()
             }
             
             
@@ -210,8 +227,10 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
         
         roundCornersForCell(cell, in: tableView, at: indexPath)
         
-        if let selectedIndex = selectedIndex {
-            if indexPath.row == selectedIndex  {
+        if let categories = categories,
+           let selectedCategory = selectedCategory
+        {
+            if categories[indexPath.row] == selectedCategory {
                 cell.checkmarkImageView.isHidden = false
             }
         }
@@ -242,7 +261,7 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let categories = categories else { return }
-        viewModel.handleNavigation(action: .select(category: categories[indexPath.row], pos: indexPath.row))
+        viewModel.handleNavigation(action: .select(category: categories[indexPath.row]))
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -273,7 +292,7 @@ enum InteractionType {
     case add
     case edit(category: TrackerCategory)
     case remove(category: TrackerCategory)
-    case select(category: TrackerCategory, pos: Int)
+    case select(category: TrackerCategory)
 }
 
 

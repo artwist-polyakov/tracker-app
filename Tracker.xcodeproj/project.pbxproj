@@ -15,6 +15,7 @@
 		AF31CF952AA4E8AB00C63E18 /* CategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF31CF942AA4E8AB00C63E18 /* CategoryTableViewCell.swift */; };
 		AF31CF972AA4F4D800C63E18 /* NewCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF31CF962AA4F4D800C63E18 /* NewCategoryViewController.swift */; };
 		AF31CF9B2AA8C16A00C63E18 /* CategorySelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF31CF9A2AA8C16A00C63E18 /* CategorySelectionViewModel.swift */; };
+		AF31CF9E2AA989CE00C63E18 /* CategorySelectionViewModelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF31CF9D2AA989CE00C63E18 /* CategorySelectionViewModelDelegate.swift */; };
 		AF5D5B382A93F13D00498D80 /* CategoriesDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B372A93F13D00498D80 /* CategoriesDataStore.swift */; };
 		AF5D5B3A2A93F15E00498D80 /* ExecutionsDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B392A93F15E00498D80 /* ExecutionsDataStore.swift */; };
 		AF5D5B3C2A93F21700498D80 /* TrackersRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D5B3B2A93F21700498D80 /* TrackersRecord.swift */; };
@@ -76,6 +77,7 @@
 		AF31CF942AA4E8AB00C63E18 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewCell.swift; sourceTree = "<group>"; };
 		AF31CF962AA4F4D800C63E18 /* NewCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryViewController.swift; sourceTree = "<group>"; };
 		AF31CF9A2AA8C16A00C63E18 /* CategorySelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewModel.swift; sourceTree = "<group>"; };
+		AF31CF9D2AA989CE00C63E18 /* CategorySelectionViewModelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewModelDelegate.swift; sourceTree = "<group>"; };
 		AF5D5B372A93F13D00498D80 /* CategoriesDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesDataStore.swift; sourceTree = "<group>"; };
 		AF5D5B392A93F15E00498D80 /* ExecutionsDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionsDataStore.swift; sourceTree = "<group>"; };
 		AF5D5B3B2A93F21700498D80 /* TrackersRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersRecord.swift; sourceTree = "<group>"; };
@@ -189,10 +191,11 @@
 		AF0D45A72A8926A000C60143 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				AF31CF9C2AA9897F00C63E18 /* New or Edit Category */,
 				AFCA55E02A7FEF0400D9A851 /* CategorySelectionViewController.swift */,
 				AF31CF942AA4E8AB00C63E18 /* CategoryTableViewCell.swift */,
-				AF31CF962AA4F4D800C63E18 /* NewCategoryViewController.swift */,
 				AF31CF9A2AA8C16A00C63E18 /* CategorySelectionViewModel.swift */,
+				AF31CF9D2AA989CE00C63E18 /* CategorySelectionViewModelDelegate.swift */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -204,6 +207,14 @@
 				AF31CF902AA4D77600C63E18 /* OnboardingViewController.swift */,
 			);
 			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		AF31CF9C2AA9897F00C63E18 /* New or Edit Category */ = {
+			isa = PBXGroup;
+			children = (
+				AF31CF962AA4F4D800C63E18 /* NewCategoryViewController.swift */,
+			);
+			path = "New or Edit Category";
 			sourceTree = "<group>";
 		};
 		AF5D5B342A93F10A00498D80 /* DataStore */ = {
@@ -451,6 +462,7 @@
 				AF5D5B3E2A93F32400498D80 /* ExecutionsRecord.swift in Sources */,
 				AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */,
 				AFD92DF62A854BC000F36905 /* AlertModel.swift in Sources */,
+				AF31CF9E2AA989CE00C63E18 /* CategorySelectionViewModelDelegate.swift in Sources */,
 				AFD92E1D2A88FCDA00F36905 /* SupplementaryViewMain.swift in Sources */,
 				AF31CF882AA4D2C000C63E18 /* OnboardingData.swift in Sources */,
 				AFCA55BB2A7C22E800D9A851 /* TrackersCollectionsPresenter.swift in Sources */,

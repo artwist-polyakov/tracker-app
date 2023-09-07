@@ -76,8 +76,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func giveMeCategoryById(id: UUID) -> TrackerCategory? {
-        return
-        try? dataProvider?.giveMeCategoryById(id: id)
+        return try? dataProvider?.giveMeCategoryById(id: id)
     }
     
     
