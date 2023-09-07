@@ -54,7 +54,6 @@ final class CategorySelectionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,6 +121,7 @@ final class CategorySelectionViewController: UIViewController {
     }
     
     private func bind() {
+        
         viewModel.navigationClosure = { [weak self] in
             guard let self = self else { return }
             let state = self.viewModel.navigationState

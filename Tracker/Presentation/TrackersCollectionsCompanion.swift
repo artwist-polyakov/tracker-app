@@ -86,7 +86,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     
     // MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let quantity = dataProvider?.numberOfRowsInSection(section) ?? 0
+        let quantity = dataProvider?.numberOfRowsInSection(section) ?? .zero
         guard let servant = delegate else {return quantity}
         servant.quantityTernar(quantity)
         return quantity
@@ -181,7 +181,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        let count = self.dataProvider?.numberOfSections ?? 0
+        let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
         return count
     }
@@ -193,7 +193,7 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.reloadItems(at: indexPaths)
-        let count = self.dataProvider?.numberOfSections ?? 0
+        let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
     }
     
@@ -208,7 +208,7 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
             cv.insertItems(at: insertedIndexPaths)
             cv.deleteItems(at: deletedIndexPaths)
         } completion: { _ in
-            let count = self.dataProvider?.numberOfSections ?? 0
+            let count = self.dataProvider?.numberOfSections ?? .zero
             self.delegate?.quantityTernar(count)
         }
     }
@@ -218,7 +218,7 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else { return }
         cv.reloadData()
-        let count = self.dataProvider?.numberOfSections ?? 0
+        let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
     }
 }

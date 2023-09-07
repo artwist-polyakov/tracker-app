@@ -76,7 +76,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     
     private func checkSaveButtonReady() {
         switch enteredName.count {
-        case 0:
+        case .zero:
             addButton.isEnabled = false
             nameField.textColor = UIColor(named: "TrackerGray")
             addButton.backgroundColor = UIColor(named: "TrackerGray")

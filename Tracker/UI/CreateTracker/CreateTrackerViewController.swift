@@ -404,7 +404,7 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 0:
+        case .zero:
             return MenuTableViewCell.cellHeight
         case 1, 2:
             var collectionCellWidth: CGFloat {
@@ -413,15 +413,15 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             }
             return 3*(collectionCellWidth+2) // высота для коллекций
         default:
-            return 0
+            return .zero
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section > 0 {
+        if section > .zero {
             return 12
         }
-        return 0
+        return .zero
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

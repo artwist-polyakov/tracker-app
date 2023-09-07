@@ -13,7 +13,7 @@ class OnboardingViewController: UIPageViewController, UIPageViewControllerDataSo
     lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
-        pageControl.currentPage = 0
+        pageControl.currentPage = .zero
         
         let color = UIColor(named: "#1A1B22") ?? .black
         pageControl.currentPageIndicatorTintColor = color

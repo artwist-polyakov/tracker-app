@@ -98,14 +98,14 @@ extension DataStore: TrackersDataStore {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         fetchRequest.predicate = NSPredicate(format: "trackerId == %@", trackerId as NSUUID)
         let count = try? context.count(for: fetchRequest)
-        return count ?? 0
+        return count ?? .zero
     }
     
     func hasExecutionForDate(for trackerId: UUID, date: SimpleDate) -> Bool {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         fetchRequest.predicate = NSPredicate(format: "trackerId == %@ AND date == %@", trackerId as NSUUID, date.date as NSDate)
         let count = try? context.count(for: fetchRequest)
-        return count ?? 0 > 0
+        return count ?? .zero > .zero
     }
     
     

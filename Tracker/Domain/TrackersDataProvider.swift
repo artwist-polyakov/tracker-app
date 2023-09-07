@@ -53,8 +53,7 @@ final class TrackersDataProvider: NSObject {
         }
     }
     
-    
-    private var previousSectionCount: Int = 0
+    private var previousSectionCount: Int = .zero
     private var shouldReloadData: Bool = false
     
     weak var delegate: TrackersDataProviderDelegate?
@@ -222,12 +221,12 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     
     var numberOfSections: Int {
-        let result = trackersFetchedResultsController.sections?.count ?? 0
+        let result = trackersFetchedResultsController.sections?.count ?? .zero
         return result
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? 0
+        let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? .zero
         return result
     }
     

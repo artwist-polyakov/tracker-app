@@ -72,7 +72,7 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     func quantityTernar(_ quantity: Int) {
         guard let vc = viewController else {return}
         vc.updateStartingBlockState(state)
-        quantity > 0 ? vc.hideStartingBlock() : vc.showStartingBlock()
+        quantity > .zero ? vc.hideStartingBlock() : vc.showStartingBlock()
     }
     
     func handleClearAllData() {
