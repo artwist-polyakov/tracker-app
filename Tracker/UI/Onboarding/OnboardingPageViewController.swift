@@ -23,9 +23,9 @@ class OnboardingPageViewController: UIViewController {
     }
 
     private func setupView() {
-        // Здесь устанавливается весь дизайн страницы, например фон, текст и кнопка
         let backgroundImageView = UIImageView()
         backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
         backgroundImageView.image = UIImage(named: data.imageName)
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backgroundImageView)
@@ -48,7 +48,6 @@ class OnboardingPageViewController: UIViewController {
         titleLabel.textColor = UIColor(named: "#1A1B22") ?? .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
-
         
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -65,8 +64,6 @@ class OnboardingPageViewController: UIViewController {
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
-
-        
     }
 
     @objc private func didTapButton() {
