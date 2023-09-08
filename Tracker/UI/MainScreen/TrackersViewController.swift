@@ -16,9 +16,7 @@ final class TrackersViewController: UIViewController {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = NSLocalizedString("trackers",
-                                       value: "Нет значения",
-                                       comment: "Заголовок приложения")
+        label.text = L10n.trackers
         label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         return label
     }()

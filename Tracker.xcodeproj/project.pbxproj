@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF2A941E2AAB82FB0055634D /* Strings+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2A941D2AAB82FB0055634D /* Strings+Generated.swift */; };
 		AF31CF882AA4D2C000C63E18 /* OnboardingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF31CF872AA4D2C000C63E18 /* OnboardingData.swift */; };
 		AF31CF8A2AA4D33100C63E18 /* OnboardingRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF31CF892AA4D33100C63E18 /* OnboardingRepositoryProtocol.swift */; };
 		AF31CF8C2AA4D4F000C63E18 /* OnboardingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF31CF8B2AA4D4F000C63E18 /* OnboardingRepository.swift */; };
@@ -71,6 +72,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AF2A941D2AAB82FB0055634D /* Strings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Strings+Generated.swift"; sourceTree = "<group>"; };
 		AF31CF872AA4D2C000C63E18 /* OnboardingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingData.swift; sourceTree = "<group>"; };
 		AF31CF892AA4D33100C63E18 /* OnboardingRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AF31CF8B2AA4D4F000C63E18 /* OnboardingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingRepository.swift; sourceTree = "<group>"; };
@@ -210,6 +212,14 @@
 			path = Category;
 			sourceTree = "<group>";
 		};
+		AF2A941C2AAB7DFD0055634D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				AF2A941D2AAB82FB0055634D /* Strings+Generated.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 		AF31CF8D2AA4D5E000C63E18 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,6 +259,7 @@
 		AF8CAE032AAA0DD400FEDDF6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AF2A941C2AAB7DFD0055634D /* Generated */,
 				AF8CAE1C2AAA57F900FEDDF6 /* Localizable.strings */,
 				AF381E152AAA7B260057670F /* Localizable.stringsdict */,
 			);
@@ -469,6 +480,7 @@
 				AFCA55F12A8235F600D9A851 /* ColorCollectionViewCell.swift in Sources */,
 				AFCA55CF2A7E527500D9A851 /* TrackerCategory.swift in Sources */,
 				AFD92DF22A83D97D00F36905 /* SheduleTableViewCell.swift in Sources */,
+				AF2A941E2AAB82FB0055634D /* Strings+Generated.swift in Sources */,
 				AFCA55E12A7FEF0400D9A851 /* CategorySelectionViewController.swift in Sources */,
 				AF5D5B632A960A3400498D80 /* TrackersCollectionsCompanionInteractor.swift in Sources */,
 				AF31CF9B2AA8C16A00C63E18 /* CategorySelectionViewModel.swift in Sources */,
