@@ -89,6 +89,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         let quantity = dataProvider?.numberOfRowsInSection(section) ?? .zero
         guard let servant = delegate else {return quantity}
         servant.quantityTernar(quantity)
+        print("ОШИБКА: запрошено число элементов коллекции для секции \(section): \(quantity)")
         return quantity
     }
     
@@ -188,6 +189,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
+        print("ОШИБКА: запрошено число секций коллекции: \(count)")
         return count
     }
 }

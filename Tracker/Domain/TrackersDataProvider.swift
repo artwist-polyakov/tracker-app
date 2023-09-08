@@ -9,6 +9,7 @@ struct TrackersDataUpdate {
     let updatedIndexes: IndexSet
 }
 
+
 // Протокол для уведомления об изменениях.
 protocol TrackersDataProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackersDataUpdate)
@@ -53,7 +54,7 @@ final class TrackersDataProvider: NSObject {
         }
     }
     
-    private var previousSectionCount: Int = .zero
+    private var previousSectionCount: Int? = nil
     private var shouldReloadData: Bool = false
     
     weak var delegate: TrackersDataProviderDelegate?
@@ -127,13 +128,18 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("ОШИБКА previousSectionCount = \(previousSectionCount)")
+        print("ОШИБКА numberOfSections = \(numberOfSections)")
         if previousSectionCount != numberOfSections {
+            print("ОШИБКА: я в ветке удаления секций")
             shouldReloadData = true
         }
         
         if shouldReloadData {
+            print("ОШИБКА: перезагружаю все данные")
             delegate?.reloadData()
         } else {
+            print("ОШИБКА: выполняю батчапдейт")
             guard let currentSection = currentSection else {return}
             delegate?.didUpdate(TrackersDataUpdate(
                 section: currentSection,
@@ -219,9 +225,16 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         self.typedText = query
     }
     
-    
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? .zero
+        if let prev = previousSectionCount {
+            if prev != result {
+                previousSectionCount = result
+                shouldReloadData = true
+            }
+        } else {
+            previousSectionCount = result
+        }
         return result
     }
     
@@ -311,7 +324,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         }
     }
     
-    
     func giveMeAllCategories() -> [TrackerCategory] {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
@@ -331,12 +343,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func deleteCategory(category: TrackerCategory) {
-        if isLastCategory(categoryId: category.id) {
-                // Если это последняя категория, просто очистите все данные
-                clearAllCoreData()
-                return
-            }
-        
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
         fetchRequest.fetchLimit = 1
@@ -353,32 +359,14 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         }
     }
     
-    private func isLastCategory(categoryId: UUID) -> Bool {
-        let fetchRequest: NSFetchRequest<CategoriesCoreData> = NSFetchRequest(entityName: "CategoriesCoreData")
-        fetchRequest.predicate = NSPredicate(format: "id != %@", categoryId as NSUUID)
-        do {
-            let remainingCategories = try context.fetch(fetchRequest)
-            return remainingCategories.isEmpty
-        } catch {
-            print("Ошибка при проверке: \(error)")
-            return false
-        }
-    }
-    
     func editCategory(category: TrackerCategory) {
-
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
         fetchRequest.fetchLimit = 1
-
         do {
-            
             let fetchedCategories = try context.fetch(fetchRequest)
             if let categoryToEdit = fetchedCategories.first {
-                
                 categoryToEdit.title = category.categoryTitle
-                
-                
                 try context.save()
                 delegate?.reloadData()
             }
