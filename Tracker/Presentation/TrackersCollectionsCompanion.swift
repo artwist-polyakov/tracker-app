@@ -207,8 +207,16 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
         cv.performBatchUpdates {
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
+            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: update.section) }
+            let updatedSections = update.updatedSections
+            let deletedSections = update.deletedSections
+            let insertedSections = update.insertedSections
+            cv.deleteSections(deletedSections)
+            cv.insertSections(insertedSections)
+            cv.reloadSections(updatedSections)
             cv.insertItems(at: insertedIndexPaths)
             cv.deleteItems(at: deletedIndexPaths)
+            cv.reloadItems(at: updatedIndexPaths)
         } completion: { _ in
             let count = self.dataProvider?.numberOfSections ?? .zero
             self.delegate?.quantityTernar(count)

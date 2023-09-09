@@ -7,7 +7,12 @@ struct TrackersDataUpdate {
     let insertedIndexes: IndexSet
     let deletedIndexes: IndexSet
     let updatedIndexes: IndexSet
+    let insertedSections: IndexSet
+    let deletedSections: IndexSet
+    let updatedSections: IndexSet
 }
+
+
 
 
 // Протокол для уведомления об изменениях.
@@ -42,7 +47,7 @@ final class TrackersDataProvider: NSObject {
     enum TrackersDataProviderError: Error {
         case failedToInitializeContext
     }
-    private var currentSection: Int?
+    private var currentSection: Int = -1
     var selectedDate: SimpleDate = SimpleDate(date: Date()) {
         didSet {
             reloadData()
@@ -67,6 +72,10 @@ final class TrackersDataProvider: NSObject {
     private var insertedIndexes: IndexSet?
     private var deletedIndexes: IndexSet?
     private var updatedIndexes: IndexSet?
+    
+    private var insertedSections: IndexSet?
+    private var deletedSections: IndexSet?
+    private var updatedSections: IndexSet?
     
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
@@ -132,7 +141,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         print("ОШИБКА numberOfSections = \(numberOfSections)")
         if previousSectionCount != numberOfSections {
             print("ОШИБКА: я в ветке удаления секций")
-            shouldReloadData = true
+//            shouldReloadData = true
         }
         
         if shouldReloadData {
@@ -140,23 +149,45 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             delegate?.reloadData()
         } else {
             print("ОШИБКА: выполняю батчапдейт")
-            guard let currentSection = currentSection else {return}
             delegate?.didUpdate(TrackersDataUpdate(
                 section: currentSection,
                 insertedIndexes: insertedIndexes ?? IndexSet(),
                 deletedIndexes: deletedIndexes ?? IndexSet(),
-                updatedIndexes: updatedIndexes ?? IndexSet()
+                updatedIndexes: updatedIndexes ?? IndexSet(),
+                insertedSections: insertedSections ?? IndexSet(),
+                deletedSections: deletedSections ?? IndexSet(),
+                updatedSections: updatedSections ?? IndexSet()
             )
             )
         }
         shouldReloadData = false
         insertedIndexes = nil
         deletedIndexes = nil
+        updatedIndexes = nil
+        insertedSections = nil
+        deletedSections = nil
+        updatedSections = nil
+        currentSection = -1
     }
     
     
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        print("ОШИБКА я в контроллере который следит за числом секций")
+        switch type {
+        case .delete:
+            deletedSections?.insert(sectionIndex)
+        case .insert:
+            insertedSections?.insert(sectionIndex)
+        case .update:
+            updatedSections?.insert(sectionIndex)
+        default:
+            break
+        }
+        delegate?.didUpdate(generateUdate())
+    }
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
+        print("ОШИБКА я в контроллере который следит за числом объектов")
         switch type {
         case .delete:
             if let indexPath = indexPath {
@@ -171,6 +202,30 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         default:
             break
         }
+        delegate?.didUpdate(generateUdate())
+    }
+    
+    private func generateUdate() -> TrackersDataUpdate {
+        let result =  TrackersDataUpdate(
+            section: currentSection,
+            insertedIndexes: insertedIndexes ?? IndexSet(),
+            deletedIndexes: deletedIndexes ?? IndexSet(),
+            updatedIndexes: updatedIndexes ?? IndexSet(),
+            insertedSections: insertedSections ?? IndexSet(),
+            deletedSections: deletedSections ?? IndexSet(),
+            updatedSections: updatedSections ?? IndexSet()
+        )
+        
+        currentSection = -1
+        insertedIndexes = nil
+        deletedIndexes = nil
+        updatedIndexes = nil
+        insertedSections = nil
+        deletedSections = nil
+        updatedSections = nil
+        
+        return result
+        
     }
     
     
@@ -230,7 +285,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         if let prev = previousSectionCount {
             if prev != result {
                 previousSectionCount = result
-                shouldReloadData = true
+//                shouldReloadData = true
             }
         } else {
             previousSectionCount = result
