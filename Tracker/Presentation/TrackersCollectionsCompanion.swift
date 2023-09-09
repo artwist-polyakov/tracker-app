@@ -114,12 +114,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
                 text: tracker.title,
                 emoji: Mappers.intToIconMapper(tracker.icon),
                 sheetColor: color,
-                quantityText: String.localizedStringWithFormat(
-                    NSLocalizedString("daysStrike",
-                                      value: "Строки нет %d",
-                                      comment: "Число дней с завершенными трекерами"),
-                    days
-                ),
+                quantityText: L10n.daysStrike(days),
                 hasMark: isDone
             )
         }
