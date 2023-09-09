@@ -12,9 +12,6 @@ struct TrackersDataUpdate {
     let updatedSections: IndexSet
 }
 
-
-
-
 // Протокол для уведомления об изменениях.
 protocol TrackersDataProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackersDataUpdate)
