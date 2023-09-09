@@ -47,7 +47,7 @@ final class TrackersDataProvider: NSObject {
     enum TrackersDataProviderError: Error {
         case failedToInitializeContext
     }
-    private var currentSection: Int = -1
+    
     var selectedDate: SimpleDate = SimpleDate(date: Date()) {
         didSet {
             reloadData()
@@ -69,13 +69,14 @@ final class TrackersDataProvider: NSObject {
     private let categoriesDataStore: CategoriesDataStore
     private let executionsDataStore: ExecutionsDataStore
     
-    private var insertedIndexes: IndexSet?
-    private var deletedIndexes: IndexSet?
-    private var updatedIndexes: IndexSet?
+    private var currentSection: Int = -1
     
-    private var insertedSections: IndexSet?
-    private var deletedSections: IndexSet?
-    private var updatedSections: IndexSet?
+    private var insertedIndexes: IndexSet = []
+    private var deletedIndexes: IndexSet = []
+    private var updatedIndexes: IndexSet = []
+    private var insertedSections: IndexSet = []
+    private var deletedSections: IndexSet = []
+    private var updatedSections: IndexSet = []
     
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
@@ -149,25 +150,8 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             delegate?.reloadData()
         } else {
             print("ОШИБКА: выполняю батчапдейт")
-            delegate?.didUpdate(TrackersDataUpdate(
-                section: currentSection,
-                insertedIndexes: insertedIndexes ?? IndexSet(),
-                deletedIndexes: deletedIndexes ?? IndexSet(),
-                updatedIndexes: updatedIndexes ?? IndexSet(),
-                insertedSections: insertedSections ?? IndexSet(),
-                deletedSections: deletedSections ?? IndexSet(),
-                updatedSections: updatedSections ?? IndexSet()
-            )
-            )
+            delegate?.didUpdate(generateUdate())
         }
-        shouldReloadData = false
-        insertedIndexes = nil
-        deletedIndexes = nil
-        updatedIndexes = nil
-        insertedSections = nil
-        deletedSections = nil
-        updatedSections = nil
-        currentSection = -1
     }
     
     
@@ -175,15 +159,14 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         print("ОШИБКА я в контроллере который следит за числом секций")
         switch type {
         case .delete:
-            deletedSections?.insert(sectionIndex)
+            deletedSections.insert(sectionIndex)
         case .insert:
-            insertedSections?.insert(sectionIndex)
+            insertedSections.insert(sectionIndex)
         case .update:
-            updatedSections?.insert(sectionIndex)
+            updatedSections.insert(sectionIndex)
         default:
             break
         }
-        delegate?.didUpdate(generateUdate())
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -191,38 +174,37 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         switch type {
         case .delete:
             if let indexPath = indexPath {
-                deletedIndexes?.insert(indexPath.item)
+                deletedIndexes.insert(indexPath.item)
                 currentSection = indexPath.section
             }
         case .insert:
             if let indexPath = newIndexPath {
-                insertedIndexes?.insert(indexPath.item)
+                insertedIndexes.insert(indexPath.item)
                 currentSection = indexPath.section
             }
         default:
             break
         }
-        delegate?.didUpdate(generateUdate())
     }
     
     private func generateUdate() -> TrackersDataUpdate {
         let result =  TrackersDataUpdate(
             section: currentSection,
-            insertedIndexes: insertedIndexes ?? IndexSet(),
-            deletedIndexes: deletedIndexes ?? IndexSet(),
-            updatedIndexes: updatedIndexes ?? IndexSet(),
-            insertedSections: insertedSections ?? IndexSet(),
-            deletedSections: deletedSections ?? IndexSet(),
-            updatedSections: updatedSections ?? IndexSet()
+            insertedIndexes: insertedIndexes,
+            deletedIndexes: deletedIndexes,
+            updatedIndexes: updatedIndexes,
+            insertedSections: insertedSections,
+            deletedSections: deletedSections,
+            updatedSections: updatedSections
         )
         
         currentSection = -1
-        insertedIndexes = nil
-        deletedIndexes = nil
-        updatedIndexes = nil
-        insertedSections = nil
-        deletedSections = nil
-        updatedSections = nil
+        insertedIndexes = []
+        deletedIndexes = []
+        updatedIndexes = []
+        insertedSections = []
+        deletedSections = []
+        updatedSections = []
         
         return result
         

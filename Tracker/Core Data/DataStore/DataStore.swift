@@ -88,7 +88,7 @@ extension DataStore: TrackersDataStore {
                 do {
                     try context.save()
                 } catch let error as NSError {
-                    print("Ошибка при сохранении контекста: \(error)")
+                    print("ОШИБКА Ошибка при сохранении контекста: \(error)")
                 }
             }
         }

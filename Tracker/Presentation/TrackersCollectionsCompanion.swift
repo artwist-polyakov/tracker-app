@@ -205,6 +205,7 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.performBatchUpdates {
+            print("ОШИБКА я в перформ батч компаньона")
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
             let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: update.section) }
@@ -214,8 +215,8 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
             cv.deleteSections(deletedSections)
             cv.insertSections(insertedSections)
             cv.reloadSections(updatedSections)
-            cv.insertItems(at: insertedIndexPaths)
             cv.deleteItems(at: deletedIndexPaths)
+            cv.insertItems(at: insertedIndexPaths)
             cv.reloadItems(at: updatedIndexPaths)
         } completion: { _ in
             let count = self.dataProvider?.numberOfSections ?? .zero
