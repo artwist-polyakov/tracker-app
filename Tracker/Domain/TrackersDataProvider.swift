@@ -55,7 +55,7 @@ final class TrackersDataProvider: NSObject {
             reloadData()
         }
     }
-        
+    
     weak var delegate: TrackersDataProviderDelegate?
     
     private let context: NSManagedObjectContext
@@ -132,7 +132,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-            delegate?.didUpdate(generateUdate())
+        delegate?.didUpdate(generateUdate())
     }
     
     
@@ -355,7 +355,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
         fetchRequest.fetchLimit = 1
-
+        
         do {
             let fetchedCategories = try context.fetch(fetchRequest)
             if let categoryToDelete = fetchedCategories.first {
