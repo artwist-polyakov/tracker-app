@@ -18,7 +18,7 @@ final class CreateTrackerViewController: UIViewController {
     // Элементы UI
     let warningLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
+        label.text = L10n.Trackers.Search.warning
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textColor = UIColor(named: "TrackerRed")
         label.textAlignment = .center
@@ -84,10 +84,10 @@ final class CreateTrackerViewController: UIViewController {
     // MARK: - UI Setup
     private func setupUI() {
         // Настройка UITextField
-        trackerNameField.placeholder = "Имя трекера"
+        trackerNameField.placeholder = L10n.Trackers.Create.inputName
         trackerNameField.backgroundColor = UIColor(named: "TrackerBackground")
         trackerNameField.attributedPlaceholder = NSAttributedString(
-            string: "Введите название трекера",
+            string: L10n.Trackers.Create.inputPlaceholder,
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
         )
         trackerNameField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -106,12 +106,12 @@ final class CreateTrackerViewController: UIViewController {
         case .habit:
             
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
-                MenuItem(title: "Создать расписание", subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
+                MenuItem(title: L10n.Trackers.Create.chooseCategory, subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
+                MenuItem(title: L10n.Trackers.Create.chooseShedule, subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
             ]
         case .irregularEvent:
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory)
+                MenuItem(title: L10n.Trackers.Create.chooseCategory, subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory)
             ]
         case .notSet:
             menuItems = []
@@ -129,7 +129,7 @@ final class CreateTrackerViewController: UIViewController {
         cancelButton.backgroundColor = UIColor(named: "TrackerWhite")
         cancelButton.layer.borderColor = UIColor(named: "TrackerRed")?.cgColor
         cancelButton.layer.borderWidth = 1
-        cancelButton.setTitle("Отмена", for: .normal)
+        cancelButton.setTitle(L10n.cancel, for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cancelButton.setTitleColor(UIColor(named: "TrackerRed"), for: .normal)
         cancelButton.layer.cornerRadius = 16
@@ -137,7 +137,7 @@ final class CreateTrackerViewController: UIViewController {
         view.addSubview(cancelButton)
         
         // Настройка createButton
-        createButton.setTitle("Создать", for: .normal)
+        createButton.setTitle(L10n.create, for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = UIColor(named: "TrackerGray")
         createButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
@@ -207,15 +207,15 @@ final class CreateTrackerViewController: UIViewController {
         
         if isRightToLeft {
             trackerNameField.textAlignment = .right
-            trackerNameField.leftView = clearButton
-            trackerNameField.leftViewMode = .never
-            trackerNameField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
-            trackerNameField.rightViewMode = .always
+            trackerNameField.rightView = clearButton
+            trackerNameField.rightViewMode = .whileEditing
+            trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
+            trackerNameField.leftViewMode = .always
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         } else {
             trackerNameField.textAlignment = .left
             trackerNameField.rightView = clearButton
-            trackerNameField.rightViewMode = .never
+            trackerNameField.rightViewMode = .whileEditing
             trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
             trackerNameField.leftViewMode = .always
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
@@ -255,11 +255,11 @@ final class CreateTrackerViewController: UIViewController {
             guard let self = self else { return }
             guard let category = category else {
                 self.menuItems[0].subtitle = ""
-                self.menuItems[0].title = "Выбрать категорию"
+                self.menuItems[0].title = L10n.Trackers.Create.chooseCategory
                 return }
             self.delegate?.didSelectTrackerCategory(category)
             self.menuItems[0].subtitle = category.categoryTitle
-            self.menuItems[0].title = "Категория"
+            self.menuItems[0].title = L10n.Trackers.Create.choosenCategory
             self.changeCategoryMenuSubtitle()
         }
         self.navigationController?.pushViewController(categoryVC, animated: true)
@@ -285,7 +285,9 @@ final class CreateTrackerViewController: UIViewController {
             let newSubtitle = Mappers.sortedStringOfSetWeekdays(self.shedule)
             self.menuItems[1].subtitle = newSubtitle
             if toFlush.count > 0 {
-                self.menuItems[1].title = "Расписание"
+                self.menuItems[1].title = L10n.Trackers.Create.choosenShedule
+            } else {
+                self.menuItems[1].title = L10n.Trackers.Create.chooseShedule
             }
             self.changeSheduleMenuSubtitle()
         }
@@ -330,11 +332,11 @@ final class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
-            self.title = "Новая привычка"
+            self.title = L10n.Trackers.Category.newHabit
         case .irregularEvent:
-            self.title = "Новое нерегулярное событие"
+            self.title = L10n.Trackers.Category.newIrregular
         case .notSet:
-            self.title = "Неизвестный лейбл"
+            self.title = L10n.Trackers.Category.newUnknown
         }
     }
     

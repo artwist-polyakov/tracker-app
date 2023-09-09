@@ -38,9 +38,7 @@ final class TrackersViewController: UIViewController {
     
     var searchField: UISearchTextField = {
         let field = UISearchTextField()
-        field.text = NSLocalizedString("search",
-                                       value: "Нет значения",
-                                       comment: "Плейсхолдер для поиска")
+        field.text = L10n.search
         field.backgroundColor = UIColor(named: "TrackerSearchFieldColor")
         field.textColor = UIColor(named: "TrackerGray")
         return field
@@ -182,18 +180,18 @@ final class TrackersViewController: UIViewController {
     
     func showFutureDateAlert() {
         let alertPresenter = AlertPresenter()
-        let alert = AlertModel(title: "Не лги!", message: "Нельзя отметить выполненным трекер из будущего", primaryButtonText: "Простите!", primaryButtonCompletion: {})
+        let alert = AlertModel(title: L10n.Dont.lie, message: L10n.Dont.Lie.message, primaryButtonText: L10n.sorry, primaryButtonCompletion: {})
         alertPresenter.show(in: self, model:alert)
     }
     
     func showDeleteDataAlert() {
         let alertPresenter = AlertPresenter()
         let alert = AlertModel(
-            title: "Очистка данных",
-            message: "Вы действительно хотите очистить все данные?",
-            primaryButtonText: "Отмена",
+            title: L10n.Clear.data,
+            message: L10n.Clear.Data.agreement,
+            primaryButtonText: L10n.cancel,
             primaryButtonCompletion: {},
-            secondaryButtonText: "Удаляем",
+            secondaryButtonText: L10n.Delete.this,
             secondaryButtonCompletion: {
                 self.collectionPresenter.handleClearAllData()
                 self.collectionPresenter.resetState()
@@ -237,10 +235,10 @@ extension TrackersViewController: TrackersViewControllerProtocol {
         switch (state) {
         case .NOT_FOUND:
             voidImage.image = UIImage(named: "NotFoundImage")
-            questionLabel.text = "Ничего не найдено"
+            questionLabel.text = L10n.Nothing.found
         default:
             voidImage.image = UIImage(named: "VoidImage")
-            questionLabel.text = "Что будем отслеживать?"
+            questionLabel.text = L10n.EmptyState.title
         }
     }
 }

@@ -35,13 +35,13 @@ struct Mappers {
         // зависит от локали
         
         let shift = 1 // MARK: - тут будет Int(NSLocalizedString()) 0 для английского
-        return ["понедельник": shifter(2, shift),
-                "вторник": shifter(3, shift),
-                "среда": shifter(4, shift),
-                "четверг": shifter(5, shift),
-                "пятница": shifter(6, shift),
-                "суббота": shifter(7, shift),
-                "воскресенье": shifter(1, shift)]
+        return [L10n.monday: shifter(2, shift),
+                L10n.tuesday: shifter(3, shift),
+                L10n.wednesday: shifter(4, shift),
+                L10n.thursday: shifter(5, shift),
+                L10n.friday: shifter(6, shift),
+                L10n.saturday: shifter(7, shift),
+                L10n.sunday: shifter(1, shift)]
     }
     
     static private func shifter(_ pos: Int, _ shift: Int) -> [Int] {
@@ -50,15 +50,15 @@ struct Mappers {
     
     static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
         if weekdays.count == 7 {
-            return "Каждый день"
+            return L10n.Every.day
         }
-        let shortNames = ["понедельник":"Пн",
-                           "вторник":"Вт",
-                           "среда":"Ср",
-                           "четверг":"Чт",
-                           "пятница":"Пт",
-                           "суббота":"Сб",
-                           "воскресенье":"Вс"]
+        let shortNames = [L10n.monday:L10n.Monday.short,
+                          L10n.tuesday:L10n.Tuesday.short,
+                          L10n.wednesday:L10n.Wednesday.short,
+                          L10n.thursday:L10n.Thursday.short,
+                          L10n.friday:L10n.Friday.short,
+                          L10n.saturday:L10n.Saturday.short,
+                          L10n.sunday:L10n.Sunday.short]
         
         let allWeekdaysNames = giveMeAllWeekdaysNames()
         let sortedWeekdays = weekdays.sorted { weekday1, weekday2 in

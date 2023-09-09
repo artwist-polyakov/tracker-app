@@ -70,7 +70,7 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! SupplementaryView
-            headerView.titleLabel.text = "Emoji"
+            headerView.titleLabel.text = L10n.Trackers.Create.emoji
             return headerView
         default:
             return UICollectionReusableView()

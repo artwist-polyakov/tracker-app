@@ -52,16 +52,6 @@ internal enum L10n {
       internal static let agreement = L10n.tr("Localizable", "clear.data.agreement", fallback: "Are you sure you want to clear all data?")
     }
   }
-  internal enum Days {
-    /// days
-    internal static let five = L10n.tr("Localizable", "days.five", fallback: "days")
-    /// days
-    internal static let many = L10n.tr("Localizable", "days.many", fallback: "days")
-    /// day
-    internal static let one = L10n.tr("Localizable", "days.one", fallback: "day")
-    /// days
-    internal static let two = L10n.tr("Localizable", "days.two", fallback: "days")
-  }
   internal enum Delete {
     /// Are you sure you want to delete the tracker?
     internal static let confirmation = L10n.tr("Localizable", "delete.confirmation", fallback: "Are you sure you want to delete the tracker?")

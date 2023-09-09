@@ -9,7 +9,7 @@ final class TrackerTypeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
-        self.title = "Создание трекера"
+        self.title = L10n.Trackers.title
         
         setupButtons()
         layoutButtons()
@@ -17,7 +17,7 @@ final class TrackerTypeViewController: UIViewController {
     
     private func setupButtons() {
         // Настройка кнопки "Привычка"
-        habitButton.setTitle("Привычка", for: .normal)
+        habitButton.setTitle(L10n.Trackers.Category.habit, for: .normal)
         habitButton.backgroundColor = UIColor(named: "TrackerBlack")
         habitButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
         habitButton.layer.cornerRadius = 16
@@ -25,7 +25,7 @@ final class TrackerTypeViewController: UIViewController {
         habitButton.addTarget(self, action: #selector(handleHabitButton), for: .touchUpInside)
         
         // Настройка кнопки "Нерегулярное событие"
-        irregularEventButton.setTitle("Нерегулярное событие", for: .normal)
+        irregularEventButton.setTitle(L10n.Trackers.Category.irregular, for: .normal)
         irregularEventButton.backgroundColor = UIColor(named: "TrackerBlack")
         irregularEventButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
         irregularEventButton.layer.cornerRadius = 16

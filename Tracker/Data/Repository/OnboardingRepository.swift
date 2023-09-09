@@ -5,11 +5,11 @@ class OnboardingRepository: OnboardingRepositoryProtocol {
 
     func getOnboardingData() -> [OnboardingData] {
         let allData: [OnboardingData] = [
-            OnboardingData(title: "Отслеживайте только то, что хотите",
-                           buttonText: "Вот это технологии!",
+            OnboardingData(title: L10n.Onboarding.Title.first,
+                           buttonText: L10n.Onboarding.button,
                            imageName: "OnboardingBackgroundBlue"),
-            OnboardingData(title: "Даже если это не литры воды и йога",
-                           buttonText: "Вот это технологии!",
+            OnboardingData(title: L10n.Onboarding.Title.second,
+                           buttonText: L10n.Onboarding.button,
                            imageName: "OnboardingBackgroundRed"),
         ]
         let completedTitles: [String] = userDefaults.stringArray(forKey: onboardingKey) ?? []
