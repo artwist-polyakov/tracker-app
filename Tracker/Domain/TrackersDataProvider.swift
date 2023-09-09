@@ -58,10 +58,7 @@ final class TrackersDataProvider: NSObject {
             reloadData()
         }
     }
-    
-    private var previousSectionCount: Int? = nil
-    private var shouldReloadData: Bool = false
-    
+        
     weak var delegate: TrackersDataProviderDelegate?
     
     private let context: NSManagedObjectContext
@@ -138,20 +135,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("ОШИБКА previousSectionCount = \(previousSectionCount)")
-        print("ОШИБКА numberOfSections = \(numberOfSections)")
-        if previousSectionCount != numberOfSections {
-            print("ОШИБКА: я в ветке удаления секций")
-//            shouldReloadData = true
-        }
-        
-        if shouldReloadData {
-            print("ОШИБКА: перезагружаю все данные")
-            delegate?.reloadData()
-        } else {
-            print("ОШИБКА: выполняю батчапдейт")
             delegate?.didUpdate(generateUdate())
-        }
     }
     
     
@@ -237,7 +221,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     
     private func reloadData() {
-        previousSectionCount = numberOfSections
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
         do {
@@ -264,14 +247,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? .zero
-        if let prev = previousSectionCount {
-            if prev != result {
-                previousSectionCount = result
-//                shouldReloadData = true
-            }
-        } else {
-            previousSectionCount = result
-        }
         return result
     }
     
