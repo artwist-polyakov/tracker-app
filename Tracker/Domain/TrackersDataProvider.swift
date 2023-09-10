@@ -7,8 +7,10 @@ struct TrackersDataUpdate {
     let insertedIndexes: IndexSet
     let deletedIndexes: IndexSet
     let updatedIndexes: IndexSet
+    let insertedSections: IndexSet
+    let deletedSections: IndexSet
+    let updatedSections: IndexSet
 }
-
 
 // Протокол для уведомления об изменениях.
 protocol TrackersDataProviderDelegate: AnyObject {
@@ -42,7 +44,7 @@ final class TrackersDataProvider: NSObject {
     enum TrackersDataProviderError: Error {
         case failedToInitializeContext
     }
-    private var currentSection: Int?
+    
     var selectedDate: SimpleDate = SimpleDate(date: Date()) {
         didSet {
             reloadData()
@@ -54,9 +56,6 @@ final class TrackersDataProvider: NSObject {
         }
     }
     
-    private var previousSectionCount: Int? = nil
-    private var shouldReloadData: Bool = false
-    
     weak var delegate: TrackersDataProviderDelegate?
     
     private let context: NSManagedObjectContext
@@ -64,9 +63,14 @@ final class TrackersDataProvider: NSObject {
     private let categoriesDataStore: CategoriesDataStore
     private let executionsDataStore: ExecutionsDataStore
     
-    private var insertedIndexes: IndexSet?
-    private var deletedIndexes: IndexSet?
-    private var updatedIndexes: IndexSet?
+    private var currentSection: Int = -1
+    
+    private var insertedIndexes: IndexSet = []
+    private var deletedIndexes: IndexSet = []
+    private var updatedIndexes: IndexSet = []
+    private var insertedSections: IndexSet = []
+    private var deletedSections: IndexSet = []
+    private var updatedSections: IndexSet = []
     
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
@@ -128,49 +132,61 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("ОШИБКА previousSectionCount = \(previousSectionCount)")
-        print("ОШИБКА numberOfSections = \(numberOfSections)")
-        if previousSectionCount != numberOfSections {
-            print("ОШИБКА: я в ветке удаления секций")
-            shouldReloadData = true
-        }
-        
-        if shouldReloadData {
-            print("ОШИБКА: перезагружаю все данные")
-            delegate?.reloadData()
-        } else {
-            print("ОШИБКА: выполняю батчапдейт")
-            guard let currentSection = currentSection else {return}
-            delegate?.didUpdate(TrackersDataUpdate(
-                section: currentSection,
-                insertedIndexes: insertedIndexes ?? IndexSet(),
-                deletedIndexes: deletedIndexes ?? IndexSet(),
-                updatedIndexes: updatedIndexes ?? IndexSet()
-            )
-            )
-        }
-        shouldReloadData = false
-        insertedIndexes = nil
-        deletedIndexes = nil
+        delegate?.didUpdate(generateUdate())
     }
     
     
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .delete:
+            deletedSections.insert(sectionIndex)
+        case .insert:
+            insertedSections.insert(sectionIndex)
+        case .update:
+            updatedSections.insert(sectionIndex)
+        default:
+            break
+        }
+    }
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
         switch type {
         case .delete:
             if let indexPath = indexPath {
-                deletedIndexes?.insert(indexPath.item)
+                deletedIndexes.insert(indexPath.item)
                 currentSection = indexPath.section
             }
         case .insert:
             if let indexPath = newIndexPath {
-                insertedIndexes?.insert(indexPath.item)
+                insertedIndexes.insert(indexPath.item)
                 currentSection = indexPath.section
             }
         default:
             break
         }
+    }
+    
+    private func generateUdate() -> TrackersDataUpdate {
+        let result =  TrackersDataUpdate(
+            section: currentSection,
+            insertedIndexes: insertedIndexes,
+            deletedIndexes: deletedIndexes,
+            updatedIndexes: updatedIndexes,
+            insertedSections: insertedSections,
+            deletedSections: deletedSections,
+            updatedSections: updatedSections
+        )
+        
+        currentSection = -1
+        insertedIndexes = []
+        deletedIndexes = []
+        updatedIndexes = []
+        insertedSections = []
+        deletedSections = []
+        updatedSections = []
+        
+        return result
+        
     }
     
     
@@ -200,7 +216,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     
     private func reloadData() {
-        previousSectionCount = numberOfSections
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
         do {
@@ -227,14 +242,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? .zero
-        if let prev = previousSectionCount {
-            if prev != result {
-                previousSectionCount = result
-                shouldReloadData = true
-            }
-        } else {
-            previousSectionCount = result
-        }
         return result
     }
     
@@ -346,7 +353,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
         fetchRequest.fetchLimit = 1
-
+        
         do {
             let fetchedCategories = try context.fetch(fetchRequest)
             if let categoryToDelete = fetchedCategories.first {
