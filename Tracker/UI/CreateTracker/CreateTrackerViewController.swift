@@ -50,7 +50,7 @@ final class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-
+        
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -78,7 +78,6 @@ final class CreateTrackerViewController: UIViewController {
             else { return }
             checkCreateButtonReady()
         }
-        
     }
     
     // MARK: - UI Setup
@@ -199,7 +198,6 @@ final class CreateTrackerViewController: UIViewController {
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             menuTableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16)
         ])
-        
     }
     
     private func configureForLocale() {
@@ -338,7 +336,6 @@ final class CreateTrackerViewController: UIViewController {
             self.title = L10n.Trackers.Category.newUnknown
         }
     }
-    
 }
 
 // MARK: UITableViewDataSource, UITableViewDelegate
@@ -353,7 +350,6 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             return 0
         }
     }
-    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
@@ -445,8 +441,6 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             cell.roundCorners([.bottomLeft, .bottomRight], radius: 16)
         }
     }
-    
-    
 }
 
 extension CreateTrackerViewController: UIGestureRecognizerDelegate {

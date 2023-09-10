@@ -94,7 +94,6 @@ final class TrackersDataProvider: NSObject {
                                         NSSortDescriptor(key:"trackerToCategory.creationDate", ascending: false),
                                         NSSortDescriptor(key:"trackerToCategory.id", ascending: false)]
         
-        
         fetchRequest.predicate = giveTrackersPredicate()
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -103,7 +102,6 @@ final class TrackersDataProvider: NSObject {
             cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
-        
         
         return fetchedResultsController
     }()
@@ -189,7 +187,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         
     }
     
-    
     private func giveCategoriesPredicate() -> NSPredicate {
         if typedText.isEmpty {
             return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
@@ -199,7 +196,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                String(selectedDate.weekDayNum), typedText)
         }
     }
-    
     
     private func giveTrackersPredicate() -> NSPredicate {
         if typedText.isEmpty {
@@ -213,7 +209,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                #keyPath(TrackersCoreData.title), typedText)
         }
     }
-    
     
     private func reloadData() {
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()

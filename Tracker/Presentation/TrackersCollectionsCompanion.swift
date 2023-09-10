@@ -107,8 +107,8 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
                 }
                 return color
             }()
-                
-
+            
+            
             cell.configure(
                 text: tracker.title,
                 emoji: Mappers.intToIconMapper(tracker.icon),
@@ -132,7 +132,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         return cell
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let paddingSpace = 9
         let availableWidth = Int(collectionView.frame.width) - paddingSpace
@@ -151,7 +150,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 55)
@@ -196,7 +194,6 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
         let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
     }
-    
     
     func didUpdate(_ update: TrackersDataUpdate) {
         guard let vc = viewController,
