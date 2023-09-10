@@ -137,7 +137,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        print("ОШИБКА я в контроллере который следит за числом секций")
         switch type {
         case .delete:
             deletedSections.insert(sectionIndex)
@@ -151,7 +150,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        print("ОШИБКА я в контроллере который следит за числом объектов")
         switch type {
         case .delete:
             if let indexPath = indexPath {

@@ -274,7 +274,6 @@ final class CreateTrackerViewController: UIViewController {
             weekdaysDictionary[$0.lowercased()]?[1] ?? 0 < weekdaysDictionary[$1.lowercased()]?[1] ?? 0 })
         scheduleVC.completionDone = {
             var toFlush: [Int] = []
-            print(scheduleVC.daysChecked)
             for day in scheduleVC.daysChecked {
                 if let records = weekdaysDictionary[day.lowercased()] {
                     toFlush.append(records[0])

@@ -89,7 +89,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         let quantity = dataProvider?.numberOfRowsInSection(section) ?? .zero
         guard let servant = delegate else {return quantity}
         servant.quantityTernar(quantity)
-        print("ОШИБКА: запрошено число элементов коллекции для секции \(section): \(quantity)")
         return quantity
     }
     
@@ -184,7 +183,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
-        print("ОШИБКА: запрошено число секций коллекции: \(count)")
         return count
     }
 }
@@ -205,7 +203,6 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.performBatchUpdates {
-            print("ОШИБКА я в перформ батч компаньона")
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
             let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: update.section) }
