@@ -12,7 +12,7 @@ import SnapshotTesting
 final class TrackerTests: XCTestCase {
     func testMainScreen() {
         let vc = TrackersViewController()
-        vc.view.backgroundColor = .cyan
+//        vc.view.backgroundColor = .cyan // раскомментировать, чтобы провалить тест.
         assertSnapshot(matching: vc, as: .image)
     }
 }
