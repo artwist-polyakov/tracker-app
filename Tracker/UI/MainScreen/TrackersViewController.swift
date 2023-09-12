@@ -11,6 +11,7 @@ final class TrackersViewController: UIViewController {
         let picker = UIDatePicker()
         picker.preferredDatePickerStyle = .compact
         picker.datePickerMode = .date
+        picker.maximumDate = Date()
         return picker
     }()
     
