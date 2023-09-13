@@ -16,6 +16,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
                 executionsStore: executionsDataStore,
                 delegate: self
             )
+            provider.checkPinnedCategory()
             return provider
         } catch let error as NSError {
             print("Данные недоступны. Ошибка \(error)")

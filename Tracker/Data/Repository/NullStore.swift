@@ -12,6 +12,10 @@ extension NullStore: TrackersDataStore {
 }
 
 extension NullStore: CategoriesDataStore {
+    func giveMeCategory(with id: UUID) throws -> CategoriesCoreData? {
+        return nil
+    }
+    
     func add(_ record: TrackerCategory, _ isAutomatic: Bool) throws {}
 }
 

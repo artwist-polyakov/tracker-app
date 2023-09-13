@@ -37,6 +37,7 @@ protocol TrackersDataProviderProtocol {
     func deleteCategory(category: TrackerCategory)
     func editCategory(category: TrackerCategory)
     func giveMeCategoryById(id: UUID) -> TrackerCategory?
+    func checkPinnedCategory()
 }
 
 extension TrackersDataProviderProtocol {
@@ -66,7 +67,7 @@ final class TrackersDataProvider: NSObject {
     }
     
     weak var delegate: TrackersDataProviderDelegate?
-    
+    private var pinnedCategoryID: CategoriesCoreData?
     private let context: NSManagedObjectContext
     private let trackersDataStore: TrackersDataStore
     private let categoriesDataStore: CategoriesDataStore
@@ -124,11 +125,14 @@ final class TrackersDataProvider: NSObject {
         guard let context = trackersDataStore.managedObjectContext else {
             throw TrackersDataProviderError.failedToInitializeContext
         }
+        
         self.delegate = delegate
         self.context = context
         self.trackersDataStore = trackersDataStore
         self.categoriesDataStore = categoriesDataStore
         self.executionsDataStore = executionsDataStore
+
+        
     }
 }
 
@@ -391,6 +395,21 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             }
         } catch let error as NSError {
             print("Ошибка при редактировании категории: \(error.localizedDescription)")
+        }
+    }
+    
+    func checkPinnedCategory() {
+        let pinnedCategories = self.giveMeAllCategories(justAutomatic: true).filter { $0.categoryTitle == "Закрепленные трекеры" }
+        if let id = pinnedCategories.first?.id {
+            try? self.pinnedCategoryID = categoriesDataStore.giveMeCategory(with: id)
+        } else {
+            let newPinnedCategory = TrackerCategory(id: UUID(), categoryTitle: "Закрепленные трекеры")
+            do {
+                try addCategory(newPinnedCategory, isAutomatic: true)
+            } catch {
+                return
+            }
+            checkPinnedCategory()
         }
     }
 }

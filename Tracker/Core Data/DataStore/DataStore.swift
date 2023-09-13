@@ -94,6 +94,17 @@ extension DataStore: TrackersDataStore {
         }
     }
     
+    func giveMeCategory(with id: UUID) throws -> CategoriesCoreData?  {
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as NSUUID)
+        let existingCategories = try context.fetch(fetchRequest)
+        if let firstCategory = existingCategories.first {
+            return firstCategory
+        } else {
+            return nil
+        }
+    }
+    
     func numberOfExecutions(for trackerId: UUID) -> Int {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         fetchRequest.predicate = NSPredicate(format: "trackerId == %@", trackerId as NSUUID)
