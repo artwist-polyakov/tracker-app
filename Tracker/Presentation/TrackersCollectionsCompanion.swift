@@ -23,7 +23,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         }
     }()
     
-    let repository = TrackersRepositoryImpl.shared
     let cellIdentifier = "TrackerCollectionViewCell"
     weak var delegate: TrackersCollectionsCompanionDelegate?
     var selectedDate: Date? {
@@ -96,7 +95,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
         
         if let tracker = dataProvider?.object(at: indexPath) {
-            
             let days = tracker.daysDone
             let isDone = tracker.isChecked
             let computedColorName = "\(1 + ((tracker.color - 1) % QUANTITY.COLLECTIONS_CELLS.rawValue))"
@@ -107,7 +105,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
                 }
                 return color
             }()
-            
             
             cell.configure(
                 text: tracker.title,
