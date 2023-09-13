@@ -98,7 +98,7 @@ final class TrackersDataProvider: NSObject {
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
-            sectionNameKeyPath: "categoryId",
+            sectionNameKeyPath: "trackerToCategory.id",
             cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
