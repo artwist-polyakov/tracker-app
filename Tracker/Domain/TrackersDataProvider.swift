@@ -24,7 +24,7 @@ protocol TrackersDataProviderProtocol {
     var numberOfSections: Int { get }
     func numberOfRowsInSection(_ section: Int) -> Int
     func object(at indexPath: IndexPath) -> TrackersRecord?
-    func addCategory(_ category: TrackerCategory) throws
+    func addCategory(_ category: TrackerCategory, isAutomatic:Bool) throws
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws
     func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws
     func deleteObject(at indexPath: IndexPath) throws
@@ -33,7 +33,7 @@ protocol TrackersDataProviderProtocol {
     func categoryTitle(for categoryId: UUID) -> String?
     func giveMeAnyCategory() -> TrackerCategory?
     func clearAllCoreData()
-    func giveMeAllCategories(excludeAutomatic: Bool) -> [TrackerCategory]
+    func giveMeAllCategories(justAutomatic: Bool) -> [TrackerCategory]
     func deleteCategory(category: TrackerCategory)
     func editCategory(category: TrackerCategory)
     func giveMeCategoryById(id: UUID) -> TrackerCategory?
@@ -41,7 +41,10 @@ protocol TrackersDataProviderProtocol {
 
 extension TrackersDataProviderProtocol {
     func giveMeAllCategories() -> [TrackerCategory] {
-        giveMeAllCategories(excludeAutomatic: true)
+        giveMeAllCategories(justAutomatic: false)
+    }
+    func addCategory(_ category: TrackerCategory) throws {
+        try addCategory(category, isAutomatic: false)
     }
 }
 
@@ -260,8 +263,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         return TrackersRecordImpl(from: coreDataObject, daysDone: daysGone, isChecked: isDoneAt)
     }
     
-    func addCategory(_ category: TrackerCategory) throws {
-        try categoriesDataStore.add(category)
+    func addCategory(_ category: TrackerCategory, isAutomatic: Bool) throws {
+        try categoriesDataStore.add(category, isAutomatic)
     }
     
     func giveMeAnyCategory() -> TrackerCategory?  {
@@ -337,12 +340,10 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         }
     }
     
-    func giveMeAllCategories(excludeAutomatic: Bool) -> [TrackerCategory] {
+    func giveMeAllCategories(justAutomatic: Bool) -> [TrackerCategory] {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         
-        if excludeAutomatic {
-                fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: false))
-            }
+        fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: justAutomatic))
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         

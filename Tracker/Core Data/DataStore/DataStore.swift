@@ -122,13 +122,14 @@ extension DataStore: TrackersDataStore {
 }
 
 extension DataStore: CategoriesDataStore {
-    func add(_ record: TrackerCategory) throws {
+    func add(_ record: TrackerCategory, _ isAutomatic: Bool) throws {
         try performSync { context in
             Result {
                 let categoriesCoreData = CategoriesCoreData(context: context)
                 categoriesCoreData.title = record.categoryTitle
                 categoriesCoreData.creationDate = Date()
                 categoriesCoreData.id = record.id
+                categoriesCoreData.isAutomatic = isAutomatic
                 try context.save()
             }
         }

@@ -12,7 +12,7 @@ extension NullStore: TrackersDataStore {
 }
 
 extension NullStore: CategoriesDataStore {
-    func add(_ record: TrackerCategory) throws {}
+    func add(_ record: TrackerCategory, _ isAutomatic: Bool) throws {}
 }
 
 extension NullStore: ExecutionsDataStore {
