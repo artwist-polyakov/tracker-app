@@ -3,6 +3,7 @@
     <entity name="CategoriesCoreData" representedClassName="CategoriesCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isAutomatic" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="categoryToTrackers" toMany="YES" deletionRule="Cascade" destinationEntity="TrackersCoreData" inverseName="trackerToCategory" inverseEntity="TrackersCoreData"/>
     </entity>

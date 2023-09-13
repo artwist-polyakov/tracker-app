@@ -162,11 +162,13 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         default:
             id = ""
         }
-        
+        print("ОШИБКА - выбираю категорию для \(indexPath)")
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
+        print("ОШИБКА - выбираю категорию для секции\(indexPath.section)")
         
         if kind == UICollectionView.elementKindSectionHeader {
             if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)) {
+                print("ОШИБКА - выбираю категорию для \(tracker)")
                 if let categoryTitle = dataProvider?.categoryTitle(for: tracker.categoryId) {
                     view.titleLabel.text = categoryTitle
                 }

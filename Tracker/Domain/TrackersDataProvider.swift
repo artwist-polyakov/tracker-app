@@ -98,6 +98,7 @@ final class TrackersDataProvider: NSObject {
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
+//            sectionNameKeyPath: "categoryId",
             sectionNameKeyPath: "trackerToCategory.id",
             cacheName: nil)
         fetchedResultsController.delegate = self
@@ -302,10 +303,14 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     func categoryTitle(for categoryId: UUID) -> String? {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        print("ОШИБКА ищу категорию \(categoryId)")
+        print("ОШИБКА \(giveMeAllCategories())")
         fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
         fetchRequest.fetchLimit = 1
         do {
             let categories = try context.fetch(fetchRequest)
+            
+            print("ОШИБКА: вот такие категории я нашел \(categories.map{$0.title})")
             return categories.first?.title
         } catch let error as NSError {
             print("Ошибка при извлечении категории: \(error)")
@@ -328,6 +333,11 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     func giveMeAllCategories() -> [TrackerCategory] {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        
+//        if !includeAutomatic {
+//                fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: false))
+//            }
+        
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
         do {

@@ -1,6 +1,6 @@
 import Foundation
 
-final class TrackerCategory {
+final class TrackerCategory: CustomStringConvertible {
     let id: UUID
     var categoryTitle: String
     
@@ -8,6 +8,10 @@ final class TrackerCategory {
         self.id = id
         self.categoryTitle = categoryTitle
     }
+    
+    var description: String {
+            return "TrackerCategory - ID: \(id), Title: \(categoryTitle)"
+        }
 }
 
 extension TrackerCategory: Equatable {
