@@ -33,10 +33,16 @@ protocol TrackersDataProviderProtocol {
     func categoryTitle(for categoryId: UUID) -> String?
     func giveMeAnyCategory() -> TrackerCategory?
     func clearAllCoreData()
-    func giveMeAllCategories() -> [TrackerCategory]
+    func giveMeAllCategories(excludeAutomatic: Bool) -> [TrackerCategory]
     func deleteCategory(category: TrackerCategory)
     func editCategory(category: TrackerCategory)
     func giveMeCategoryById(id: UUID) -> TrackerCategory?
+}
+
+extension TrackersDataProviderProtocol {
+    func giveMeAllCategories() -> [TrackerCategory] {
+        giveMeAllCategories(excludeAutomatic: true)
+    }
 }
 
 final class TrackersDataProvider: NSObject {
@@ -331,12 +337,12 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         }
     }
     
-    func giveMeAllCategories() -> [TrackerCategory] {
+    func giveMeAllCategories(excludeAutomatic: Bool) -> [TrackerCategory] {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         
-//        if !includeAutomatic {
-//                fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: false))
-//            }
+        if excludeAutomatic {
+                fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: false))
+            }
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
