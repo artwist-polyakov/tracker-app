@@ -55,3 +55,4 @@ saturday.short = "Сб";
 sunday = "воскресенье";
 sunday.short = "Вс";
 every.day = "Каждый день";
+pinned = "Закрепленные";
