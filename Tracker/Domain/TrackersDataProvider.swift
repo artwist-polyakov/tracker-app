@@ -9,15 +9,13 @@ enum CategoryFilterType {
 
 // Эта структура будет использоваться для уведомления о любых изменениях в данных.
 struct TrackersDataUpdate {
-    let section: Int
-    let insertedIndexes: IndexSet
-    let deletedIndexes: IndexSet
-    let updatedIndexes: IndexSet
+    let insertedIndexes: [IndexPath]
+    let deletedIndexes: [IndexPath]
+    let updatedIndexes: [IndexPath]
+    let movedIndexes: [(from: IndexPath, to: IndexPath)]
     let insertedSections: IndexSet
     let deletedSections: IndexSet
     let updatedSections: IndexSet
-    let insertedItems: Int
-    let deletedItems: Int
 }
 
 // Протокол для уведомления об изменениях.
@@ -84,16 +82,15 @@ final class TrackersDataProvider: NSObject {
     private let categoriesDataStore: CategoriesDataStore
     private let executionsDataStore: ExecutionsDataStore
     
-    private var currentSection: Int = -1
     
-    private var insertedIndexes: IndexSet = []
-    private var deletedIndexes: IndexSet = []
-    private var updatedIndexes: IndexSet = []
+    private var insertedIndexes: [IndexPath] = []
+    private var deletedIndexes: [IndexPath] = []
+    private var updatedIndexes: [IndexPath] = []
     private var insertedSections: IndexSet = []
     private var deletedSections: IndexSet = []
     private var updatedSections: IndexSet = []
-    private var insertedItems: Int = 0
-    private var deletedItems: Int = 0
+    private var movedIndexes: [(from: IndexPath, to: IndexPath)] = []
+    
     
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
@@ -171,11 +168,9 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         case .delete:
             print("ОШИБКА: ФОРМИРУЮ секции для удаления \(sectionIndex)")
             deletedSections.insert(sectionIndex)
-            deletedItems += sectionInfo.numberOfObjects
         case .insert:
             print("ОШИБКА: ФОРМИРУЮ секции для вставки \(sectionIndex)")
             insertedSections.insert(sectionIndex)
-            insertedItems += sectionInfo.numberOfObjects
         case .update:
             print("ОШИБКА: ФОРМИРУЮ секции для изменения \(sectionIndex)")
             updatedSections.insert(sectionIndex)
@@ -184,22 +179,28 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         }
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
         switch type {
         case .delete:
             if let indexPath = indexPath {
-                deletedIndexes.insert(indexPath.item)
-                currentSection = indexPath.section
+                deletedIndexes.append(indexPath)
             }
         case .insert:
             if let indexPath = newIndexPath {
-                insertedIndexes.insert(indexPath.item)
-                currentSection = indexPath.section
+                insertedIndexes.append(indexPath)
             }
         case .update:
             if let indexPath = indexPath {
-                updatedIndexes.insert(indexPath.item)
-                currentSection = indexPath.section
+                updatedIndexes.append(indexPath)
+            }
+        case .move:
+            if let indexPath,
+               let newIndexPath {
+                movedIndexes.append((indexPath, newIndexPath))
             }
         default:
             break
@@ -208,26 +209,22 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     private func generateUdate() -> TrackersDataUpdate {
         let result =  TrackersDataUpdate(
-            section: currentSection,
             insertedIndexes: insertedIndexes,
             deletedIndexes: deletedIndexes,
             updatedIndexes: updatedIndexes,
+            movedIndexes: movedIndexes,
             insertedSections: insertedSections,
             deletedSections: deletedSections,
-            updatedSections: updatedSections,
-            insertedItems: insertedItems,
-            deletedItems: deletedItems
+            updatedSections: updatedSections
         )
         print("ОШИБКА: ПАКЕТ ДАННЫХ ДЛЯ ОБНОВЛЕНИЯ: \(result)")
-        currentSection = -1
         insertedIndexes = []
         deletedIndexes = []
         updatedIndexes = []
+        movedIndexes = []
         insertedSections = []
         deletedSections = []
         updatedSections = []
-        insertedItems = 0
-        deletedItems = 0
         
         return result
         

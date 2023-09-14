@@ -212,34 +212,18 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.performBatchUpdates {
-            var insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
-            var deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
-            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: update.section) }
-            let updatedSections = update.updatedSections
-            let deletedSections = update.deletedSections
-            let insertedSections = update.insertedSections
-            cv.deleteSections(deletedSections)
+            cv.deleteSections(update.deletedSections)
             print("ОШИБКА section delete completed")
-            cv.insertSections(insertedSections)
+            cv.insertSections(update.insertedSections)
             print("ОШИБКА section insert completed")
-            cv.reloadSections(updatedSections)
-            for section in deletedSections {
-                for indexItem in 0..<update.deletedItems {
-                    deletedIndexPaths.append(IndexPath(item: indexItem, section: section))
-                }
+            cv.reloadSections(update.updatedSections)
+
+            cv.deleteItems(at: update.deletedIndexes)
+            cv.insertItems(at: update.insertedIndexes)
+            cv.reloadItems(at: update.updatedIndexes)
+            for move in update.movedIndexes {
+                cv.moveItem(at: move.from, to: move.to)
             }
-            
-            for section in insertedSections {
-                for indexItem in 0..<update.insertedItems {
-                    insertedIndexPaths.append(IndexPath(item: indexItem, section: section))
-                }
-            }
-            if insertedIndexPaths.count == 0 {
-                insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
-            }
-            cv.deleteItems(at: deletedIndexPaths)
-            cv.insertItems(at: insertedIndexPaths)
-            cv.reloadItems(at: updatedIndexPaths)
         } completion: { _ in
             let count = self.dataProvider?.numberOfSections ?? .zero
             self.delegate?.quantityTernar(count)
