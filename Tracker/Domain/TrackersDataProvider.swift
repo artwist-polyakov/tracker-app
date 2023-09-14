@@ -42,8 +42,9 @@ protocol TrackersDataProviderProtocol {
 
 extension TrackersDataProviderProtocol {
     func giveMeAllCategories() -> [TrackerCategory] {
-        giveMeAllCategories(justAutomatic: false)
+        return giveMeAllCategories(justAutomatic: false)
     }
+    
     func addCategory(_ category: TrackerCategory) throws {
         try addCategory(category, isAutomatic: false)
     }

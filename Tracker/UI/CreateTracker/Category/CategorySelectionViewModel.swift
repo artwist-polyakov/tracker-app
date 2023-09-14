@@ -37,6 +37,7 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     
     func refreshState() {
         categories = interactor.giveMeAllCategories() ?? []
+        print("ОШИБКА \(categories)")
         if categories.isEmpty {
             state = .emptyResult
         } else {
