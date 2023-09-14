@@ -154,7 +154,8 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.didUpdate(generateUdate())
+//        delegate?.didUpdate(generateUdate())
+        delegate?.reloadData()
     }
     
     
