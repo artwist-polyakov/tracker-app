@@ -9,10 +9,10 @@ enum CategoryFilterType {
 
 // Эта структура будет использоваться для уведомления о любых изменениях в данных.
 struct TrackersDataUpdate {
-    let section: Int
-    let insertedIndexes: IndexSet
-    let deletedIndexes: IndexSet
-    let updatedIndexes: IndexSet
+    let insertedIndexes: [IndexPath]
+    let deletedIndexes: [IndexPath]
+    let updatedIndexes: [IndexPath]
+    let movedIndexes: [(from: IndexPath, to: IndexPath)]
     let insertedSections: IndexSet
     let deletedSections: IndexSet
     let updatedSections: IndexSet
@@ -82,14 +82,15 @@ final class TrackersDataProvider: NSObject {
     private let categoriesDataStore: CategoriesDataStore
     private let executionsDataStore: ExecutionsDataStore
     
-    private var currentSection: Int = -1
     
-    private var insertedIndexes: IndexSet = []
-    private var deletedIndexes: IndexSet = []
-    private var updatedIndexes: IndexSet = []
+    private var insertedIndexes: [IndexPath] = []
+    private var deletedIndexes: [IndexPath] = []
+    private var updatedIndexes: [IndexPath] = []
     private var insertedSections: IndexSet = []
     private var deletedSections: IndexSet = []
     private var updatedSections: IndexSet = []
+    private var movedIndexes: [(from: IndexPath, to: IndexPath)] = []
+    
     
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
@@ -149,40 +150,56 @@ final class TrackersDataProvider: NSObject {
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        insertedIndexes = IndexSet()
-        deletedIndexes = IndexSet()
+        print("ОШИБКА Я СБРАСЫВАЮ ВСТАВКУ И УДАЛЕНИЕ ИНДЕКСОВ")
+//        insertedIndexes = IndexSet()
+//        deletedIndexes = IndexSet()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        delegate?.didUpdate(generateUdate())
-        delegate?.reloadData()
+        print("ОШИБКА: ОТДАЮ ИЗМЕНЕНИЯ В РАБОТУ")
+        delegate?.didUpdate(generateUdate())
     }
     
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
+            
         case .delete:
+            print("ОШИБКА: ФОРМИРУЮ секции для удаления \(sectionIndex)")
             deletedSections.insert(sectionIndex)
         case .insert:
+            print("ОШИБКА: ФОРМИРУЮ секции для вставки \(sectionIndex)")
             insertedSections.insert(sectionIndex)
         case .update:
+            print("ОШИБКА: ФОРМИРУЮ секции для изменения \(sectionIndex)")
             updatedSections.insert(sectionIndex)
         default:
             break
         }
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
         switch type {
         case .delete:
             if let indexPath = indexPath {
-                deletedIndexes.insert(indexPath.item)
-                currentSection = indexPath.section
+                deletedIndexes.append(indexPath)
             }
         case .insert:
             if let indexPath = newIndexPath {
-                insertedIndexes.insert(indexPath.item)
-                currentSection = indexPath.section
+                insertedIndexes.append(indexPath)
+            }
+        case .update:
+            if let indexPath = indexPath {
+                updatedIndexes.append(indexPath)
+            }
+        case .move:
+            if let indexPath,
+               let newIndexPath {
+                movedIndexes.append((indexPath, newIndexPath))
             }
         default:
             break
@@ -191,19 +208,19 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     private func generateUdate() -> TrackersDataUpdate {
         let result =  TrackersDataUpdate(
-            section: currentSection,
             insertedIndexes: insertedIndexes,
             deletedIndexes: deletedIndexes,
             updatedIndexes: updatedIndexes,
+            movedIndexes: movedIndexes,
             insertedSections: insertedSections,
             deletedSections: deletedSections,
             updatedSections: updatedSections
         )
-        
-        currentSection = -1
+        print("ОШИБКА: ПАКЕТ ДАННЫХ ДЛЯ ОБНОВЛЕНИЯ: \(result)")
         insertedIndexes = []
         deletedIndexes = []
         updatedIndexes = []
+        movedIndexes = []
         insertedSections = []
         deletedSections = []
         updatedSections = []
@@ -432,8 +449,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             }
             checkPinnedCategory()
         }
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "TrackersCoreData")
-        var trackers = try? context.fetch(fetchRequest) as? [TrackersCoreData]
     }
     
     func interactWithTrackerPinning(_ tracker: TrackersRecord) throws {
