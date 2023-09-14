@@ -143,7 +143,7 @@ final class TrackersViewController: UIViewController {
         let trackerTypeViewController = TrackerTypeViewController()
         trackerTypeViewController.delegate = collectionPresenter
         let navigationController = UINavigationController(rootViewController: trackerTypeViewController)
-        analyticsService.report(event: "add-button-tapped", params: [:])
+        analyticsService.report(event: "add-button-tapped", params: ["isFirst":"\(voidImage.isHidden)"])
         self.present(navigationController, animated: true, completion: nil)
     }
     
