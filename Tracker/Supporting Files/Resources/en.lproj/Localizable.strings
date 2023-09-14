@@ -55,3 +55,4 @@ saturday.short = "Sat";
 sunday = "Sunday";
 sunday.short = "Sun";
 every.day = "Every day";
+pinned = "Pinned";

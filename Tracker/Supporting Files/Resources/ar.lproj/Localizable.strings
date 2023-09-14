@@ -55,3 +55,4 @@ saturday.short = "سب";
 sunday = "الأحد";
 sunday.short = "أح";
 every.day = "كل يوم";
+pinned = "مثبت";
