@@ -1,6 +1,12 @@
 import Foundation
 import CoreData
 
+enum CategoryFilterType {
+    case all
+    case automatic
+    case manual
+}
+
 // Эта структура будет использоваться для уведомления о любых изменениях в данных.
 struct TrackersDataUpdate {
     let section: Int
@@ -33,16 +39,18 @@ protocol TrackersDataProviderProtocol {
     func categoryTitle(for categoryId: UUID) -> String?
     func giveMeAnyCategory() -> TrackerCategory?
     func clearAllCoreData()
-    func giveMeAllCategories(justAutomatic: Bool) -> [TrackerCategory]
+    func giveMeAllCategories(filterType: CategoryFilterType) -> [TrackerCategory]
     func deleteCategory(category: TrackerCategory)
     func editCategory(category: TrackerCategory)
     func giveMeCategoryById(id: UUID) -> TrackerCategory?
     func checkPinnedCategory()
+    func interactWithTrackerPinning(_ tracker: TrackersRecord) throws
+    func categoryConnectedToTracker(trackerId: UUID) -> TrackerCategory?
 }
 
 extension TrackersDataProviderProtocol {
     func giveMeAllCategories() -> [TrackerCategory] {
-        return giveMeAllCategories(justAutomatic: false)
+        return giveMeAllCategories(filterType: .manual)
     }
     
     func addCategory(_ category: TrackerCategory) throws {
@@ -101,16 +109,17 @@ final class TrackersDataProvider: NSObject {
     
     private lazy var trackersFetchedResultsController:  NSFetchedResultsController<TrackersCoreData> = {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true),
-                                        NSSortDescriptor(key:"trackerToCategory.creationDate", ascending: false),
-                                        NSSortDescriptor(key:"trackerToCategory.id", ascending: false)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key:"trackerToCategory.creationDate", ascending: true),
+            NSSortDescriptor(key: "creationDate", ascending: true),
+            NSSortDescriptor(key:"trackerToCategory.id", ascending: false)]
         
         fetchRequest.predicate = giveTrackersPredicate()
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
 //            sectionNameKeyPath: "categoryId",
-            sectionNameKeyPath: "trackerToCategory.id",
+            sectionNameKeyPath: "trackerToCategory",
             cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
@@ -252,11 +261,13 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? .zero
+        print("ОШИБКА возвращаю число категорий для вывода в коллекцию: \(result)")
         return result
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
         let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? .zero
+        print("ОШИБКА возвращаю число элементов для вывода в секцию \(section): \(result)")
         return result
     }
     
@@ -317,8 +328,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     func categoryTitle(for categoryId: UUID) -> String? {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
-        print("ОШИБКА ищу категорию \(categoryId)")
-        print("ОШИБКА \(giveMeAllCategories())")
         fetchRequest.predicate = NSPredicate(format: "id == %@", categoryId as NSUUID)
         fetchRequest.fetchLimit = 1
         do {
@@ -350,11 +359,16 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         }
     }
     
-    func giveMeAllCategories(justAutomatic: Bool) -> [TrackerCategory] {
+    func giveMeAllCategories(filterType: CategoryFilterType) -> [TrackerCategory] {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
-        
-        fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: justAutomatic))
-        
+        switch filterType {
+        case .automatic:
+            fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: true))
+        case .manual:
+            fetchRequest.predicate = NSPredicate(format: "isAutomatic == %@", NSNumber(value: false))
+        case .all:
+            break
+        }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
         do {
@@ -405,7 +419,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func checkPinnedCategory() {
-        let pinnedCategories = self.giveMeAllCategories(justAutomatic: true).filter { $0.categoryTitle == AutomaticCategories.pinned.rawValue }
+        let pinnedCategories = self.giveMeAllCategories(filterType: .automatic).filter { $0.categoryTitle == AutomaticCategories.pinned.rawValue }
         if let id = pinnedCategories.first?.id {
             try? self.pinnedCategoryID = categoriesDataStore.giveMeCategory(with: id)
         } else {
@@ -416,6 +430,47 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
                 return
             }
             checkPinnedCategory()
+        }
+        print("ОШИБКА: Добавили или нашли категорию \(pinnedCategoryID?.title)")
+        print("ОШИБКА: её идентификатор \(pinnedCategoryID?.id)")
+        print("ОШИБКА: Список категорий\(self.giveMeAllCategories(filterType: .all).map{$0.categoryTitle})")
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "TrackersCoreData")
+        var trackers = try? context.fetch(fetchRequest) as! [TrackersCoreData]
+        print("ОШИБКА: Список трекеров \(trackers?.map{$0.trackerToCategory?.isAutomatic})")
+    }
+    
+    func interactWithTrackerPinning(_ tracker: TrackersRecord) throws {
+        guard let pinnedCategoryID = pinnedCategoryID else { return }
+        switch tracker.isPinned {
+        case true:
+            let targetCategory = self.giveMeAllCategories(filterType: .manual).filter { $0.id == tracker.categoryId }.first
+            guard let targetCategory = targetCategory else { return }
+            var coreCategory: CategoriesCoreData? = nil
+            try? coreCategory = categoriesDataStore.giveMeCategory(with: targetCategory.id)
+            if let coreCategory = coreCategory
+            {
+                try trackersDataStore.chageCategory(for: tracker.trackerId, to: coreCategory)
+            }
+        case false:
+            try trackersDataStore.chageCategory(for: tracker.trackerId, to: pinnedCategoryID)
+        }
+    }
+    
+    func categoryConnectedToTracker(trackerId: UUID) -> TrackerCategory? {
+        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+        fetchRequest.predicate = NSPredicate(format: "ANY categoryToTrackers.id == %@", trackerId as NSUUID)
+        fetchRequest.fetchLimit = 1
+        do {
+            let fetchedCategories = try context.fetch(fetchRequest)
+            if let category = fetchedCategories.first {
+                guard let id = category.id, let title = category.title else { return nil }
+                return TrackerCategory(id: id, categoryTitle: title)
+            } else {
+                return nil
+            }
+        } catch let error as NSError {
+            print("Ошибка при извлечении категории: \(error)")
+            return nil
         }
     }
 }

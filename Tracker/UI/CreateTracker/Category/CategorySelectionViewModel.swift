@@ -36,7 +36,7 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     private let interactor = TrackersCollectionsCompanionInteractor.shared
     
     func refreshState() {
-        categories = interactor.giveMeAllCategories() ?? []
+        categories = interactor.giveMeAllCategories(filterType: .manual) ?? []
         print("ОШИБКА \(categories)")
         if categories.isEmpty {
             state = .emptyResult

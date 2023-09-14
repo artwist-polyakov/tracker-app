@@ -3,6 +3,8 @@ import CoreData
 final class NullStore {}
 
 extension NullStore: TrackersDataStore {
+    func chageCategory(for trackerId: UUID, to category: CategoriesCoreData) throws {
+    }
     
     var managedObjectContext: NSManagedObjectContext? { nil }
     func add(_ record: Tracker, categoryId: UUID, categoryTitle: String) throws {}

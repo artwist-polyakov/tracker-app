@@ -59,6 +59,8 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             notifyObservers()
         }
     }
+    let trackerIsPinnedToFlush: Bool = false
+    
     var trackerColorToFlush: Int? {
         didSet {
             notifyObservers()
@@ -163,7 +165,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
                               color: trackerColor,
                               title: trackerTitle,
                               icon: Mappers.iconToIntMapper(trackerIcon),
-                              isPlannedFor: trackerSheduleToFlush)
+                              isPlannedFor: trackerSheduleToFlush,
+                              isPinned: trackerIsPinnedToFlush)
         
         interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
         

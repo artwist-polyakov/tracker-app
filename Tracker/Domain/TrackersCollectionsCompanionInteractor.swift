@@ -20,8 +20,8 @@ final class TrackersCollectionsCompanionInteractor {
         companion?.clearAllCoreData()
     }
     
-    func giveMeAllCategories() -> [TrackerCategory]? {
-        return companion?.giveMeAllCategories()
+    func giveMeAllCategories(filterType: CategoryFilterType) -> [TrackerCategory]? {
+        return companion?.giveMeAllCategories(filterType: filterType)
     }
     
     func addCategory(name: String) {

@@ -59,8 +59,8 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         dataProvider?.clearAllCoreData()
     }
     
-    func giveMeAllCategories () -> [TrackerCategory]? {
-        return dataProvider?.giveMeAllCategories()
+    func giveMeAllCategories (filterType: CategoryFilterType = .all) -> [TrackerCategory]? {
+        return dataProvider?.giveMeAllCategories(filterType: filterType)
     }
     
     func addCategory (category: TrackerCategory) {
@@ -91,6 +91,18 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         servant.quantityTernar(quantity)
         return quantity
     }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions -> UIMenu? in
+            guard let tracker = self.dataProvider?.object(at: indexPath)  else {return nil}
+            return UIMenu(title: "", children: [
+                UIAction(title: tracker.isPinned ? "Открепить" : "Закрепить") { [weak self] _ in
+                    try? self?.dataProvider?.interactWithTrackerPinning(tracker)
+                }
+            ])
+        }
+    }
+
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
@@ -170,8 +182,8 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         if kind == UICollectionView.elementKindSectionHeader {
             if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)) {
                 print("ОШИБКА - выбираю категорию для \(tracker)")
-                if let categoryTitle = dataProvider?.categoryTitle(for: tracker.categoryId) {
-                    view.titleLabel.text = categoryTitle
+                if let category = dataProvider?.categoryConnectedToTracker(trackerId: tracker.trackerId) {
+                    view.titleLabel.text = category.categoryTitle
                 }
             }
         }

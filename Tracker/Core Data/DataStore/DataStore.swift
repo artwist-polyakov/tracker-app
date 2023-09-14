@@ -53,6 +53,29 @@ final class DataStore {
 
 // MARK: - TrackersDataStore
 extension DataStore: TrackersDataStore {
+    func chageCategory(for trackerId: UUID, to category: CategoriesCoreData) throws {
+        let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSUUID)
+        let existingTrackers = try context.fetch(fetchRequest)
+        print("ОШИБКА Устанавливаю трекер в категорию \(category.title)")
+        // Получите новую ссылку на category из текущего контекста
+        let currentContextCategory = context.object(with: category.objectID) as! CategoriesCoreData
+
+        if let tracker = existingTrackers.first {
+            tracker.trackerToCategory = currentContextCategory
+            tracker.isPinned = !tracker.isPinned
+            do {
+                try context.save()
+                
+            } catch let error as NSError {
+                print("Ошибка при сохранении изменений в контексте: \(error)")
+                throw error
+            }
+        } else {
+            throw NSError(domain: "DataStoreError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Tracker not found for provided ID."])
+        }
+    }
+    
     var managedObjectContext: NSManagedObjectContext? {
         context
     }

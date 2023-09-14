@@ -6,4 +6,5 @@ protocol TrackersDataStore {
     func delete(_ record: NSManagedObject) throws
     func numberOfExecutions(for trackerId: UUID) -> Int
     func hasExecutionForDate(for trackerId: UUID, date: SimpleDate) -> Bool
+    func chageCategory(for trackerId: UUID, to category: CategoriesCoreData) throws
 }
