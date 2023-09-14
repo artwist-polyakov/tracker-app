@@ -431,12 +431,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             }
             checkPinnedCategory()
         }
-        print("ОШИБКА: Добавили или нашли категорию \(pinnedCategoryID?.title)")
-        print("ОШИБКА: её идентификатор \(pinnedCategoryID?.id)")
-        print("ОШИБКА: Список категорий\(self.giveMeAllCategories(filterType: .all).map{$0.categoryTitle})")
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "TrackersCoreData")
-        var trackers = try? context.fetch(fetchRequest) as! [TrackersCoreData]
-        print("ОШИБКА: Список трекеров \(trackers?.map{$0.trackerToCategory?.isAutomatic})")
+        var trackers = try? context.fetch(fetchRequest) as? [TrackersCoreData]
     }
     
     func interactWithTrackerPinning(_ tracker: TrackersRecord) throws {
