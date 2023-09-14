@@ -55,3 +55,4 @@ saturday.short = "六";
 sunday = "星期日";
 sunday.short = "日";
 every.day = "每一天";
+pinned = "固定的";

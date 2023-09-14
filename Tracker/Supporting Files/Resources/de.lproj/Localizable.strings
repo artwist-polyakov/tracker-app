@@ -55,3 +55,4 @@ saturday.short = "Sa";
 sunday = "Sonntag";
 sunday.short = "So";
 every.day = "Jeden Tag";
+pinned = "Angeheftet";

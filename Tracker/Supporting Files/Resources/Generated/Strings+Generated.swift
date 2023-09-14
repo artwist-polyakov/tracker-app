@@ -24,6 +24,8 @@ internal enum L10n {
   internal static let friday = L10n.tr("Localizable", "friday", fallback: "Friday")
   /// Monday
   internal static let monday = L10n.tr("Localizable", "monday", fallback: "Monday")
+  /// Pinned
+  internal static let pinned = L10n.tr("Localizable", "pinned", fallback: "Pinned")
   /// Ready
   internal static let ready = L10n.tr("Localizable", "ready", fallback: "Ready")
   /// Saturday

@@ -1,7 +1,7 @@
 import UIKit
 
 final class TrackersViewController: UIViewController {
-    
+    private let analyticsService = AnalyticsService()
     var addBarButtonItem: UIBarButtonItem?
     var collectionView: UICollectionView?
     var collectionPresenter: TrackersCollectionsPresenter!
@@ -143,6 +143,7 @@ final class TrackersViewController: UIViewController {
         let trackerTypeViewController = TrackerTypeViewController()
         trackerTypeViewController.delegate = collectionPresenter
         let navigationController = UINavigationController(rootViewController: trackerTypeViewController)
+        analyticsService.report(event: "add-button-tapped", params: ["isFirst":"\(voidImage.isHidden)"])
         self.present(navigationController, animated: true, completion: nil)
     }
     

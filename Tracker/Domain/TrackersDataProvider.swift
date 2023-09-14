@@ -42,8 +42,9 @@ protocol TrackersDataProviderProtocol {
 
 extension TrackersDataProviderProtocol {
     func giveMeAllCategories() -> [TrackerCategory] {
-        giveMeAllCategories(justAutomatic: false)
+        return giveMeAllCategories(justAutomatic: false)
     }
+    
     func addCategory(_ category: TrackerCategory) throws {
         try addCategory(category, isAutomatic: false)
     }
@@ -324,7 +325,12 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             let categories = try context.fetch(fetchRequest)
             
             print("ОШИБКА: вот такие категории я нашел \(categories.map{$0.title})")
-            return categories.first?.title
+            if let cat = categories.first {
+                let check = cat.isAutomatic && cat.title == AutomaticCategories.pinned.rawValue
+                return check ? L10n.pinned : cat.title
+            } else {
+                return nil
+            }
         } catch let error as NSError {
             print("Ошибка при извлечении категории: \(error)")
             return nil
@@ -399,11 +405,11 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     }
     
     func checkPinnedCategory() {
-        let pinnedCategories = self.giveMeAllCategories(justAutomatic: true).filter { $0.categoryTitle == "Закрепленные трекеры" }
+        let pinnedCategories = self.giveMeAllCategories(justAutomatic: true).filter { $0.categoryTitle == AutomaticCategories.pinned.rawValue }
         if let id = pinnedCategories.first?.id {
             try? self.pinnedCategoryID = categoriesDataStore.giveMeCategory(with: id)
         } else {
-            let newPinnedCategory = TrackerCategory(id: UUID(), categoryTitle: "Закрепленные трекеры")
+            let newPinnedCategory = TrackerCategory(id: UUID(), categoryTitle: AutomaticCategories.pinned.rawValue)
             do {
                 try addCategory(newPinnedCategory, isAutomatic: true)
             } catch {
