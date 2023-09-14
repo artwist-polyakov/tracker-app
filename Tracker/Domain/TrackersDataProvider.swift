@@ -16,6 +16,8 @@ struct TrackersDataUpdate {
     let insertedSections: IndexSet
     let deletedSections: IndexSet
     let updatedSections: IndexSet
+    let insertedItems: Int
+    let deletedItems: Int
 }
 
 // Протокол для уведомления об изменениях.
@@ -90,6 +92,8 @@ final class TrackersDataProvider: NSObject {
     private var insertedSections: IndexSet = []
     private var deletedSections: IndexSet = []
     private var updatedSections: IndexSet = []
+    private var insertedItems: Int = 0
+    private var deletedItems: Int = 0
     
     private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
@@ -149,22 +153,31 @@ final class TrackersDataProvider: NSObject {
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        insertedIndexes = IndexSet()
-        deletedIndexes = IndexSet()
+        print("ОШИБКА Я СБРАСЫВАЮ ВСТАВКУ И УДАЛЕНИЕ ИНДЕКСОВ")
+//        insertedIndexes = IndexSet()
+//        deletedIndexes = IndexSet()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.didUpdate(generateUdate())
+        print("ОШИБКА: ОТДАЮ ИЗМЕНЕНИЯ В РАБОТУ")
+//        delegate?.didUpdate(generateUdate())
+        delegate?.reloadData()
     }
     
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
+            
         case .delete:
+            print("ОШИБКА: ФОРМИРУЮ секции для удаления \(sectionIndex)")
             deletedSections.insert(sectionIndex)
+            deletedItems += sectionInfo.numberOfObjects
         case .insert:
+            print("ОШИБКА: ФОРМИРУЮ секции для вставки \(sectionIndex)")
             insertedSections.insert(sectionIndex)
+            insertedItems += sectionInfo.numberOfObjects
         case .update:
+            print("ОШИБКА: ФОРМИРУЮ секции для изменения \(sectionIndex)")
             updatedSections.insert(sectionIndex)
         default:
             break
@@ -183,6 +196,11 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                 insertedIndexes.insert(indexPath.item)
                 currentSection = indexPath.section
             }
+        case .update:
+            if let indexPath = indexPath {
+                updatedIndexes.insert(indexPath.item)
+                currentSection = indexPath.section
+            }
         default:
             break
         }
@@ -196,9 +214,11 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             updatedIndexes: updatedIndexes,
             insertedSections: insertedSections,
             deletedSections: deletedSections,
-            updatedSections: updatedSections
+            updatedSections: updatedSections,
+            insertedItems: insertedItems,
+            deletedItems: deletedItems
         )
-        
+        print("ОШИБКА: ПАКЕТ ДАННЫХ ДЛЯ ОБНОВЛЕНИЯ: \(result)")
         currentSection = -1
         insertedIndexes = []
         deletedIndexes = []
@@ -206,6 +226,8 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         insertedSections = []
         deletedSections = []
         updatedSections = []
+        insertedItems = 0
+        deletedItems = 0
         
         return result
         
@@ -431,8 +453,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             }
             checkPinnedCategory()
         }
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "TrackersCoreData")
-        var trackers = try? context.fetch(fetchRequest) as? [TrackersCoreData]
     }
     
     func interactWithTrackerPinning(_ tracker: TrackersRecord) throws {

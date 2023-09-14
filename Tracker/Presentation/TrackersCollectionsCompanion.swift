@@ -212,15 +212,31 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.performBatchUpdates {
-            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
-            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
+            var insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
+            var deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: update.section) }
             let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: update.section) }
             let updatedSections = update.updatedSections
             let deletedSections = update.deletedSections
             let insertedSections = update.insertedSections
             cv.deleteSections(deletedSections)
+            print("ОШИБКА section delete completed")
             cv.insertSections(insertedSections)
+            print("ОШИБКА section insert completed")
             cv.reloadSections(updatedSections)
+            for section in deletedSections {
+                for indexItem in 0..<update.deletedItems {
+                    deletedIndexPaths.append(IndexPath(item: indexItem, section: section))
+                }
+            }
+            
+            for section in insertedSections {
+                for indexItem in 0..<update.insertedItems {
+                    insertedIndexPaths.append(IndexPath(item: indexItem, section: section))
+                }
+            }
+            if insertedIndexPaths.count == 0 {
+                insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: update.section) }
+            }
             cv.deleteItems(at: deletedIndexPaths)
             cv.insertItems(at: insertedIndexPaths)
             cv.reloadItems(at: updatedIndexPaths)
