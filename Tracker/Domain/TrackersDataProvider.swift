@@ -157,8 +157,8 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         print("ОШИБКА: ОТДАЮ ИЗМЕНЕНИЯ В РАБОТУ")
-//        delegate?.didUpdate(generateUdate())
-        delegate?.reloadData()
+        delegate?.didUpdate(generateUdate())
+//        delegate?.reloadData()
     }
     
     
