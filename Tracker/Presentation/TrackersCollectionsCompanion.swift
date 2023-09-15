@@ -93,7 +93,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions -> UIMenu? in
+        return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { suggestedActions -> UIMenu? in
             guard let tracker = self.dataProvider?.object(at: indexPath)  else {return nil}
             return UIMenu(title: "", children: [
                 UIAction(title: tracker.isPinned ? "Открепить" : "Закрепить") { [weak self] _ in
@@ -106,6 +106,22 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         }
     }
     
+    func collectionView(
+        _ collectionView: UICollectionView,
+        previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+    ) -> UITargetedPreview? {
+        guard let indexPath = configuration.identifier as? IndexPath,
+              let cell = collectionView.cellForItem(at: indexPath) as? TrackerCollectionViewCell
+        else { return nil }
+    
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        parameters.visiblePath = UIBezierPath(roundedRect: cell.viewForContextMenu().bounds, cornerRadius: 16)
+        let targetedPreview = UITargetedPreview(view: cell.viewForContextMenu(), parameters: parameters)
+        
+        return targetedPreview
+    }
+
     private func showDeleteConfirmation(for indexPath: IndexPath) {
         guard let vc = viewController else {return}
         vc.showDeleteConfirmation() { [weak self] in

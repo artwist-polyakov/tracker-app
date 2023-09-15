@@ -54,7 +54,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-    
     let whiteCircle: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 1, alpha: 0.3)
@@ -65,23 +64,26 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(sheet)
-        contentView.addSubview(titleLabel)
+        sheet.addSubview(titleLabel)
+        sheet.addSubview(emojiText)
         contentView.addSubview(quantityLabel)
         contentView.addSubview(functionButton)
-        contentView.addSubview(emojiText)
         functionButton.addTarget(self, action: #selector(functionButtonTapped), for: .touchUpInside)
         
         for subview in contentView.subviews {
             subview.translatesAutoresizingMaskIntoConstraints = false
         }
-        
+        for subview in sheet.subviews {
+            subview.translatesAutoresizingMaskIntoConstraints = false
+        }
         NSLayoutConstraint.activate([
             sheet.heightAnchor.constraint(equalToConstant: 90),
             sheet.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             sheet.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            sheet.topAnchor.constraint(equalTo: contentView.topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: sheet.bottomAnchor, constant: -12),
             titleLabel.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: sheet.trailingAnchor, constant: 12),
+            titleLabel.trailingAnchor.constraint(equalTo: sheet.trailingAnchor, constant: -12),
             emojiText.topAnchor.constraint(equalTo: sheet.topAnchor, constant: 12),
             emojiText.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
             quantityLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
@@ -89,9 +91,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             functionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             functionButton.centerYAnchor.constraint(equalTo: quantityLabel.centerYAnchor)
         ])
-        
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -102,7 +103,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                    quantityText: String,
                    hasMark: Bool
     ) {
-        
         titleLabel.text = text
         emojiText.text = emoji
         sheet.tintColor = sheetColor
@@ -112,8 +112,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         
         if hasMark {
             functionButton.setImage(UIImage(named: "Tick")?.withRenderingMode(.alwaysTemplate), for: .normal)
-            
-            
         } else {
             functionButton.setImage(UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
         }
@@ -125,4 +123,11 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         onFunctionButtonTapped?()
     }
     
+}
+
+
+extension TrackerCollectionViewCell {
+    func viewForContextMenu() -> UIView {
+        return sheet
+    }
 }
