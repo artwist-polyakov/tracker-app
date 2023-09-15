@@ -14,12 +14,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    let emojiButton: UIButton = {
-        let button = UIButton(type: .system)
+    let emojiText: UITextField = {
+        let button = UITextField()
         button.backgroundColor = UIColor(white: 1, alpha: 0)
+        button.textAlignment = .center
         button.layer.cornerRadius = 16
-        button.setTitle("", for: .normal)
-        button.tintColor = UIColor.black // Замените на нужный цвет иконки.
+        button.text = ""
+        button.tintColor = UIColor.black
         
         let backgroundView = UIView()
         backgroundView.backgroundColor = UIColor(white: 1, alpha: 0.3)
@@ -29,10 +30,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             backgroundView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
             backgroundView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
-            backgroundView.widthAnchor.constraint(equalTo: button.widthAnchor, multiplier: 0.8),
-            backgroundView.heightAnchor.constraint(equalTo: button.heightAnchor, multiplier: 0.8)
+            backgroundView.widthAnchor.constraint(equalToConstant: 24),
+            backgroundView.heightAnchor.constraint(equalToConstant: 24)
         ])
-        
         return button
     }()
     
@@ -68,7 +68,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(quantityLabel)
         contentView.addSubview(functionButton)
-        contentView.addSubview(emojiButton)
+        contentView.addSubview(emojiText)
         functionButton.addTarget(self, action: #selector(functionButtonTapped), for: .touchUpInside)
         
         for subview in contentView.subviews {
@@ -82,8 +82,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             titleLabel.bottomAnchor.constraint(equalTo: sheet.bottomAnchor, constant: -12),
             titleLabel.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: sheet.trailingAnchor, constant: 12),
-            emojiButton.topAnchor.constraint(equalTo: sheet.topAnchor, constant: 12),
-            emojiButton.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
+            emojiText.topAnchor.constraint(equalTo: sheet.topAnchor, constant: 12),
+            emojiText.leadingAnchor.constraint(equalTo: sheet.leadingAnchor, constant: 12),
             quantityLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
             quantityLabel.topAnchor.constraint(equalTo: sheet.bottomAnchor, constant: 16),
             functionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
@@ -104,7 +104,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     ) {
         
         titleLabel.text = text
-        emojiButton.setTitle(emoji, for: .normal)
+        emojiText.text = emoji
         sheet.tintColor = sheetColor
         sheet.backgroundColor = sheetColor
         quantityLabel.text = quantityText
