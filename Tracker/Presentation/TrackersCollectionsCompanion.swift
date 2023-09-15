@@ -175,13 +175,10 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         default:
             id = ""
         }
-        print("ОШИБКА - выбираю категорию для \(indexPath)")
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as! SupplementaryViewMain
-        print("ОШИБКА - выбираю категорию для секции\(indexPath.section)")
         
         if kind == UICollectionView.elementKindSectionHeader {
             if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)) {
-                print("ОШИБКА - выбираю категорию для \(tracker)")
                 if let category = dataProvider?.categoryConnectedToTracker(trackerId: tracker.trackerId) {
                     view.titleLabel.text = category.categoryTitle
                 }
@@ -213,14 +210,13 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
         else {return}
         cv.performBatchUpdates {
             cv.deleteSections(update.deletedSections)
-            print("ОШИБКА section delete completed")
             cv.insertSections(update.insertedSections)
-            print("ОШИБКА section insert completed")
             cv.reloadSections(update.updatedSections)
 
             cv.deleteItems(at: update.deletedIndexes)
             cv.insertItems(at: update.insertedIndexes)
             cv.reloadItems(at: update.updatedIndexes)
+            
             for move in update.movedIndexes {
                 cv.moveItem(at: move.from, to: move.to)
             }

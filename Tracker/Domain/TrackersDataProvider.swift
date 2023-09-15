@@ -149,14 +149,7 @@ final class TrackersDataProvider: NSObject {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("ОШИБКА Я СБРАСЫВАЮ ВСТАВКУ И УДАЛЕНИЕ ИНДЕКСОВ")
-//        insertedIndexes = IndexSet()
-//        deletedIndexes = IndexSet()
-    }
-    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("ОШИБКА: ОТДАЮ ИЗМЕНЕНИЯ В РАБОТУ")
         delegate?.didUpdate(generateUdate())
     }
     
@@ -165,13 +158,10 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         switch type {
             
         case .delete:
-            print("ОШИБКА: ФОРМИРУЮ секции для удаления \(sectionIndex)")
             deletedSections.insert(sectionIndex)
         case .insert:
-            print("ОШИБКА: ФОРМИРУЮ секции для вставки \(sectionIndex)")
             insertedSections.insert(sectionIndex)
         case .update:
-            print("ОШИБКА: ФОРМИРУЮ секции для изменения \(sectionIndex)")
             updatedSections.insert(sectionIndex)
         default:
             break
@@ -216,7 +206,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             deletedSections: deletedSections,
             updatedSections: updatedSections
         )
-        print("ОШИБКА: ПАКЕТ ДАННЫХ ДЛЯ ОБНОВЛЕНИЯ: \(result)")
         insertedIndexes = []
         deletedIndexes = []
         updatedIndexes = []
@@ -279,13 +268,11 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     var numberOfSections: Int {
         let result = trackersFetchedResultsController.sections?.count ?? .zero
-        print("ОШИБКА возвращаю число категорий для вывода в коллекцию: \(result)")
         return result
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
         let result = trackersFetchedResultsController.sections?[section].numberOfObjects ?? .zero
-        print("ОШИБКА возвращаю число элементов для вывода в секцию \(section): \(result)")
         return result
     }
     
@@ -324,8 +311,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
                 return nil
             }
             return TrackerCategory(id: id, categoryTitle: title)
-        } catch let error as NSError {
-            print("Ошибка при получении categoriesFetchedResultsController: \(error)")
+        } catch _ as NSError {
             return nil
         }
     }
@@ -351,15 +337,13 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         do {
             let categories = try context.fetch(fetchRequest)
             
-            print("ОШИБКА: вот такие категории я нашел \(categories.map{$0.title})")
             if let cat = categories.first {
                 let check = cat.isAutomatic && cat.title == AutomaticCategories.pinned.rawValue
                 return check ? L10n.pinned : cat.title
             } else {
                 return nil
             }
-        } catch let error as NSError {
-            print("Ошибка при извлечении категории: \(error)")
+        } catch _ as NSError {
             return nil
         }
     }
@@ -397,8 +381,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
                 return TrackerCategory(id: id, categoryTitle: title)
             }
             
-        } catch let error as NSError {
-            print("Ошибка при извлечении всех категорий: \(error)")
+        } catch _ as NSError {
             return []
         }
     }

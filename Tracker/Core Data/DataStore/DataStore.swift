@@ -57,8 +57,6 @@ extension DataStore: TrackersDataStore {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSUUID)
         let existingTrackers = try context.fetch(fetchRequest)
-        print("ОШИБКА Устанавливаю трекер в категорию \(category.title)")
-        // Получите новую ссылку на category из текущего контекста
         let currentContextCategory = context.object(with: category.objectID) as! CategoriesCoreData
 
         if let tracker = existingTrackers.first {
