@@ -6,4 +6,5 @@ protocol TrackersViewControllerProtocol: AnyObject {
     func hideStartingBlock()
     func showFutureDateAlert()
     func updateStartingBlockState (_ state: PRESENTER_ERRORS)
+    func showDeleteConfirmation(_ completion: @escaping  ()->())
 }

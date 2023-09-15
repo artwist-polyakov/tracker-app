@@ -414,8 +414,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         } catch let error as NSError {
             print("Ошибка при удалении трекеров категории: \(error.localizedDescription)")
         }
-        
-        
     }
     
     func editCategory(category: TrackerCategory) {

@@ -98,12 +98,21 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
             return UIMenu(title: "", children: [
                 UIAction(title: tracker.isPinned ? "Открепить" : "Закрепить") { [weak self] _ in
                     try? self?.dataProvider?.interactWithTrackerPinning(tracker)
+                },
+                UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                    self?.showDeleteConfirmation(for: indexPath)
                 }
             ])
         }
     }
-
     
+    private func showDeleteConfirmation(for indexPath: IndexPath) {
+        guard let vc = viewController else {return}
+        vc.showDeleteConfirmation() { [weak self] in
+            try? self?.dataProvider?.deleteObject(at: indexPath)
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell
         

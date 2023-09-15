@@ -221,6 +221,20 @@ extension TrackersViewController: UITextFieldDelegate {
 
 
 extension TrackersViewController: TrackersViewControllerProtocol {
+    func showDeleteConfirmation(_ completion: @escaping () -> ()) {
+        let alertController = UIAlertController(title: nil, message: "Вы уверены, что хотите удалить трекер?", preferredStyle: .actionSheet)
+
+        let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in completion()
+        }
+
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+
+        alertController.addAction(deleteAction)
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true)
+    }
+    
     
     
     func showStartingBlock() {
