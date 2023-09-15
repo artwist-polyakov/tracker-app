@@ -359,6 +359,8 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         } catch let error as NSError {
             print("Ошибка при удалении CategoriesCoreData: \(error.localizedDescription)")
         }
+        
+        checkPinnedCategory()
     }
     
     func giveMeAllCategories(filterType: CategoryFilterType) -> [TrackerCategory] {
@@ -396,11 +398,24 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
             if let categoryToDelete = fetchedCategories.first {
                 context.delete(categoryToDelete)
                 try context.save()
-                delegate?.reloadData()
             }
         } catch let error as NSError {
             print("Ошибка при удалении категории: \(error.localizedDescription)")
         }
+        
+        let trackersFetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
+        trackersFetchRequest.predicate = NSPredicate(format: "categoryId == %@", category.id as NSUUID)
+        do {
+            let fetchedTrackers = try context.fetch(trackersFetchRequest)
+            for tracker in fetchedTrackers {
+                context.delete(tracker)
+            }
+            try context.save()
+        } catch let error as NSError {
+            print("Ошибка при удалении трекеров категории: \(error.localizedDescription)")
+        }
+        
+        
     }
     
     func editCategory(category: TrackerCategory) {
