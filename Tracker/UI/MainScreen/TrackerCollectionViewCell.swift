@@ -115,16 +115,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         } else {
             functionButton.setImage(UIImage(named: "Plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
         }
-        
     }
     
     @objc
     func functionButtonTapped() {
         onFunctionButtonTapped?()
     }
-    
 }
-
 
 extension TrackerCollectionViewCell {
     func viewForContextMenu() -> UIView {
