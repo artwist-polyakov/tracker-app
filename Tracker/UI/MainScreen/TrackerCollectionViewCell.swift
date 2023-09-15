@@ -15,25 +15,25 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }()
     
     let emojiText: UITextField = {
-        let button = UITextField()
-        button.backgroundColor = UIColor(white: 1, alpha: 0)
-        button.textAlignment = .center
-        button.layer.cornerRadius = 16
-        button.text = ""
-        button.tintColor = UIColor.black
+        let label = UITextField()
+        label.backgroundColor = UIColor(white: 1, alpha: 0)
+        label.textAlignment = .center
+        label.layer.cornerRadius = 16
+        label.text = ""
+        label.tintColor = UIColor.black
         
         let backgroundView = UIView()
         backgroundView.backgroundColor = UIColor(white: 1, alpha: 0.3)
         backgroundView.layer.cornerRadius = 12
-        button.addSubview(backgroundView)
+        label.addSubview(backgroundView)
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            backgroundView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
-            backgroundView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            backgroundView.centerXAnchor.constraint(equalTo: label.centerXAnchor),
+            backgroundView.centerYAnchor.constraint(equalTo: label.centerYAnchor),
             backgroundView.widthAnchor.constraint(equalToConstant: 24),
             backgroundView.heightAnchor.constraint(equalToConstant: 24)
         ])
-        return button
+        return label
     }()
     
     let sheet: UIView = {
