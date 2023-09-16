@@ -20,7 +20,7 @@ final class CreateTrackerViewController: UIViewController {
             menuTableView.reloadData()
         }
     }
-    private var daysCount: Int = 20
+    private var daysCount: Int = 0
     // Элементы UI
     let warningLabel: UILabel = {
         let label = UILabel()
@@ -352,8 +352,23 @@ final class CreateTrackerViewController: UIViewController {
             self.selectedTrackerType = .irregularEvent
         case false:
             self.selectedTrackerType = .habit
+            tracker.isPlannedFor.forEach {
+                shedule.insert(String($0))
+            }
+        }
+        self.navigationItem.title = "Редактирование привычки"
+        trackerNameField.text = tracker.title
+        trackerNameField.textColor = UIColor(named: "TrackerBlack")
+        trackerNameField.rightViewMode = .always
+        if trackerNameField.text?.count ?? 0 <= 38 {
+            warningLabel.isHidden = true
+            delegate?.didSetTrackerTitle(trackerNameField.text ?? "")
+        } else {
+            warningLabel.isHidden = false
         }
         
+        guard let category = delegate?.giveMeCategoryById(id: tracker.categoryId) else { return }
+        self.delegate?.didSelectTrackerCategory(category)
     }
 }
 

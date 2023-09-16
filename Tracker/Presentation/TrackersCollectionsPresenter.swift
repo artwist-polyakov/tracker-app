@@ -88,6 +88,10 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
+    func giveMeCategoryById(id: UUID) -> TrackerCategory? {
+        return interactor?.giveMeCategoryById(id: id)
+    }
+    
     func giveMeSelectedDays() -> [Int] {
         return trackerSheduleToFlush.compactMap { Int(String($0)) }
     }
