@@ -15,6 +15,12 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     private var isTextFieldFocused: Bool = false
+    private var isEditScreen: Bool = false {
+        didSet {
+            menuTableView.reloadData()
+        }
+    }
+    private var daysCount: Int = 20
     // Элементы UI
     let warningLabel: UILabel = {
         let label = UILabel()
@@ -50,7 +56,6 @@ final class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -103,7 +108,6 @@ final class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
-            
             menuItems = [
                 MenuItem(title: L10n.Trackers.Create.chooseCategory, subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
                 MenuItem(title: L10n.Trackers.Create.chooseShedule, subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
@@ -118,6 +122,7 @@ final class CreateTrackerViewController: UIViewController {
         menuTableView.dataSource = self
         menuTableView.delegate = self
         menuTableView.isScrollEnabled = false
+        menuTableView.register(DaysCountLabel.self, forCellReuseIdentifier: "DaysCountLabel")
         menuTableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "MenuCell")
         menuTableView.register(IconCollectionViewCell.self, forCellReuseIdentifier: "IconCollectionViewCell")
         menuTableView.register(ColorCollectionViewCell.self, forCellReuseIdentifier: "ColorCollectionViewCell")
@@ -187,17 +192,21 @@ final class CreateTrackerViewController: UIViewController {
         ])
         
         menuTableView.backgroundColor = UIColor(named: "TrackerWhite")
-        menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+//        menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+//        menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         menuTableView.translatesAutoresizingMaskIntoConstraints = false
         menuTableView.separatorStyle = .none
         
         NSLayoutConstraint.activate([
-            menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
+            menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: isEditScreen ? 0 : 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             menuTableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16)
         ])
+    }
+    
+    private func shift() -> Int {
+        isEditScreen ? 1 : 0
     }
     
     private func configureForLocale() {
@@ -231,11 +240,11 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     func changeSheduleMenuSubtitle(){
-        menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+        menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0 + shift())], with: .automatic)
     }
     
     func changeCategoryMenuSubtitle(){
-        menuTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        menuTableView.reloadRows(at: [IndexPath(row: 0, section: 0 + shift())], with: .automatic)
     }
     
     @objc func dismissKeyboard() {
@@ -336,28 +345,36 @@ final class CreateTrackerViewController: UIViewController {
             self.title = L10n.Trackers.Category.newUnknown
         }
     }
+    
+    func configureToEditTracker(_ tracker: Tracker) {
+        switch tracker.isPlannedFor.isEmpty {
+        case true:
+            self.selectedTrackerType = .irregularEvent
+        case false:
+            self.selectedTrackerType = .habit
+        }
+        
+    }
 }
 
 // MARK: UITableViewDataSource, UITableViewDelegate
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0:
+        case 0 + shift():
             return menuItems.count
-        case 1, 2:
-            return 1
         default:
-            return 0
+            return 1
         }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section{
-        case 0:
+        case 0 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! MenuTableViewCell
             let menuItem = menuItems[indexPath.row]
             cell.titleLabel.text = menuItem.title
@@ -378,47 +395,54 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             }
             roundCornersForCell(cell, in: tableView, at: indexPath)
             return cell
-        case 1:
+        case 1 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "IconCollectionViewCell", for: indexPath) as! IconCollectionViewCell
             cell.delegate = self.delegate
             return cell
-        case 2:
+        case 2 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCollectionViewCell", for: indexPath) as! ColorCollectionViewCell
             cell.delegate = self.delegate
             return cell
-            
         default:
-            return UITableViewCell()
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DaysCountLabel", for: indexPath) as! DaysCountLabel
+            cell.configure(days: daysCount, isActive: isEditScreen)
+            return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
-            return
-        }
         menuItems[indexPath.row].action()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case .zero:
+        case 0 + shift():
             return MenuTableViewCell.cellHeight
-        case 1, 2:
+        case 1 + shift(), 2 + shift():
             var collectionCellWidth: CGFloat {
                 let width = view.frame.width
                 return ceil(width / 6)
             }
             return 3*(collectionCellWidth+2) // высота для коллекций
         default:
-            return .zero
+            return 24
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section > .zero {
+        switch section {
+        case 1 + shift(),2 + shift():
             return 12
+        default:
+            return 0
         }
-        return .zero
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        switch section {
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

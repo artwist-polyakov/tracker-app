@@ -51,6 +51,11 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         try? dataProvider?.addTracker(tracker, categoryId: categoryId, categoryTitle:categoryTitle)
     }
     
+    func editTracker(_ tracker: Tracker) {
+        try? dataProvider?.editTracker(tracker)
+    }
+    
+    
     func giveMeAnyCategory() -> TrackerCategory? {
         return dataProvider?.giveMeAnyCategory()
     }

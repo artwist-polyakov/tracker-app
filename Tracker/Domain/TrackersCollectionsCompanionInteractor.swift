@@ -40,5 +40,9 @@ final class TrackersCollectionsCompanionInteractor {
         companion?.editCategory(category: newCategory)
     }
     
+    func editTracker(saveVersion newTracker: Tracker) {
+        companion?.editTracker(newTracker)
+    }
+    
     
 }

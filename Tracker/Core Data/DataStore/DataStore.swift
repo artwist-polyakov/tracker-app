@@ -74,6 +74,34 @@ extension DataStore: TrackersDataStore {
         }
     }
     
+    func edit(_ tracker: Tracker) throws {
+        let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", tracker.id as NSUUID)
+        let existingTrackers = try context.fetch(fetchRequest)
+        
+        if let existingTracker = existingTrackers.first {
+            existingTracker.title = tracker.title
+            existingTracker.icon = Int16(tracker.icon)
+            existingTracker.color = Int16(tracker.color)
+            existingTracker.shedule = tracker.isPlannedFor
+            existingTracker.categoryId = tracker.categoryId
+            if !existingTracker.isPinned {
+                let categoryFetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
+                categoryFetchRequest.predicate = NSPredicate(format: "id == %@", tracker.categoryId as NSUUID)
+                let existingCategories = try context.fetch(categoryFetchRequest)
+                existingTracker.trackerToCategory = existingCategories.first
+            }
+            do {
+                try context.save()
+            } catch let error as NSError {
+                print("Ошибка при сохранении изменений в контексте: \(error)")
+                throw error
+            }
+        } else {
+            throw NSError(domain: "DataStoreError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Tracker not found for provided ID."])
+        }
+    }
+    
     var managedObjectContext: NSManagedObjectContext? {
         context
     }

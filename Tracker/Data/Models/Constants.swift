@@ -5,3 +5,4 @@ enum QUANTITY: Int {
 enum AutomaticCategories: String {
     case pinned = "Закрепленные трекеры"
 }
+

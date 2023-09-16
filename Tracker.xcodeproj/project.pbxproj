@@ -37,6 +37,7 @@
 		AF981B742AB0889B006023C9 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = AF981B732AB0889B006023C9 /* SnapshotTesting */; };
 		AF9B4AFC2A913DE1007EC298 /* TrackersDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFB2A913DE1007EC298 /* TrackersDataStore.swift */; };
 		AF9B4AFE2A913DEB007EC298 /* NullStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9B4AFD2A913DEB007EC298 /* NullStore.swift */; };
+		AFB9D2042AB6332C003678E1 /* DaysCountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB9D2032AB6332C003678E1 /* DaysCountLabel.swift */; };
 		AFBF95C02A938174007D4C7C /* Execution.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBF95BF2A938174007D4C7C /* Execution.swift */; };
 		AFBF95C22A93828F007D4C7C /* TrackersSearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBF95C12A93828F007D4C7C /* TrackersSearchResponse.swift */; };
 		AFCA55A42A7AB01A00D9A851 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */; };
@@ -131,6 +132,7 @@
 		AF981B6B2AB0886C006023C9 /* TrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTests.swift; sourceTree = "<group>"; };
 		AF9B4AFB2A913DE1007EC298 /* TrackersDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataStore.swift; sourceTree = "<group>"; };
 		AF9B4AFD2A913DEB007EC298 /* NullStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullStore.swift; sourceTree = "<group>"; };
+		AFB9D2032AB6332C003678E1 /* DaysCountLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysCountLabel.swift; sourceTree = "<group>"; };
 		AFBF95BF2A938174007D4C7C /* Execution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Execution.swift; sourceTree = "<group>"; };
 		AFBF95C12A93828F007D4C7C /* TrackersSearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersSearchResponse.swift; sourceTree = "<group>"; };
 		AFCA55A32A7AB01A00D9A851 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				AFCA55E82A81575C00D9A851 /* IconCell.swift */,
 				AFCA55DC2A7FE8FE00D9A851 /* CreateTrackerViewController.swift */,
 				AFCA55E42A8135BF00D9A851 /* MenuItem.swift */,
+				AFB9D2032AB6332C003678E1 /* DaysCountLabel.swift */,
 				AFCA55AB2A7C05C500D9A851 /* SupplementaryView.swift */,
 				AF0D45A72A8926A000C60143 /* Category */,
 				AF0D45A62A89269900C60143 /* Shedule */,
@@ -673,6 +676,7 @@
 				AFCA55BD2A7C34E500D9A851 /* TrackersViewControllerProtocol.swift in Sources */,
 				AF5D5B612A9546DF00498D80 /* DataStore.swift in Sources */,
 				AF5D5B3E2A93F32400498D80 /* ExecutionsRecord.swift in Sources */,
+				AFB9D2042AB6332C003678E1 /* DaysCountLabel.swift in Sources */,
 				AFCA55A62A7AB02400D9A851 /* TabBarController.swift in Sources */,
 				AFD92DF62A854BC000F36905 /* AlertModel.swift in Sources */,
 				AF31CF9E2AA989CE00C63E18 /* CategorySelectionViewModelDelegate.swift in Sources */,
