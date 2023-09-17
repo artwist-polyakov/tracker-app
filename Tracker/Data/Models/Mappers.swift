@@ -48,6 +48,11 @@ struct Mappers {
         return [pos,((pos+7)-shift)%8]
     }
     
+    static func intToDaynameMapper(_ input: Int) -> String {
+        return giveMeAllWeekdaysNames().filter ( {$0.value[0] == input} ).first?.key ?? "0"
+        
+    }
+    
     static func sortedStringOfSetWeekdays(_ weekdays: Set<String>) -> String {
         if weekdays.count == 7 {
             return L10n.Every.day
@@ -59,7 +64,7 @@ struct Mappers {
                           L10n.friday:L10n.Friday.short,
                           L10n.saturday:L10n.Saturday.short,
                           L10n.sunday:L10n.Sunday.short]
-        
+
         let allWeekdaysNames = giveMeAllWeekdaysNames()
         let sortedWeekdays = weekdays.sorted { weekday1, weekday2 in
             guard let value1 = allWeekdaysNames[weekday1.lowercased()],

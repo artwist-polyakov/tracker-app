@@ -21,6 +21,8 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     private var daysCount: Int = 0
+    private var selectedColorPath: IndexPath? = nil
+    private var selectedEmojiPath: IndexPath? = nil
     // Элементы UI
     let warningLabel: UILabel = {
         let label = UILabel()
@@ -83,7 +85,9 @@ final class CreateTrackerViewController: UIViewController {
             else { return }
             checkCreateButtonReady()
         }
+        checkCreateButtonReady()
     }
+
     
     // MARK: - UI Setup
     private func setupUI() {
@@ -141,7 +145,7 @@ final class CreateTrackerViewController: UIViewController {
         view.addSubview(cancelButton)
         
         // Настройка createButton
-        createButton.setTitle(L10n.create, for: .normal)
+        createButton.setTitle(isEditScreen ? "Сохранить" : L10n.create, for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = UIColor(named: "TrackerGray")
         createButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
@@ -252,8 +256,6 @@ final class CreateTrackerViewController: UIViewController {
         isTextFieldFocused = false
     }
     
-    
-    
     // MARK: - Actions
     private func handleSelectCategory() {
         let category = delegate?.giveMeSelectedCategory()
@@ -308,7 +310,6 @@ final class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .always
             if textField.text?.count ?? 0 <= 38 {
                 warningLabel.isHidden = true
-                delegate?.didSetTrackerTitle(textField.text ?? "")
             } else {
                 warningLabel.isHidden = false
             }
@@ -317,6 +318,7 @@ final class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .never
             warningLabel.isHidden = true
         }
+        delegate?.didSetTrackerTitle(textField.text ?? "")
     }
     
     @objc func clearTextField() {
@@ -346,17 +348,26 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     
-    func configureToEditTracker(_ tracker: Tracker) {
+    func configureToEditTracker(_ tracker: Tracker, daysDone: Int) {
+        createButton.titleLabel?.text = "Сохранить"
         switch tracker.isPlannedFor.isEmpty {
         case true:
             self.selectedTrackerType = .irregularEvent
         case false:
             self.selectedTrackerType = .habit
+            
+            var toFlush: [Int] = []
             tracker.isPlannedFor.forEach {
-                shedule.insert(String($0))
+                
+                if let number = Int(String($0)) {
+                    shedule.insert(Mappers.intToDaynameMapper(number).capitalized)
+                            toFlush.append(number)
+                        }
             }
+            self.delegate?.didSetShedulleToFlush(toFlush)
         }
-        self.navigationItem.title = "Редактирование привычки"
+        delegate?.didSelectTrackerType(self.selectedTrackerType ?? .notSet)
+        self.title = "Редактирование привычки"
         trackerNameField.text = tracker.title
         trackerNameField.textColor = UIColor(named: "TrackerBlack")
         trackerNameField.rightViewMode = .always
@@ -369,6 +380,16 @@ final class CreateTrackerViewController: UIViewController {
         
         guard let category = delegate?.giveMeCategoryById(id: tracker.categoryId) else { return }
         self.delegate?.didSelectTrackerCategory(category)
+        self.delegate?.didSetTrackerIcon(Mappers.intToIconMapper(tracker.icon))
+        self.selectedEmojiPath = IndexPath(item: tracker.icon-1, section: 0)
+        self.delegate?.didSetTrackerColorToFlush(tracker.color-1)
+        self.selectedColorPath = IndexPath(item: tracker.color-1, section: 0)
+        if tracker.isPinned {
+            self.delegate?.didSetPinned()
+        }
+        self.isEditScreen = true
+        self.daysCount = daysDone
+        self.delegate?.markToEdit(id: tracker.id)
     }
 }
 
@@ -412,10 +433,16 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             return cell
         case 1 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "IconCollectionViewCell", for: indexPath) as! IconCollectionViewCell
+            if let selected = selectedEmojiPath {
+                cell.selectedIndexPath = selected
+            }
             cell.delegate = self.delegate
             return cell
         case 2 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCollectionViewCell", for: indexPath) as! ColorCollectionViewCell
+            if let selected = selectedColorPath {
+                cell.selectedIndexPath = selected
+            }
             cell.delegate = self.delegate
             return cell
         default:

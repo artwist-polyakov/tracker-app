@@ -42,9 +42,6 @@ final class ScheduleViewController: UIViewController {
             self?.daysChecked.insert(it)
         }
         
-        
-        
-        
         setupUI()
         layoutUI()
         
@@ -53,6 +50,7 @@ final class ScheduleViewController: UIViewController {
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.register(SheduleTableViewCell.self, forCellReuseIdentifier: "MenuCell")
+        tableView.reloadData()
     }
     
     // MARK: - UI Setup
@@ -106,7 +104,6 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
             cell.separatorView.isHidden = false
         }
         roundCornersForCell(cell, in: tableView, at: indexPath)
-        
         if daysChecked.contains(content[indexPath.row]) {
             cell.switchControl.isOn = true
         } else {

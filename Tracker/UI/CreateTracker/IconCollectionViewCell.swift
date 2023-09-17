@@ -6,6 +6,11 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
     let numberOfColumns: CGFloat = 6
     var collectionView: UICollectionView
     let icons: [String] =  (1...QUANTITY.COLLECTIONS_CELLS.rawValue).compactMap { Mappers.intToIconMapper($0) }
+    var selectedIndexPath: IndexPath? = nil {
+        didSet {
+            collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         
@@ -48,6 +53,7 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "IconCell", for: indexPath) as! IconCell
         cell.cellWidth = floor((collectionView.frame.width - (numberOfColumns - 1)) / numberOfColumns)
         cell.label.text = icons[indexPath.row]
+        cell.isSelected = selectedIndexPath == indexPath
         return cell
     }
     
@@ -63,6 +69,7 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedEmoji = icons[indexPath.row]
+//        selectedIndexPath = indexPath
         delegate?.didSetTrackerIcon(selectedEmoji)
     }
     

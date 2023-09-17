@@ -133,13 +133,11 @@ final class TrackersViewController: UIViewController {
               collection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
               collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
-        
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
     }
     
-    
-    
     @objc func addButtonTapped() {
+        collectionPresenter.clearAllFlushProperties()
         let trackerTypeViewController = TrackerTypeViewController()
         trackerTypeViewController.delegate = collectionPresenter
         let navigationController = UINavigationController(rootViewController: trackerTypeViewController)
@@ -219,8 +217,17 @@ extension TrackersViewController: UITextFieldDelegate {
     }
 }
 
-
 extension TrackersViewController: TrackersViewControllerProtocol {
+    func launchEditProcess(tracker: Tracker, days: Int) {
+        collectionPresenter.clearAllFlushProperties()
+        let editVC = CreateTrackerViewController()
+        editVC.delegate = collectionPresenter
+        let navigationController = UINavigationController(rootViewController: editVC)
+        analyticsService.report(event: "edit-tapped", params: ["title":"\(tracker.title)"])
+        editVC.configureToEditTracker(tracker, daysDone: days)
+        self.present(navigationController, animated: true, completion: nil)
+    }
+    
     func showDeleteConfirmation(_ completion: @escaping () -> ()) {
         let alertController = UIAlertController(title: nil, message: "Вы уверены, что хотите удалить трекер?", preferredStyle: .actionSheet)
 
