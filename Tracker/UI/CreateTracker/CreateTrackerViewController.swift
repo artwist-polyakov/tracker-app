@@ -85,13 +85,7 @@ final class CreateTrackerViewController: UIViewController {
             else { return }
             checkCreateButtonReady()
         }
-        
-        if let indexPath = selectedColorPath {
-            colorCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
-        if let indexPath = selectedEmojiPath {
-            iconCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
+        checkCreateButtonReady()
     }
 
     
@@ -390,7 +384,7 @@ final class CreateTrackerViewController: UIViewController {
         guard let category = delegate?.giveMeCategoryById(id: tracker.categoryId) else { return }
         self.delegate?.didSelectTrackerCategory(category)
         self.delegate?.didSetTrackerIcon(Mappers.intToIconMapper(tracker.icon))
-        self.selectedEmojiPath = IndexPath(item: tracker.icon-1, section: 0)
+        self.selectedEmojiPath = IndexPath(item: tracker.icon, section: 0)
         self.delegate?.didSetTrackerColorToFlush(tracker.color-1)
         self.selectedColorPath = IndexPath(item: tracker.color-1, section: 0)
         if tracker.isPinned {
@@ -442,6 +436,10 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             return cell
         case 1 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "IconCollectionViewCell", for: indexPath) as! IconCollectionViewCell
+            if let selected = selectedEmojiPath {
+                print("ОШИБКА \(selected)")
+                cell.selectedIndexPath = selected
+            }
             cell.delegate = self.delegate
             return cell
         case 2 + shift():
