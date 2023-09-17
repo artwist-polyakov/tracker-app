@@ -229,7 +229,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         if kind == UICollectionView.elementKindSectionHeader {
             if let tracker = dataProvider?.object(at: IndexPath(item: 0, section: indexPath.section)) {
                 if let category = dataProvider?.categoryConnectedToTracker(trackerId: tracker.trackerId) {
-                    view.titleLabel.text = category.categoryTitle
+                    view.titleLabel.text = dataProvider?.categoryTitle(for: category.id)
                 }
             }
         }
