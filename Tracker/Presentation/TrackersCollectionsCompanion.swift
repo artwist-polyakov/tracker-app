@@ -101,13 +101,13 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         return UIContextMenuConfiguration(identifier: indexPath as NSIndexPath, previewProvider: nil) { suggestedActions -> UIMenu? in
             guard let tracker = self.dataProvider?.object(at: indexPath)  else {return nil}
             return UIMenu(title: "", children: [
-                UIAction(title: tracker.isPinned ? "Открепить" : "Закрепить") { [weak self] _ in
+                UIAction(title: tracker.isPinned ? L10n.unpin : L10n.pin) { [weak self] _ in
                     try? self?.dataProvider?.interactWithTrackerPinning(tracker)
                 },
-                UIAction(title: "Редактировать") { [weak self] _ in
+                UIAction(title: L10n.edit) { [weak self] _ in
                     self?.showEditVC(for: indexPath)
                 },
-                UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                UIAction(title: L10n.delete, attributes: .destructive) { [weak self] _ in
                     self?.showDeleteConfirmation(for: indexPath)
                 }
             ])

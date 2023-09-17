@@ -229,12 +229,12 @@ extension TrackersViewController: TrackersViewControllerProtocol {
     }
     
     func showDeleteConfirmation(_ completion: @escaping () -> ()) {
-        let alertController = UIAlertController(title: nil, message: "Вы уверены, что хотите удалить трекер?", preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: nil, message: L10n.Delete.confirmation, preferredStyle: .actionSheet)
 
-        let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in completion()
+        let deleteAction = UIAlertAction(title: L10n.Delete.this, style: .destructive) { _ in completion()
         }
 
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        let cancelAction = UIAlertAction(title: L10n.cancel, style: .cancel)
 
         alertController.addAction(deleteAction)
         alertController.addAction(cancelAction)

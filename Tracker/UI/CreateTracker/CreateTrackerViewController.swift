@@ -145,7 +145,7 @@ final class CreateTrackerViewController: UIViewController {
         view.addSubview(cancelButton)
         
         // Настройка createButton
-        createButton.setTitle(isEditScreen ? "Сохранить" : L10n.create, for: .normal)
+        createButton.setTitle(isEditScreen ? L10n.save : L10n.create, for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = UIColor(named: "TrackerGray")
         createButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
@@ -349,7 +349,7 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     func configureToEditTracker(_ tracker: Tracker, daysDone: Int) {
-        createButton.titleLabel?.text = "Сохранить"
+        createButton.titleLabel?.text = L10n.save
         switch tracker.isPlannedFor.isEmpty {
         case true:
             self.selectedTrackerType = .irregularEvent
@@ -367,7 +367,7 @@ final class CreateTrackerViewController: UIViewController {
             self.delegate?.didSetShedulleToFlush(toFlush)
         }
         delegate?.didSelectTrackerType(self.selectedTrackerType ?? .notSet)
-        self.title = "Редактирование привычки"
+        self.title = L10n.Habit.editing
         trackerNameField.text = tracker.title
         trackerNameField.textColor = UIColor(named: "TrackerBlack")
         trackerNameField.rightViewMode = .always

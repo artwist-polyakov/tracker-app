@@ -220,7 +220,7 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
-            let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
+            let editAction = UIAction(title: L10n.edit, image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
                 self.viewModel.handleNavigation(action: .edit(pos: indexPath.row))
             }
             

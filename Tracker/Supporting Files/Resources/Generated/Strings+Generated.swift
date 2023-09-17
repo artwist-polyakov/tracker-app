@@ -20,16 +20,22 @@ internal enum L10n {
   }
   /// Delete
   internal static let delete = L10n.tr("Localizable", "delete", fallback: "Delete")
+  /// Edit
+  internal static let edit = L10n.tr("Localizable", "edit", fallback: "Edit")
   /// Friday
   internal static let friday = L10n.tr("Localizable", "friday", fallback: "Friday")
   /// Monday
   internal static let monday = L10n.tr("Localizable", "monday", fallback: "Monday")
+  /// Pin
+  internal static let pin = L10n.tr("Localizable", "pin", fallback: "Pin")
   /// Pinned
   internal static let pinned = L10n.tr("Localizable", "pinned", fallback: "Pinned")
   /// Ready
   internal static let ready = L10n.tr("Localizable", "ready", fallback: "Ready")
   /// Saturday
   internal static let saturday = L10n.tr("Localizable", "saturday", fallback: "Saturday")
+  /// Save
+  internal static let save = L10n.tr("Localizable", "save", fallback: "Save")
   /// Search
   internal static let search = L10n.tr("Localizable", "search", fallback: "Search")
   /// Sorry!
@@ -44,6 +50,8 @@ internal enum L10n {
   internal static let trackers = L10n.tr("Localizable", "trackers", fallback: "Trackers")
   /// Tuesday
   internal static let tuesday = L10n.tr("Localizable", "tuesday", fallback: "Tuesday")
+  /// Unpin
+  internal static let unpin = L10n.tr("Localizable", "unpin", fallback: "Unpin")
   /// Wednesday
   internal static let wednesday = L10n.tr("Localizable", "wednesday", fallback: "Wednesday")
   internal enum Clear {
@@ -79,6 +87,10 @@ internal enum L10n {
   internal enum Friday {
     /// Fri
     internal static let short = L10n.tr("Localizable", "friday.short", fallback: "Fri")
+  }
+  internal enum Habit {
+    /// Habit editing
+    internal static let editing = L10n.tr("Localizable", "habit.editing", fallback: "Habit editing")
   }
   internal enum Monday {
     /// Mon
