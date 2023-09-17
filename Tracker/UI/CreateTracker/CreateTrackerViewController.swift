@@ -310,7 +310,6 @@ final class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .always
             if textField.text?.count ?? 0 <= 38 {
                 warningLabel.isHidden = true
-                delegate?.didSetTrackerTitle(textField.text ?? "")
             } else {
                 warningLabel.isHidden = false
             }
@@ -319,6 +318,7 @@ final class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .never
             warningLabel.isHidden = true
         }
+        delegate?.didSetTrackerTitle(textField.text ?? "")
     }
     
     @objc func clearTextField() {

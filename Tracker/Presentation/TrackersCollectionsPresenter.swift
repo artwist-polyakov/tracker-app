@@ -201,12 +201,13 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func isReadyToFlush() -> Bool {
-        if trackerTypeToFlush == .notSet {
+        guard let trackerTitleToFlush = trackerTitleToFlush else { return false }
+        if trackerTypeToFlush == .notSet || trackerTitleToFlush.isEmpty {
             return false
         } else if trackerTypeToFlush == .irregularEvent {
-            return trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerColorToFlush != nil
+            return trackerIconToFlush != nil && trackerColorToFlush != nil
         } else {
-            return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != "" && trackerColorToFlush != nil
+            return trackerTypeToFlush != .notSet && trackerIconToFlush != nil && trackerSheduleToFlush != "" && trackerColorToFlush != nil
         }
     }
     
