@@ -202,6 +202,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     
     func isReadyToFlush() -> Bool {
         if trackerTypeToFlush == .notSet {
+            print("ОШИБКА не выбран тип трекера")
             return false
         } else if trackerTypeToFlush == .irregularEvent {
             return trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerColorToFlush != nil
@@ -209,7 +210,6 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
             return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != "" && trackerColorToFlush != nil
         }
     }
-    
     
     private func notifyObservers(){
         if isReadyToFlush() {
@@ -225,3 +225,4 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         }
     }
 }
+
