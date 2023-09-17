@@ -41,6 +41,7 @@ final class IconCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
+            print("ОШИБКА я ячейка у меня isSelected = \(isSelected)")
             self.contentView.backgroundColor = isSelected ? UIColor(named: "TrackerLightgray") : .clear
         }
     }

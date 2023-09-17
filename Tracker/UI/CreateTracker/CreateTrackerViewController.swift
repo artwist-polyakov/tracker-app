@@ -145,7 +145,7 @@ final class CreateTrackerViewController: UIViewController {
         view.addSubview(cancelButton)
         
         // Настройка createButton
-        createButton.setTitle(L10n.create, for: .normal)
+        createButton.setTitle(isEditScreen ? "Сохранить" : L10n.create, for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = UIColor(named: "TrackerGray")
         createButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
@@ -363,14 +363,14 @@ final class CreateTrackerViewController: UIViewController {
             tracker.isPlannedFor.forEach {
                 
                 if let number = Int(String($0)) {
-                            shedule.insert(Mappers.intToDaynameMapper(number))
+                    shedule.insert(Mappers.intToDaynameMapper(number).capitalized)
                             toFlush.append(number)
                         }
             }
             self.delegate?.didSetShedulleToFlush(toFlush)
         }
         delegate?.didSelectTrackerType(self.selectedTrackerType ?? .notSet)
-        self.navigationItem.title = "Редактирование привычки"
+        self.title = "Редактирование привычки"
         trackerNameField.text = tracker.title
         trackerNameField.textColor = UIColor(named: "TrackerBlack")
         trackerNameField.rightViewMode = .always
@@ -384,7 +384,7 @@ final class CreateTrackerViewController: UIViewController {
         guard let category = delegate?.giveMeCategoryById(id: tracker.categoryId) else { return }
         self.delegate?.didSelectTrackerCategory(category)
         self.delegate?.didSetTrackerIcon(Mappers.intToIconMapper(tracker.icon))
-        self.selectedEmojiPath = IndexPath(item: tracker.icon, section: 0)
+        self.selectedEmojiPath = IndexPath(item: tracker.icon-1, section: 0)
         self.delegate?.didSetTrackerColorToFlush(tracker.color-1)
         self.selectedColorPath = IndexPath(item: tracker.color-1, section: 0)
         if tracker.isPinned {

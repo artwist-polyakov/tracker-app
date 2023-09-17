@@ -8,7 +8,8 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
     let icons: [String] =  (1...QUANTITY.COLLECTIONS_CELLS.rawValue).compactMap { Mappers.intToIconMapper($0) }
     var selectedIndexPath: IndexPath? = nil {
         didSet {
-            collectionView.reloadData()
+            collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+//            collectionView.reloadData()
         }
     }
     
@@ -72,7 +73,7 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedEmoji = icons[indexPath.row]
-        selectedIndexPath = indexPath
+//        selectedIndexPath = indexPath
         delegate?.didSetTrackerIcon(selectedEmoji)
     }
     
