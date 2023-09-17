@@ -168,9 +168,6 @@ extension DataStore: TrackersDataStore {
         return count ?? .zero > .zero
     }
     
-    
-    
-    
     func delete(_ record: NSManagedObject) throws {
         try performSync { context in
             Result {
@@ -187,7 +184,7 @@ extension DataStore: CategoriesDataStore {
             Result {
                 let categoriesCoreData = CategoriesCoreData(context: context)
                 categoriesCoreData.title = record.categoryTitle
-                categoriesCoreData.creationDate = Date()
+                categoriesCoreData.creationDate = isAutomatic ? Date(timeIntervalSince1970: 0) : Date()
                 categoriesCoreData.id = record.id
                 categoriesCoreData.isAutomatic = isAutomatic
                 try context.save()
