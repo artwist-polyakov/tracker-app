@@ -11,6 +11,8 @@ final class CreateTrackerViewController: UIViewController {
     var shedule: Set<String> = []
     var selectedTrackerType: TrackerType? {
         didSet {
+            print("ОШИБКА Tracker type is \(selectedTrackerType ?? .notSet)")
+            
             configureForSelectedType()
         }
     }
@@ -61,7 +63,9 @@ final class CreateTrackerViewController: UIViewController {
         print("ОШИБКА я в экране создания трекера перед setupUI")
         setupUI()
         print("ОШИБКА я в экране создания трекера после setupUI")
-        layoutUI()
+        if view != nil {
+            layoutUI()
+        }
         print("ОШИБКА я в экране создания трекера после layoutUI")
         menuTableView.reloadData()
         self.view.layoutIfNeeded()
@@ -90,6 +94,12 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.clearAllFlushProperties()
+    }
+
+    
     // MARK: - UI Setup
     private func setupUI() {
         // Настройка UITextField
@@ -113,6 +123,8 @@ final class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
+            print("ОШИБКА shedule = \(shedule)")
+            print("ОШИБКА \(Mappers.sortedStringOfSetWeekdays(shedule))")
             menuItems = [
                 MenuItem(title: L10n.Trackers.Create.chooseCategory, subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
                 MenuItem(title: L10n.Trackers.Create.chooseShedule, subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
@@ -366,8 +378,9 @@ final class CreateTrackerViewController: UIViewController {
             self.selectedTrackerType = .habit
             var toFlush: [Int] = []
             tracker.isPlannedFor.forEach {
-                shedule.insert(String($0))
+                
                 if let number = Int(String($0)) {
+                            shedule.insert(Mappers.intToDaynameMapper(number))
                             toFlush.append(number)
                         }
             }

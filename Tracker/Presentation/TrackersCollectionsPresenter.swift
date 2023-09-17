@@ -151,6 +151,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func clearAllFlushProperties() {
+        print("ОШИБКА я очищаю всё")
         trackerTypeToFlush = .notSet
         trackerTitleToFlush = nil
         trackerIconToFlush = nil
@@ -221,6 +222,4 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
                 userInfo: ["GO": false ])
         }
     }
-    
-    
 }

@@ -35,10 +35,12 @@ final class ScheduleViewController: UIViewController {
         self.navigationItem.hidesBackButton = true
         self.title = L10n.Trackers.shedule
         completionTurnOff = { [weak self] it in
+            print("ОШИБКА \(it)")
             self?.daysChecked.remove(it)
         }
         
         completionTurnOn = { [weak self] it in
+            print("ОШИБКА \(it)")
             self?.daysChecked.insert(it)
         }
         

@@ -226,6 +226,7 @@ extension TrackersViewController: TrackersViewControllerProtocol {
         editVC.delegate = collectionPresenter
         let navigationController = UINavigationController(rootViewController: editVC)
         analyticsService.report(event: "edit-tapped", params: ["title":"\(tracker.title)"])
+        editVC.configureToEditTracker(tracker, daysDone: days)
         self.present(navigationController, animated: true, completion: nil)
     }
     
