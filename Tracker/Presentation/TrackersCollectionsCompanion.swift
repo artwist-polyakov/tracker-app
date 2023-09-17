@@ -141,7 +141,8 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         guard let vc = viewController,
               let obj = self.dataProvider?.object(at: indexPath)
         else {return}
-        let tracker = Tracker(categoryId: obj.categoryId,
+        let tracker = Tracker(id: obj.trackerId,
+                              categoryId: obj.categoryId,
                               color: obj.color,
                               title: obj.title,
                               icon: obj.icon,

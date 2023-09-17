@@ -11,8 +11,6 @@ final class CreateTrackerViewController: UIViewController {
     var shedule: Set<String> = []
     var selectedTrackerType: TrackerType? {
         didSet {
-            print("ОШИБКА Tracker type is \(selectedTrackerType ?? .notSet)")
-            
             configureForSelectedType()
         }
     }
@@ -60,13 +58,8 @@ final class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-        print("ОШИБКА я в экране создания трекера перед setupUI")
         setupUI()
-        print("ОШИБКА я в экране создания трекера после setupUI")
-        if view != nil {
-            layoutUI()
-        }
-        print("ОШИБКА я в экране создания трекера после layoutUI")
+        layoutUI()
         menuTableView.reloadData()
         self.view.layoutIfNeeded()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -92,11 +85,13 @@ final class CreateTrackerViewController: UIViewController {
             else { return }
             checkCreateButtonReady()
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        delegate?.clearAllFlushProperties()
+        
+        if let indexPath = selectedColorPath {
+            colorCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
+        if let indexPath = selectedEmojiPath {
+            iconCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
     }
 
     
@@ -123,8 +118,6 @@ final class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
-            print("ОШИБКА shedule = \(shedule)")
-            print("ОШИБКА \(Mappers.sortedStringOfSetWeekdays(shedule))")
             menuItems = [
                 MenuItem(title: L10n.Trackers.Create.chooseCategory, subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
                 MenuItem(title: L10n.Trackers.Create.chooseShedule, subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
@@ -165,13 +158,6 @@ final class CreateTrackerViewController: UIViewController {
         createButton.layer.cornerRadius = 16
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         view.addSubview(createButton)
-        
-        if let indexPath = selectedColorPath {
-            colorCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
-        if let indexPath = selectedEmojiPath {
-            iconCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        }
     }
     
     // MARK: - Layout
@@ -371,11 +357,14 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     func configureToEditTracker(_ tracker: Tracker, daysDone: Int) {
+        print("ОШИБКА - конфигурирую для редактирования")
+        createButton.titleLabel?.text = "Сохранить"
         switch tracker.isPlannedFor.isEmpty {
         case true:
             self.selectedTrackerType = .irregularEvent
         case false:
             self.selectedTrackerType = .habit
+            
             var toFlush: [Int] = []
             tracker.isPlannedFor.forEach {
                 
@@ -386,6 +375,7 @@ final class CreateTrackerViewController: UIViewController {
             }
             self.delegate?.didSetShedulleToFlush(toFlush)
         }
+        delegate?.didSelectTrackerType(self.selectedTrackerType ?? .notSet)
         self.navigationItem.title = "Редактирование привычки"
         trackerNameField.text = tracker.title
         trackerNameField.textColor = UIColor(named: "TrackerBlack")
@@ -400,14 +390,15 @@ final class CreateTrackerViewController: UIViewController {
         guard let category = delegate?.giveMeCategoryById(id: tracker.categoryId) else { return }
         self.delegate?.didSelectTrackerCategory(category)
         self.delegate?.didSetTrackerIcon(Mappers.intToIconMapper(tracker.icon))
-        self.selectedEmojiPath = IndexPath(item: tracker.icon, section: 0)
-        self.delegate?.didSetTrackerColorToFlush(tracker.color)
-        self.selectedColorPath = IndexPath(item: tracker.color, section: 0)
+        self.selectedEmojiPath = IndexPath(item: tracker.icon-1, section: 0)
+        self.delegate?.didSetTrackerColorToFlush(tracker.color-1)
+        self.selectedColorPath = IndexPath(item: tracker.color-1, section: 0)
         if tracker.isPinned {
             self.delegate?.didSetPinned()
         }
+        self.isEditScreen = true
         self.daysCount = daysDone
-        self.delegate?.markToEdit()
+        self.delegate?.markToEdit(id: tracker.id)
     }
 }
 

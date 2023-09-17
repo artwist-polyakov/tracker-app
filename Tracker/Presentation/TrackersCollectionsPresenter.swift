@@ -61,7 +61,7 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
     }
     var trackerIsPinnedToFlush: Bool = false
     var isEditing: Bool = false
-    
+    var editingId: UUID? = nil
     
     var trackerColorToFlush: Int? {
         didSet {
@@ -94,8 +94,9 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         self.trackerIsPinnedToFlush = true
     }
     
-    func markToEdit() {
+    func markToEdit(id: UUID) {
         self.isEditing = true
+        editingId = id
     }
     
     func giveMeCategoryById(id: UUID) -> TrackerCategory? {
@@ -151,7 +152,6 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func clearAllFlushProperties() {
-        print("ОШИБКА я очищаю всё")
         trackerTypeToFlush = .notSet
         trackerTitleToFlush = nil
         trackerIconToFlush = nil
@@ -160,6 +160,7 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerCategoryToFlush = nil
         trackerCategorynameToFlush = nil
         isEditing = false
+        editingId = nil
         trackerIsPinnedToFlush = false
     }
     
@@ -178,7 +179,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
             icon: Mappers.iconToIntMapper(trackerIcon),
             plannedDaysOfWeek: trackerSheduleToFlush)
         
-        let tracker = Tracker(categoryId: trackseCategory,
+        let tracker = Tracker(id: editingId ?? UUID(),
+                              categoryId: trackseCategory,
                               color: trackerColor,
                               title: trackerTitle,
                               icon: Mappers.iconToIntMapper(trackerIcon),

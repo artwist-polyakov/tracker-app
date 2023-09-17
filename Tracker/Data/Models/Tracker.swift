@@ -23,4 +23,20 @@ struct Tracker {
         self.isPlannedFor = isPlannedFor
         self.isPinned = isPinned
     }
+    
+    init(id: UUID,
+           categoryId: UUID,
+           color: Int,
+           title: String,
+           icon: Int,
+           isPlannedFor: String,
+           isPinned: Bool) {
+          self.id = id
+          self.categoryId = categoryId
+          self.color = color
+          self.title = title
+          self.icon = icon
+          self.isPlannedFor = isPlannedFor
+          self.isPinned = isPinned
+      }
 }
