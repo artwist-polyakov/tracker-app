@@ -9,10 +9,8 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
     var selectedIndexPath: IndexPath? = nil {
         didSet {
             collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
-//            collectionView.reloadData()
         }
     }
-    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         
@@ -56,8 +54,6 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
         cell.cellWidth = floor((collectionView.frame.width - (numberOfColumns - 1)) / numberOfColumns)
         cell.label.text = icons[indexPath.row]
         cell.isSelected = selectedIndexPath == indexPath
-        guard let selectedIndexPath = selectedIndexPath else { return cell }
-        print("ОШИБКА генерирую ячейку для адреса \(indexPath), записано значение selectedIndexPath = \(selectedIndexPath), значение ячейки \(cell.isSelected) ")
         return cell
     }
     

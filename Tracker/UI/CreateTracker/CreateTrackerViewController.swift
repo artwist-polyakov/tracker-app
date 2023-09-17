@@ -256,8 +256,6 @@ final class CreateTrackerViewController: UIViewController {
         isTextFieldFocused = false
     }
     
-    
-    
     // MARK: - Actions
     private func handleSelectCategory() {
         let category = delegate?.giveMeSelectedCategory()
@@ -351,7 +349,6 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     func configureToEditTracker(_ tracker: Tracker, daysDone: Int) {
-        print("ОШИБКА - конфигурирую для редактирования")
         createButton.titleLabel?.text = "Сохранить"
         switch tracker.isPlannedFor.isEmpty {
         case true:
@@ -437,13 +434,15 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
         case 1 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "IconCollectionViewCell", for: indexPath) as! IconCollectionViewCell
             if let selected = selectedEmojiPath {
-                print("ОШИБКА \(selected)")
                 cell.selectedIndexPath = selected
             }
             cell.delegate = self.delegate
             return cell
         case 2 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCollectionViewCell", for: indexPath) as! ColorCollectionViewCell
+            if let selected = selectedColorPath {
+                cell.selectedIndexPath = selected
+            }
             cell.delegate = self.delegate
             return cell
         default:
