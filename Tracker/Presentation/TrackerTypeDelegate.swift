@@ -14,6 +14,8 @@ protocol TrackerTypeDelegate: AnyObject {
     func giveMeSelectedDays() -> [Int]
     func isReadyToFlush() -> Bool
     func giveMeCategoryById(id: UUID) -> TrackerCategory?
+    func markToEdit()
+    func didSetPinned()
 }
 
 enum TrackerType {

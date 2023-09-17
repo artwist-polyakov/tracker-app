@@ -59,7 +59,9 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             notifyObservers()
         }
     }
-    let trackerIsPinnedToFlush: Bool = false
+    var trackerIsPinnedToFlush: Bool = false
+    var isEditing: Bool = false
+    
     
     var trackerColorToFlush: Int? {
         didSet {
@@ -88,6 +90,14 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
+    func didSetPinned() {
+        self.trackerIsPinnedToFlush = true
+    }
+    
+    func markToEdit() {
+        self.isEditing = true
+    }
+    
     func giveMeCategoryById(id: UUID) -> TrackerCategory? {
         return interactor?.giveMeCategoryById(id: id)
     }
@@ -148,6 +158,8 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerColorToFlush = nil
         trackerCategoryToFlush = nil
         trackerCategorynameToFlush = nil
+        isEditing = false
+        trackerIsPinnedToFlush = false
     }
     
     func realizeAllFlushProperties() {
@@ -172,7 +184,11 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
                               isPlannedFor: trackerSheduleToFlush,
                               isPinned: trackerIsPinnedToFlush)
         
-        interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
+        if isEditing {
+            interactor?.editTracker(saveVersion: tracker)
+        } else {
+            interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
+        }
         
         clearAllFlushProperties()
         guard let vc = viewController,

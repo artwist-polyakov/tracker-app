@@ -7,4 +7,5 @@ protocol TrackersViewControllerProtocol: AnyObject {
     func showFutureDateAlert()
     func updateStartingBlockState (_ state: PRESENTER_ERRORS)
     func showDeleteConfirmation(_ completion: @escaping  ()->())
+    func launchEditProcess (tracker: Tracker, days: Int)
 }

@@ -104,6 +104,9 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
                 UIAction(title: tracker.isPinned ? "Открепить" : "Закрепить") { [weak self] _ in
                     try? self?.dataProvider?.interactWithTrackerPinning(tracker)
                 },
+                UIAction(title: "Редактировать") { [weak self] _ in
+                    self?.showEditVC(for: indexPath)
+                },
                 UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
                     self?.showDeleteConfirmation(for: indexPath)
                 }
@@ -133,6 +136,21 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
             try? self?.dataProvider?.deleteObject(at: indexPath)
         }
     }
+    
+    private func showEditVC(for indexPath: IndexPath) {
+        guard let vc = viewController,
+              let obj = self.dataProvider?.object(at: indexPath)
+        else {return}
+        let tracker = Tracker(categoryId: obj.categoryId,
+                              color: obj.color,
+                              title: obj.title,
+                              icon: obj.icon,
+                              isPlannedFor: obj.shedule,
+                              isPinned: obj.isPinned)
+        let days = obj.daysDone
+        vc.launchEditProcess(tracker: tracker, days: days)
+    }
+
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! TrackerCollectionViewCell

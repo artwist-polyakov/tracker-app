@@ -21,6 +21,8 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     private var daysCount: Int = 0
+    private var selectedColorPath: IndexPath? = nil
+    private var selectedEmojiPath: IndexPath? = nil
     // Элементы UI
     let warningLabel: UILabel = {
         let label = UILabel()
@@ -56,8 +58,11 @@ final class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
+        print("ОШИБКА я в экране создания трекера перед setupUI")
         setupUI()
+        print("ОШИБКА я в экране создания трекера после setupUI")
         layoutUI()
+        print("ОШИБКА я в экране создания трекера после layoutUI")
         menuTableView.reloadData()
         self.view.layoutIfNeeded()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -148,6 +153,13 @@ final class CreateTrackerViewController: UIViewController {
         createButton.layer.cornerRadius = 16
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         view.addSubview(createButton)
+        
+        if let indexPath = selectedColorPath {
+            colorCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
+        if let indexPath = selectedEmojiPath {
+            iconCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
     }
     
     // MARK: - Layout
@@ -346,15 +358,20 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     
-    func configureToEditTracker(_ tracker: Tracker) {
+    func configureToEditTracker(_ tracker: Tracker, daysDone: Int) {
         switch tracker.isPlannedFor.isEmpty {
         case true:
             self.selectedTrackerType = .irregularEvent
         case false:
             self.selectedTrackerType = .habit
+            var toFlush: [Int] = []
             tracker.isPlannedFor.forEach {
                 shedule.insert(String($0))
+                if let number = Int(String($0)) {
+                            toFlush.append(number)
+                        }
             }
+            self.delegate?.didSetShedulleToFlush(toFlush)
         }
         self.navigationItem.title = "Редактирование привычки"
         trackerNameField.text = tracker.title
@@ -369,6 +386,15 @@ final class CreateTrackerViewController: UIViewController {
         
         guard let category = delegate?.giveMeCategoryById(id: tracker.categoryId) else { return }
         self.delegate?.didSelectTrackerCategory(category)
+        self.delegate?.didSetTrackerIcon(Mappers.intToIconMapper(tracker.icon))
+        self.selectedEmojiPath = IndexPath(item: tracker.icon, section: 0)
+        self.delegate?.didSetTrackerColorToFlush(tracker.color)
+        self.selectedColorPath = IndexPath(item: tracker.color, section: 0)
+        if tracker.isPinned {
+            self.delegate?.didSetPinned()
+        }
+        self.daysCount = daysDone
+        self.delegate?.markToEdit()
     }
 }
 

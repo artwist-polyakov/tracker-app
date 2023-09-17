@@ -221,6 +221,14 @@ extension TrackersViewController: UITextFieldDelegate {
 
 
 extension TrackersViewController: TrackersViewControllerProtocol {
+    func launchEditProcess(tracker: Tracker, days: Int) {
+        let editVC = CreateTrackerViewController()
+        editVC.delegate = collectionPresenter
+        let navigationController = UINavigationController(rootViewController: editVC)
+        analyticsService.report(event: "edit-tapped", params: ["title":"\(tracker.title)"])
+        self.present(navigationController, animated: true, completion: nil)
+    }
+    
     func showDeleteConfirmation(_ completion: @escaping () -> ()) {
         let alertController = UIAlertController(title: nil, message: "Вы уверены, что хотите удалить трекер?", preferredStyle: .actionSheet)
 
