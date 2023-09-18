@@ -26,10 +26,20 @@ final class DataStore {
         do {
             container = try NSPersistentContainer.load(name: modelName, model: model, url: storeURL)
             context = container.newBackgroundContext()
+//
+//            let fetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
+//            let executions = try context.fetch(fetchRequest)
+//            print("----- Все выполнения (Executions) -----")
+//            for execution in executions {
+//                print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
+//            }
+            
         } catch let error as NSError {
             print("Произошла ошибка при инициализации dataStore: \(error.localizedDescription)")
             throw StoreError.failedToLoadPersistentContainer(error)
         }
+        
+        
     }
     
     private func performSync<R>(_ action: (NSManagedObjectContext) -> Result<R, Error>) throws -> R {

@@ -261,7 +261,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
 
         case .uncompletedTrackers:
             print(selectedDate.date)
-            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, NONE $tracker.trackerToExecutions.date == %@).@count = 0", Date() as NSDate)
+            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, ANY $tracker.trackerToExecutions.date == %@).@count = 0", Date() as NSDate)
         }
     }
     
@@ -287,18 +287,19 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                #keyPath(TrackersCoreData.shedule), String(SimpleDate(date:Date()).weekDayNum),
                                #keyPath(TrackersCoreData.shedule))
         case .completedTrackers:
-            print(selectedDate.date)
-            return NSPredicate(format: "ANY %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), Date() as NSDate)
+            return NSPredicate(format: "SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count > 0", Date() as NSDate)
+
 
         case .uncompletedTrackers:
-            print(selectedDate.date)
-            return NSPredicate(format: "NONE %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), Date() as NSDate)
+            return NSPredicate(format: "SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count = 0", Date() as NSDate)
         }
     }
     
     private func reloadData() {
         categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate(kind: currentPredicateType)
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
+        print("Обновил предикаты \(trackersFetchedResultsController.fetchRequest.predicate)")
+        print(categoriesFetchedResultsController.fetchRequest.predicate)
         do {
             try categoriesFetchedResultsController.performFetch()
         } catch let error as NSError  {
