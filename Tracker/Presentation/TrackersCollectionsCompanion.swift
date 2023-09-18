@@ -38,7 +38,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         }
     }
     
-    private var selectedPredicate: TrackerPredicateType? = nil
+    private var selectedPredicate: TrackerPredicateType = .defaultPredicate
     
     weak var viewController: TrackersViewControllerProtocol?
     
@@ -96,6 +96,11 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         selectedPredicate = predicate
         dataProvider?.setPredicate(predicate: predicate)
     }
+    
+    func getCurrentPredicate() -> TrackerPredicateType {
+        return selectedPredicate
+    }
+    
     
     
     // MARK: - UICollectionViewDataSource

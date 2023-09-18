@@ -254,10 +254,12 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                String(SimpleDate(date:Date()).weekDayNum))
 
         case .completedTrackers:
-            return NSPredicate(format: "ANY categoryToTrackers.trackerToExecutions.date == %@", selectedDate.date as NSDate)
+            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, ANY $tracker.trackerToExecutions.date == %@).@count > 0", selectedDate.date as NSDate)
 
         case .uncompletedTrackers:
-            return NSPredicate(format: "NOT (ANY categoryToTrackers.trackerToExecutions.date == %@)", selectedDate.date as NSDate)
+            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, NONE $tracker.trackerToExecutions.date == %@).@count == 0", selectedDate.date as NSDate)
+
+
         }
     }
 

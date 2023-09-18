@@ -117,8 +117,6 @@ final class TrackersViewController: UIViewController {
             
         ])
         
-        
-        
         view.addSubview(voidImage)
         voidImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -153,6 +151,9 @@ final class TrackersViewController: UIViewController {
             filterButton.heightAnchor.constraint(equalToConstant: 50),
             filterButton.widthAnchor.constraint(equalToConstant: 114)
         ])
+        
+        filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+        
     }
     
     @objc func addButtonTapped() {
@@ -184,6 +185,13 @@ final class TrackersViewController: UIViewController {
         }
     }
     
+    @objc func filterButtonTapped () {
+        let currentPredicate = collectionCompanion?.getCurrentPredicate()
+        let filterViewController = FiltersTrackerViewController(filterSelected: currentPredicate)
+        filterViewController.delegate = self
+        let navigationController = UINavigationController(rootViewController: filterViewController)
+        self.present(navigationController, animated: true, completion: nil)
+    }
     
     func setupButtons() {
         addBarButtonItem = {
@@ -196,6 +204,9 @@ final class TrackersViewController: UIViewController {
             barButtonItem.tintColor = UIColor (named: "TrackerBlack")
             return barButtonItem
         }()
+        
+        
+        
     }
     
     func showFutureDateAlert() {
