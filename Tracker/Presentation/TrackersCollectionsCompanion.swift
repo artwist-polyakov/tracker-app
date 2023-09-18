@@ -272,17 +272,20 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.performBatchUpdates {
+            print("ОШИБКА update: \(update)")
+            
             cv.deleteSections(update.deletedSections)
             cv.insertSections(update.insertedSections)
             cv.reloadSections(update.updatedSections)
 
             cv.deleteItems(at: update.deletedIndexes)
             cv.insertItems(at: update.insertedIndexes)
-            cv.reloadItems(at: update.updatedIndexes)
             
             for move in update.movedIndexes {
                 cv.moveItem(at: move.from, to: move.to)
             }
+            
+            cv.reloadItems(at: update.updatedIndexes)
         } completion: { _ in
             let count = self.dataProvider?.numberOfSections ?? .zero
             self.delegate?.quantityTernar(count)

@@ -257,10 +257,12 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                String(SimpleDate(date:Date()).weekDayNum))
 
         case .completedTrackers:
-            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, ANY $tracker.trackerToExecutions.date == %@).@count > 0", selectedDate.date as NSDate)
+            print(selectedDate.date)
+            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, ANY $tracker.trackerToExecutions.date == %@).@count > 0", Date() as NSDate)
 
         case .uncompletedTrackers:
-            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, NONE $tracker.trackerToExecutions.date == %@).@count > 0", selectedDate.date as NSDate)
+            print(selectedDate.date)
+            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, NONE $tracker.trackerToExecutions.date == %@).@count = 0", Date() as NSDate)
         }
     }
     
@@ -286,9 +288,12 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                #keyPath(TrackersCoreData.shedule), String(SimpleDate(date:Date()).weekDayNum),
                                #keyPath(TrackersCoreData.shedule))
         case .completedTrackers:
-            return NSPredicate(format: "ANY %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
+            print(selectedDate.date)
+            return NSPredicate(format: "ANY %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), Date() as NSDate)
+
         case .uncompletedTrackers:
-            return NSPredicate(format: "NONE %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
+            print(selectedDate.date)
+            return NSPredicate(format: "NONE %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), Date() as NSDate)
         }
     }
     
