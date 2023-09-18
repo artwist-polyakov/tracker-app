@@ -55,6 +55,7 @@ protocol TrackersDataProviderProtocol {
     func checkPinnedCategory()
     func interactWithTrackerPinning(_ tracker: TrackersRecord) throws
     func categoryConnectedToTracker(trackerId: UUID) -> TrackerCategory?
+    func setPredicate(predicate: TrackerPredicateType)
 }
 
 extension TrackersDataProviderProtocol {
@@ -234,15 +235,32 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         
     }
     
-    private func giveCategoriesPredicate() -> NSPredicate {
-        if typedText.isEmpty {
+    private func giveCategoriesPredicate(kind: TrackerPredicateType = .defaultPredicate) -> NSPredicate {
+        switch kind {
+        case .defaultPredicate:
+            if typedText.isEmpty {
+                return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
+                                   String(selectedDate.weekDayNum))
+            } else {
+                return NSPredicate(format: "((ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')) AND ANY categoryToTrackers.title CONTAINS[cd] %@",
+                                   String(selectedDate.weekDayNum), typedText)
+            }
+        case .allTrackers:
             return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
                                String(selectedDate.weekDayNum))
-        } else {
-            return NSPredicate(format: "((ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')) AND ANY categoryToTrackers.title CONTAINS[cd] %@",
-                               String(selectedDate.weekDayNum), typedText)
+
+        case .todayTrackers:
+            return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
+                               String(SimpleDate(date:Date()).weekDayNum))
+
+        case .completedTrackers:
+            return NSPredicate(format: "ANY categoryToTrackers.trackerToExecutions.date == %@", selectedDate.date as NSDate)
+
+        case .uncompletedTrackers:
+            return NSPredicate(format: "NOT (ANY categoryToTrackers.trackerToExecutions.date == %@)", selectedDate.date as NSDate)
         }
     }
+
     
     private func giveTrackersPredicate(kind: TrackerPredicateType = .defaultPredicate) -> NSPredicate {
         switch kind {
@@ -273,8 +291,8 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     private func reloadData() {
-        categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate()
-        trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate()
+        categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate(kind: currentPredicateType)
+        trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
         do {
             try categoriesFetchedResultsController.performFetch()
         } catch let error as NSError  {
@@ -289,6 +307,10 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
 }
 
 extension TrackersDataProvider: TrackersDataProviderProtocol {
+    func setPredicate(predicate: TrackerPredicateType) {
+        currentPredicateType = predicate
+    }
+    
     func setDate(date: SimpleDate) {
         self.selectedDate  = date
     }

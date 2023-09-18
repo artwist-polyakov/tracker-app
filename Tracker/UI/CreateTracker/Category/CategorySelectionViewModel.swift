@@ -6,7 +6,7 @@ enum categoriesResultState {
     case showResult(categories: [TrackerCategory], update: [Int]? = nil)
 }
 
-enum categoriesNavigationState {
+enum CategoriesNavigationState {
     case removeCategory(_ category: TrackerCategory)
     case addCategory
     case editcategory(_ category: TrackerCategory)
@@ -24,7 +24,7 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
             stateClosure()
         }
     }
-    private(set) var navigationState: categoriesNavigationState? = nil {
+    private(set) var navigationState: CategoriesNavigationState? = nil {
         didSet {
             navigationClosure()
         }

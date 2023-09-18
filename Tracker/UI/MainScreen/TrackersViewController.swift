@@ -7,6 +7,7 @@ final class TrackersViewController: UIViewController {
     var collectionPresenter: TrackersCollectionsPresenter!
     var collectionCompanion: TrackersCollectionsCompanion?
     private var isSearchFocused: Bool  = false
+    
     let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.preferredDatePickerStyle = .compact
@@ -170,6 +171,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        applyFilters(type: .defaultPredicate)
         collectionCompanion?.typedText = textField.text
         isSearchFocused = true
         collectionView?.reloadData()
@@ -296,4 +298,15 @@ extension TrackersViewController: UIGestureRecognizerDelegate {
             return false
         }
     }
+}
+
+extension TrackersViewController: FilterDelegate {
+    func applyFilters(type: TrackerPredicateType) {
+        if type != .defaultPredicate {
+            collectionCompanion?.typedText = ""
+        }
+        collectionCompanion?.setPredicate(predicate: type)
+    }
+    
+    
 }

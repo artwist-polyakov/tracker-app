@@ -37,6 +37,9 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
             dataProvider?.setQuery(query: typedText ?? "")
         }
     }
+    
+    private var selectedPredicate: TrackerPredicateType? = nil
+    
     weak var viewController: TrackersViewControllerProtocol?
     
     init(vc: TrackersViewControllerProtocol, delegate: TrackersCollectionsCompanionDelegate) {
@@ -88,6 +91,12 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     func interactWithExecution(trackerId: UUID, date: SimpleDate, indexPath: IndexPath) {
         try? dataProvider?.interactWith(trackerId, date, indexPath: indexPath)
     }
+    
+    func setPredicate(predicate: TrackerPredicateType) {
+        selectedPredicate = predicate
+        dataProvider?.setPredicate(predicate: predicate)
+    }
+    
     
     // MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -283,5 +292,7 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
         let count = self.dataProvider?.numberOfSections ?? .zero
         self.delegate?.quantityTernar(count)
     }
+    
+    
 }
 
