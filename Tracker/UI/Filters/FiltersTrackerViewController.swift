@@ -63,7 +63,7 @@ final class FiltersTrackerViewController: UIViewController {
             switch state {
             case .filterApproved(let filterPack):
                 self.delegate?.applyFilters(type: filterPack.predicate)
-                self.navigationController?.popViewController(animated: true)
+                self.dismiss(animated: true, completion: nil)
             default:
                 break
             }
@@ -106,6 +106,7 @@ extension FiltersTrackerViewController: UITableViewDataSource, UITableViewDelega
             cell.separatorView.isHidden = false
         }
         roundCornersForCell(cell, in: tableView, at: indexPath)
+        print("Я ячейка \(indexPath.row) -  \(filter.title), невидимость галки \(viewModel.isNotCheckedFilter(pos: indexPath.row))")
         cell.checkmarkImageView.isHidden = viewModel.isNotCheckedFilter(pos: indexPath.row)
         return cell
     }

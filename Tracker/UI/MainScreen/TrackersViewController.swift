@@ -168,6 +168,9 @@ final class TrackersViewController: UIViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         collectionPresenter.selectedDate = SimpleDate(date: sender.date).date
         collectionCompanion?.selectedDate = SimpleDate(date: sender.date).date
+        if collectionCompanion?.getCurrentPredicate() == .todayTrackers {
+            applyFilters(type: .defaultPredicate)
+        }
         collectionView?.reloadData()
     }
     
@@ -204,9 +207,6 @@ final class TrackersViewController: UIViewController {
             barButtonItem.tintColor = UIColor (named: "TrackerBlack")
             return barButtonItem
         }()
-        
-        
-        
     }
     
     func showFutureDateAlert() {
@@ -235,7 +235,6 @@ final class TrackersViewController: UIViewController {
         searchField.resignFirstResponder()
         isSearchFocused = false
     }
-    
 }
 
 extension TrackersViewController: UITextFieldDelegate {
@@ -272,7 +271,6 @@ extension TrackersViewController: TrackersViewControllerProtocol {
 
         self.present(alertController, animated: true)
     }
-    
     
     
     func showStartingBlock() {
@@ -315,6 +313,9 @@ extension TrackersViewController: FilterDelegate {
     func applyFilters(type: TrackerPredicateType) {
         if type != .defaultPredicate {
             collectionCompanion?.typedText = ""
+        }
+        if type == .todayTrackers {
+            datePicker.date = Date()
         }
         collectionCompanion?.setPredicate(predicate: type)
     }

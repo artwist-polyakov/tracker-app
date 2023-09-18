@@ -87,7 +87,10 @@ final class TrackersDataProvider: NSObject {
     
     var currentPredicateType: TrackerPredicateType = .defaultPredicate {
         didSet {
+            print("Я провайдер данных — меняю предикат \(currentPredicateType)")
             reloadData()
+            delegate?.reloadData()
+            
         }
     }
     
@@ -257,12 +260,9 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, ANY $tracker.trackerToExecutions.date == %@).@count > 0", selectedDate.date as NSDate)
 
         case .uncompletedTrackers:
-            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, NONE $tracker.trackerToExecutions.date == %@).@count == 0", selectedDate.date as NSDate)
-
-
+            return NSPredicate(format: "SUBQUERY(categoryToTrackers, $tracker, NONE $tracker.trackerToExecutions.date == %@).@count > 0", selectedDate.date as NSDate)
         }
     }
-
     
     private func giveTrackersPredicate(kind: TrackerPredicateType = .defaultPredicate) -> NSPredicate {
         switch kind {
@@ -288,7 +288,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         case .completedTrackers:
             return NSPredicate(format: "ANY %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
         case .uncompletedTrackers:
-            return NSPredicate(format: "NOT (ANY %K.date == %@)", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
+            return NSPredicate(format: "NONE %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
         }
     }
     
@@ -381,7 +381,11 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws {
         try executionsDataStore.interactWith(trackerId, date)
-        delegate?.reloadItems(at: [indexPath])
+        if currentPredicateType == .completedTrackers || currentPredicateType == .uncompletedTrackers {
+            delegate?.reloadData()
+        } else {
+            delegate?.reloadItems(at: [indexPath])
+        }
     }
     
     func deleteObject(at indexPath: IndexPath) throws {
