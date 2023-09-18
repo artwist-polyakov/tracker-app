@@ -22,6 +22,8 @@ internal enum L10n {
   internal static let delete = L10n.tr("Localizable", "delete", fallback: "Delete")
   /// Edit
   internal static let edit = L10n.tr("Localizable", "edit", fallback: "Edit")
+  /// Filter
+  internal static let filter = L10n.tr("Localizable", "filter", fallback: "Filter")
   /// Friday
   internal static let friday = L10n.tr("Localizable", "friday", fallback: "Friday")
   /// Monday

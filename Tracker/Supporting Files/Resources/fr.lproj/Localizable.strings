@@ -61,3 +61,4 @@ save = "Enregistrer";
 unpin = "Détacher";
 pin = "Épingler";
 edit = "Éditer";
+filter = "Filtre";

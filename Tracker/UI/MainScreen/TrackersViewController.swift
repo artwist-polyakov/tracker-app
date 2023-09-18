@@ -45,6 +45,15 @@ final class TrackersViewController: UIViewController {
         return field
     }()
     
+    let filterButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(L10n.filter, for: .normal)
+        button.backgroundColor = UIColor(named: "TrackerBlue")
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 16
+        return button
+    }()
+    
     // Вызов конструктора суперкласса с nil параметрами.
     init() { // Объявление инициализатора.
         super.init(nibName: nil, bundle: nil)
@@ -134,6 +143,15 @@ final class TrackersViewController: UIViewController {
               collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        
+        view.addSubview(filterButton)
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filterButton.heightAnchor.constraint(equalToConstant: 50),
+            filterButton.widthAnchor.constraint(equalToConstant: 114)
+        ])
     }
     
     @objc func addButtonTapped() {

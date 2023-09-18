@@ -7,6 +7,14 @@ enum CategoryFilterType {
     case manual
 }
 
+enum TrackerPredicateType {
+    case defaultPredicate
+    case allTrackers
+    case todayTrackers
+    case completedTrackers
+    case uncompletedTrackers
+}
+
 // Эта структура будет использоваться для уведомления о любых изменениях в данных.
 struct TrackersDataUpdate {
     let insertedIndexes: [IndexPath]
@@ -76,6 +84,13 @@ final class TrackersDataProvider: NSObject {
         }
     }
     
+    var currentPredicateType: TrackerPredicateType = .defaultPredicate {
+        didSet {
+            reloadData()
+        }
+    }
+    
+    
     weak var delegate: TrackersDataProviderDelegate?
     private var pinnedCategoryID: CategoriesCoreData?
     private let context: NSManagedObjectContext
@@ -116,7 +131,7 @@ final class TrackersDataProvider: NSObject {
             NSSortDescriptor(key: "creationDate", ascending: true),
             NSSortDescriptor(key:"trackerToCategory.id", ascending: false)]
         
-        fetchRequest.predicate = giveTrackersPredicate()
+        fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
@@ -229,16 +244,31 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         }
     }
     
-    private func giveTrackersPredicate() -> NSPredicate {
-        if typedText.isEmpty {
+    private func giveTrackersPredicate(kind: TrackerPredicateType = .defaultPredicate) -> NSPredicate {
+        switch kind {
+        case .defaultPredicate:
+            if typedText.isEmpty {
+                return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
+                                   #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
+                                   #keyPath(TrackersCoreData.shedule))
+            } else {
+                return NSPredicate(format: "((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
+                                   #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
+                                   #keyPath(TrackersCoreData.shedule),
+                                   #keyPath(TrackersCoreData.title), typedText)
+            }
+        case .allTrackers:
             return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
                                #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
                                #keyPath(TrackersCoreData.shedule))
-        } else {
-            return NSPredicate(format: "((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                               #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
-                               #keyPath(TrackersCoreData.shedule),
-                               #keyPath(TrackersCoreData.title), typedText)
+        case .todayTrackers:
+            return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
+                               #keyPath(TrackersCoreData.shedule), String(SimpleDate(date:Date()).weekDayNum),
+                               #keyPath(TrackersCoreData.shedule))
+        case .completedTrackers:
+            return NSPredicate(format: "ANY %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
+        case .uncompletedTrackers:
+            return NSPredicate(format: "NOT (ANY %K.date == %@)", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
         }
     }
     
