@@ -132,8 +132,7 @@ final class TrackersDataProvider: NSObject {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key:"trackerToCategory.creationDate", ascending: true),
-            NSSortDescriptor(key: "creationDate", ascending: true),
-            NSSortDescriptor(key:"trackerToCategory.id", ascending: false)]
+            NSSortDescriptor(key: "creationDate", ascending: true)]
         
         fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
         let fetchedResultsController = NSFetchedResultsController(

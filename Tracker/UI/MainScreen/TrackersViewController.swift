@@ -151,7 +151,7 @@ final class TrackersViewController: UIViewController {
             filterButton.heightAnchor.constraint(equalToConstant: 50),
             filterButton.widthAnchor.constraint(equalToConstant: 114)
         ])
-        
+        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
         
     }
