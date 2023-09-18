@@ -26,7 +26,7 @@ final class DataStore {
         do {
             container = try NSPersistentContainer.load(name: modelName, model: model, url: storeURL)
             context = container.newBackgroundContext()
-//
+//            
 //            let fetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
 //            let executions = try context.fetch(fetchRequest)
 //            print("----- Все выполнения (Executions) -----")

@@ -253,7 +253,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
 
         case .todayTrackers:
             return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
-                               String(SimpleDate(date:Date()).weekDayNum))
+                               String(selectedDate.weekDayNum))
 
         case .completedTrackers:
             print(selectedDate.date)
@@ -284,7 +284,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                #keyPath(TrackersCoreData.shedule))
         case .todayTrackers:
             return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
-                               #keyPath(TrackersCoreData.shedule), String(SimpleDate(date:Date()).weekDayNum),
+                               #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
                                #keyPath(TrackersCoreData.shedule))
         case .completedTrackers:
             return NSPredicate(format: "SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count > 0", Date() as NSDate)

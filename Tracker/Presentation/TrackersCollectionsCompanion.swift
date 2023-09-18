@@ -29,12 +29,14 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     var selectedDate: Date? {
         didSet {
             dataProvider?.setDate(date: SimpleDate(date: self.selectedDate ?? SimpleDate(date: Date()).date))
+            reloadData()
         }
     }
     var typedText: String? {
         didSet {
             delegate?.setState(state: typedText == "" ? PRESENTER_ERRORS.LETS_PLAN : PRESENTER_ERRORS.NOT_FOUND)
             dataProvider?.setQuery(query: typedText ?? "")
+            reloadData()
         }
     }
     

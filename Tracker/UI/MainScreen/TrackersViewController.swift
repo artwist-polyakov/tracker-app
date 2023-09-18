@@ -313,11 +313,17 @@ extension TrackersViewController: FilterDelegate {
     func applyFilters(type: TrackerPredicateType) {
         if type != .defaultPredicate {
             collectionCompanion?.typedText = ""
+            searchField.text = ""
         }
         if type == .todayTrackers {
             datePicker.date = Date()
+            collectionCompanion?.selectedDate = SimpleDate(date:Date()).date
+        } else if type == .allTrackers {
+            
+        } else {
+            collectionCompanion?.setPredicate(predicate: type)
         }
-        collectionCompanion?.setPredicate(predicate: type)
+        
     }
     
     
