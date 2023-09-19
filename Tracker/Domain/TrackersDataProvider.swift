@@ -319,6 +319,7 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws {
         try executionsDataStore.interactWith(trackerId, date)
         if currentPredicateType == .completedTrackers || currentPredicateType == .uncompletedTrackers {
+            reloadData()
             delegate?.reloadData()
         } else {
             delegate?.reloadItems(at: [indexPath])
