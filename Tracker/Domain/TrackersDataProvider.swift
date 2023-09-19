@@ -86,13 +86,10 @@ final class TrackersDataProvider: NSObject {
     
     var currentPredicateType: TrackerPredicateType = .defaultPredicate {
         didSet {
-            print("Я провайдер данных — меняю предикат \(currentPredicateType)")
             reloadData()
             delegate?.reloadData()
-            
         }
     }
-    
     
     weak var delegate: TrackersDataProviderDelegate?
     private var pinnedCategoryID: CategoriesCoreData?
@@ -250,7 +247,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     
     private func reloadData() {
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
-        print("Обновил предикаты \(trackersFetchedResultsController.fetchRequest.predicate)")
         do {
             try trackersFetchedResultsController.performFetch()
         } catch let error as NSError  {

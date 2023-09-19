@@ -190,7 +190,6 @@ final class TrackersViewController: UIViewController {
     @objc func filterButtonTapped () {
         
         let currentPredicate = collectionCompanion?.getCurrentPredicate()
-        print("Текущий предикат \(currentPredicate)")
         let filterViewController = FiltersTrackerViewController(filterSelected: currentPredicate)
         filterViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: filterViewController)
