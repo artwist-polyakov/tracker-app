@@ -312,22 +312,21 @@ extension TrackersViewController: UIGestureRecognizerDelegate {
 
 extension TrackersViewController: FilterDelegate {
     func applyFilters(type: TrackerPredicateType) {
+        searchField = {
+            let field = UISearchTextField()
+            field.text = L10n.search
+            field.backgroundColor = UIColor(named: "TrackerSearchFieldColor")
+            field.textColor = UIColor(named: "TrackerGray")
+            return field
+        }()
         if type != .defaultPredicate {
             collectionCompanion?.typedText = ""
-            searchField.text = ""
-            
         }
         if type == .todayTrackers {
             datePicker.date = Date()
             collectionCompanion?.selectedDate = SimpleDate(date:Date()).date
-        } else if type == .allTrackers {
-            collectionCompanion?.typedText = ""
-            searchField.text = ""
-            collectionCompanion?.setPredicate(predicate: type)
-        } else {
-            collectionCompanion?.setPredicate(predicate: type)
         }
-        
+        collectionCompanion?.setPredicate(predicate: type)
     }
     
     
