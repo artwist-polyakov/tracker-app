@@ -52,7 +52,7 @@ final class FiltersTrackerViewModel: FiltersViewModelDelegate {
     func setFilterSelected(_ type: TrackerPredicateType) {
         guard let pos = cases.firstIndex(where: { $0.predicate == type }) else { return }
         cases[pos].isOn = true
-        var paths = [pos]
+        let paths = [pos]
         currentSelectionPos = pos
         state = .show(cases: cases, update: paths)
         navigationState = .filterSelected(pos)

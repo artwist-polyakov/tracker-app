@@ -65,6 +65,15 @@ final class TrackersViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.report(event: "open", params: ["screen":"Main"])
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        analyticsService.report(event: "close", params: ["screen":"Main"])
+    }
     
     // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -161,7 +170,7 @@ final class TrackersViewController: UIViewController {
         let trackerTypeViewController = TrackerTypeViewController()
         trackerTypeViewController.delegate = collectionPresenter
         let navigationController = UINavigationController(rootViewController: trackerTypeViewController)
-        analyticsService.report(event: "add-button-tapped", params: ["isFirst":"\(voidImage.isHidden)"])
+        analyticsService.report(event: "click", params: ["screen":"Main", "item":"add_track"])
         self.present(navigationController, animated: true, completion: nil)
     }
     
@@ -188,7 +197,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc func filterButtonTapped () {
-        
+        analyticsService.report(event: "click", params: ["screen":"Main", "item":"filter"])
         let currentPredicate = collectionCompanion?.getCurrentPredicate()
         let filterViewController = FiltersTrackerViewController(filterSelected: currentPredicate)
         filterViewController.delegate = self
@@ -253,7 +262,7 @@ extension TrackersViewController: TrackersViewControllerProtocol {
         let editVC = CreateTrackerViewController()
         editVC.delegate = collectionPresenter
         let navigationController = UINavigationController(rootViewController: editVC)
-        analyticsService.report(event: "edit-tapped", params: ["title":"\(tracker.title)"])
+        analyticsService.report(event: "click", params: ["screen":"Main", "item":"edit"])
         editVC.configureToEditTracker(tracker, daysDone: days)
         self.present(navigationController, animated: true, completion: nil)
     }

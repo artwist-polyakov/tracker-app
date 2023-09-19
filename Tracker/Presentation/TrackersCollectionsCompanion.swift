@@ -3,6 +3,7 @@ import UIKit
 
 final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     private let trackersCollectionCompanionInteractor = TrackersCollectionsCompanionInteractor.shared
+    private let analyticsService = AnalyticsService()
     private lazy var dataProvider: TrackersDataProviderProtocol? = {
         let trackersDataStore = (UIApplication.shared.delegate as! AppDelegate).trackersDataStore
         let categoriesDataStore = (UIApplication.shared.delegate as! AppDelegate).categoriesDataStore
@@ -113,12 +114,15 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
             guard let tracker = self.dataProvider?.object(at: indexPath)  else {return nil}
             return UIMenu(title: "", children: [
                 UIAction(title: tracker.isPinned ? L10n.unpin : L10n.pin) { [weak self] _ in
+                    self?.analyticsService.report(event: "click", params: ["screen": "Main","item":"\(tracker.isPinned ? "unpin" : "pin")"])
                     try? self?.dataProvider?.interactWithTrackerPinning(tracker)
                 },
                 UIAction(title: L10n.edit) { [weak self] _ in
+                    self?.analyticsService.report(event: "click", params: ["screen": "Main","item":"edit"])
                     self?.showEditVC(for: indexPath)
                 },
                 UIAction(title: L10n.delete, attributes: .destructive) { [weak self] _ in
+                    self?.analyticsService.report(event: "click", params: ["screen": "Main","item":"delete"])
                     self?.showDeleteConfirmation(for: indexPath)
                 }
             ])
@@ -193,6 +197,7 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
             guard let id = self?.dataProvider?.object(at: indexPath)?.trackerId
             else {return}
             if selectdate <= SimpleDate(date:Date()).date {
+                self?.analyticsService.report(event: "click", params: ["screen": "Main","item":"track"])
                 self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate), indexPath: indexPath)
             } else {
                 guard let vc = self?.viewController else {return}
