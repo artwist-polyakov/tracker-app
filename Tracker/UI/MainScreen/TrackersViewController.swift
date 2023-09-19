@@ -117,8 +117,6 @@ final class TrackersViewController: UIViewController {
             
         ])
         
-        
-        
         view.addSubview(voidImage)
         voidImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -153,6 +151,9 @@ final class TrackersViewController: UIViewController {
             filterButton.heightAnchor.constraint(equalToConstant: 50),
             filterButton.widthAnchor.constraint(equalToConstant: 114)
         ])
+        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+        
     }
     
     @objc func addButtonTapped() {
@@ -167,6 +168,9 @@ final class TrackersViewController: UIViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         collectionPresenter.selectedDate = SimpleDate(date: sender.date).date
         collectionCompanion?.selectedDate = SimpleDate(date: sender.date).date
+        if collectionCompanion?.getCurrentPredicate() == .todayTrackers {
+            applyFilters(type: .defaultPredicate)
+        }
         collectionView?.reloadData()
     }
     
@@ -180,10 +184,17 @@ final class TrackersViewController: UIViewController {
     @objc func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
         if gestureReconizer.state == UIGestureRecognizer.State.began {
             showDeleteDataAlert()
-            
         }
     }
     
+    @objc func filterButtonTapped () {
+        
+        let currentPredicate = collectionCompanion?.getCurrentPredicate()
+        let filterViewController = FiltersTrackerViewController(filterSelected: currentPredicate)
+        filterViewController.delegate = self
+        let navigationController = UINavigationController(rootViewController: filterViewController)
+        self.present(navigationController, animated: true, completion: nil)
+    }
     
     func setupButtons() {
         addBarButtonItem = {
@@ -224,7 +235,6 @@ final class TrackersViewController: UIViewController {
         searchField.resignFirstResponder()
         isSearchFocused = false
     }
-    
 }
 
 extension TrackersViewController: UITextFieldDelegate {
@@ -261,7 +271,6 @@ extension TrackersViewController: TrackersViewControllerProtocol {
 
         self.present(alertController, animated: true)
     }
-    
     
     
     func showStartingBlock() {
@@ -302,8 +311,19 @@ extension TrackersViewController: UIGestureRecognizerDelegate {
 
 extension TrackersViewController: FilterDelegate {
     func applyFilters(type: TrackerPredicateType) {
+        searchField = {
+            let field = UISearchTextField()
+            field.text = L10n.search
+            field.backgroundColor = UIColor(named: "TrackerSearchFieldColor")
+            field.textColor = UIColor(named: "TrackerGray")
+            return field
+        }()
         if type != .defaultPredicate {
             collectionCompanion?.typedText = ""
+        }
+        if type == .todayTrackers {
+            datePicker.date = Date()
+            collectionCompanion?.selectedDate = SimpleDate(date:Date()).date
         }
         collectionCompanion?.setPredicate(predicate: type)
     }

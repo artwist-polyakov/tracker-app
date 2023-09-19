@@ -29,16 +29,18 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     var selectedDate: Date? {
         didSet {
             dataProvider?.setDate(date: SimpleDate(date: self.selectedDate ?? SimpleDate(date: Date()).date))
+            reloadData()
         }
     }
     var typedText: String? {
         didSet {
             delegate?.setState(state: typedText == "" ? PRESENTER_ERRORS.LETS_PLAN : PRESENTER_ERRORS.NOT_FOUND)
             dataProvider?.setQuery(query: typedText ?? "")
+            reloadData()
         }
     }
     
-    private var selectedPredicate: TrackerPredicateType? = nil
+    private var selectedPredicate: TrackerPredicateType = .defaultPredicate
     
     weak var viewController: TrackersViewControllerProtocol?
     
@@ -56,11 +58,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     
     func editTracker(_ tracker: Tracker) {
         try? dataProvider?.editTracker(tracker)
-    }
-    
-    
-    func giveMeAnyCategory() -> TrackerCategory? {
-        return dataProvider?.giveMeAnyCategory()
     }
     
     func clearAllCoreData() {
@@ -96,6 +93,11 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         selectedPredicate = predicate
         dataProvider?.setPredicate(predicate: predicate)
     }
+    
+    func getCurrentPredicate() -> TrackerPredicateType {
+        return selectedPredicate
+    }
+    
     
     
     // MARK: - UICollectionViewDataSource
@@ -267,17 +269,20 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.performBatchUpdates {
+            print("ОШИБКА update: \(update)")
+            
             cv.deleteSections(update.deletedSections)
             cv.insertSections(update.insertedSections)
             cv.reloadSections(update.updatedSections)
 
             cv.deleteItems(at: update.deletedIndexes)
             cv.insertItems(at: update.insertedIndexes)
-            cv.reloadItems(at: update.updatedIndexes)
             
             for move in update.movedIndexes {
                 cv.moveItem(at: move.from, to: move.to)
             }
+            
+            cv.reloadItems(at: update.updatedIndexes)
         } completion: { _ in
             let count = self.dataProvider?.numberOfSections ?? .zero
             self.delegate?.quantityTernar(count)

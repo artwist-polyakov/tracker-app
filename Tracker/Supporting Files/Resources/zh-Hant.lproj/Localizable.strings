@@ -62,3 +62,7 @@ unpin = "取消固定";
 pin = "固定";
 edit = "编辑";
 filter = "过滤器";
+filter.allTrackers = "所有追踪器";
+filter.todayTrackers = "今日追踪器";
+filter.completed = "已完成";
+filter.uncompleted = "未完成";

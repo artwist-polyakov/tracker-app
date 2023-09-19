@@ -6,7 +6,6 @@ struct PredicateElement {
     var isOn: Bool
 }
 
-
 enum FilterState {
     case start
     case show(cases: [PredicateElement], update: [Int]? = nil)
@@ -17,14 +16,13 @@ enum FilterNavigationState {
     case filterApproved(_ filter: PredicateElement)
 }
 
-
 final class FiltersTrackerViewModel: FiltersViewModelDelegate {
     
     private var cases: [PredicateElement] = [
-        PredicateElement(title: "Все трекеры", predicate: .allTrackers, isOn: false),
-        PredicateElement(title: "Трекеры на сегодня", predicate: .todayTrackers, isOn: false),
-        PredicateElement(title: "Завершенные", predicate: .completedTrackers, isOn: false),
-        PredicateElement(title: "Не завершенные", predicate: .uncompletedTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.allTrackers, predicate: .allTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.todayTrackers, predicate: .todayTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.completed, predicate: .completedTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.uncompleted, predicate: .uncompletedTrackers, isOn: false),
     ]
     
     var stateClosure: () -> Void = {}
@@ -42,9 +40,8 @@ final class FiltersTrackerViewModel: FiltersViewModelDelegate {
         }
     }
     
-    
     private(set) var updatingRows:[Int] = []
-    private var currentSelectionPos: Int? = nil
+    private var currentSelectionPos: Int = -1
     
     private let interactor = TrackersCollectionsCompanionInteractor.shared
     
@@ -54,7 +51,11 @@ final class FiltersTrackerViewModel: FiltersViewModelDelegate {
     
     func setFilterSelected(_ type: TrackerPredicateType) {
         guard let pos = cases.firstIndex(where: { $0.predicate == type }) else { return }
-        cases[pos].isOn.toggle()
+        cases[pos].isOn = true
+        var paths = [pos]
+        currentSelectionPos = pos
+        state = .show(cases: cases, update: paths)
+        navigationState = .filterSelected(pos)
         refreshState()
     }
     
@@ -74,19 +75,28 @@ final class FiltersTrackerViewModel: FiltersViewModelDelegate {
     }
     
     func handleTap(pos: Int) {
-        switch navigationState {
-        case .filterSelected(let pos) where isNotCheckedFilter(pos: pos):
-            var paths = [pos]
-            if let oldPos = currentSelectionPos {
-                paths.append(oldPos)
+        if let nav = navigationState {
+            switch nav {
+            case .filterSelected(let position) where pos != position:
+                var paths = [pos]
+                if currentSelectionPos != -1 {
+                    paths.append(currentSelectionPos)
+                    cases[currentSelectionPos].isOn.toggle()
+                }
+                currentSelectionPos = pos
+                cases[pos].isOn.toggle()
+                navigationState = .filterSelected(pos)
+                state = .show(cases: cases, update: paths)
+            default:
+                guard let filter = giveMeFilter(pos: pos) else { return }
+                navigationState = .filterApproved(filter)
             }
+        } else {
             navigationState = .filterSelected(pos)
+            cases[pos].isOn.toggle()
+            let paths = [pos]
+            currentSelectionPos = pos
             state = .show(cases: cases, update: paths)
-        default:
-            guard let filter = giveMeFilter(pos: pos) else { return }
-            navigationState = .filterApproved(filter)
         }
     }
-    
-    
 }

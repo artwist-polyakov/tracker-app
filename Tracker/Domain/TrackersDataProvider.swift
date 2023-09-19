@@ -46,7 +46,6 @@ protocol TrackersDataProviderProtocol {
     func setDate (date: SimpleDate)
     func setQuery (query: String)
     func categoryTitle(for categoryId: UUID) -> String?
-    func giveMeAnyCategory() -> TrackerCategory?
     func clearAllCoreData()
     func giveMeAllCategories(filterType: CategoryFilterType) -> [TrackerCategory]
     func deleteCategory(category: TrackerCategory)
@@ -88,9 +87,9 @@ final class TrackersDataProvider: NSObject {
     var currentPredicateType: TrackerPredicateType = .defaultPredicate {
         didSet {
             reloadData()
+            delegate?.reloadData()
         }
     }
-    
     
     weak var delegate: TrackersDataProviderDelegate?
     private var pinnedCategoryID: CategoriesCoreData?
@@ -108,29 +107,11 @@ final class TrackersDataProvider: NSObject {
     private var updatedSections: IndexSet = []
     private var movedIndexes: [(from: IndexPath, to: IndexPath)] = []
     
-    
-    private lazy var categoriesFetchedResultsController: NSFetchedResultsController<CategoriesCoreData> = {
-        let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        
-        fetchRequest.predicate = giveCategoriesPredicate()
-        
-        let fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: "id",
-            cacheName: nil)
-        fetchedResultsController.delegate = self
-        try? fetchedResultsController.performFetch()
-        return fetchedResultsController
-    }()
-    
     private lazy var trackersFetchedResultsController:  NSFetchedResultsController<TrackersCoreData> = {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key:"trackerToCategory.creationDate", ascending: true),
-            NSSortDescriptor(key: "creationDate", ascending: true),
-            NSSortDescriptor(key:"trackerToCategory.id", ascending: false)]
+            NSSortDescriptor(key: "creationDate", ascending: true)]
         
         fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
         let fetchedResultsController = NSFetchedResultsController(
@@ -234,34 +215,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         return result
         
     }
-    
-    private func giveCategoriesPredicate(kind: TrackerPredicateType = .defaultPredicate) -> NSPredicate {
-        switch kind {
-        case .defaultPredicate:
-            if typedText.isEmpty {
-                return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
-                                   String(selectedDate.weekDayNum))
-            } else {
-                return NSPredicate(format: "((ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')) AND ANY categoryToTrackers.title CONTAINS[cd] %@",
-                                   String(selectedDate.weekDayNum), typedText)
-            }
-        case .allTrackers:
-            return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
-                               String(selectedDate.weekDayNum))
 
-        case .todayTrackers:
-            return NSPredicate(format: "(ANY categoryToTrackers.shedule CONTAINS %@) OR (ANY categoryToTrackers.shedule == '')",
-                               String(SimpleDate(date:Date()).weekDayNum))
-
-        case .completedTrackers:
-            return NSPredicate(format: "ANY categoryToTrackers.trackerToExecutions.date == %@", selectedDate.date as NSDate)
-
-        case .uncompletedTrackers:
-            return NSPredicate(format: "NOT (ANY categoryToTrackers.trackerToExecutions.date == %@)", selectedDate.date as NSDate)
-        }
-    }
-
-    
     private func giveTrackersPredicate(kind: TrackerPredicateType = .defaultPredicate) -> NSPredicate {
         switch kind {
         case .defaultPredicate:
@@ -281,23 +235,18 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                #keyPath(TrackersCoreData.shedule))
         case .todayTrackers:
             return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
-                               #keyPath(TrackersCoreData.shedule), String(SimpleDate(date:Date()).weekDayNum),
+                               #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
                                #keyPath(TrackersCoreData.shedule))
         case .completedTrackers:
-            return NSPredicate(format: "ANY %K.date == %@", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
+            return NSPredicate(format: "ANY trackerToExecutions.date == %@", selectedDate.date as NSDate)
+
         case .uncompletedTrackers:
-            return NSPredicate(format: "NOT (ANY %K.date == %@)", #keyPath(TrackersCoreData.trackerToExecutions), selectedDate.date as NSDate)
+            return NSPredicate(format: "(SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count == 0) OR (trackerToExecutions.@count == 0)", selectedDate.date as NSDate)
         }
     }
     
     private func reloadData() {
-        categoriesFetchedResultsController.fetchRequest.predicate = giveCategoriesPredicate(kind: currentPredicateType)
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
-        do {
-            try categoriesFetchedResultsController.performFetch()
-        } catch let error as NSError  {
-            print("Ошибка при получении categoriesFetchedResultsController: \(error)")
-        }
         do {
             try trackersFetchedResultsController.performFetch()
         } catch let error as NSError  {
@@ -341,16 +290,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         try categoriesDataStore.add(category, isAutomatic)
     }
     
-    func giveMeAnyCategory() -> TrackerCategory?  {
-        guard let firstCategory = categoriesFetchedResultsController.fetchedObjects?.first,
-              let id = firstCategory.id,
-              let title = firstCategory.title
-        else {
-            return nil
-        }
-        return TrackerCategory(id: id, categoryTitle: title)
-    }
-    
     func giveMeCategoryById(id: UUID) -> TrackerCategory?  {
         let fetchRequest = NSFetchRequest<CategoriesCoreData>(entityName: "CategoriesCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", id as NSUUID)
@@ -379,7 +318,12 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws {
         try executionsDataStore.interactWith(trackerId, date)
-        delegate?.reloadItems(at: [indexPath])
+        if currentPredicateType == .completedTrackers || currentPredicateType == .uncompletedTrackers {
+            reloadData()
+            delegate?.reloadData()
+        } else {
+            delegate?.reloadItems(at: [indexPath])
+        }
     }
     
     func deleteObject(at indexPath: IndexPath) throws {

@@ -63,7 +63,7 @@ final class FiltersTrackerViewController: UIViewController {
             switch state {
             case .filterApproved(let filterPack):
                 self.delegate?.applyFilters(type: filterPack.predicate)
-                self.navigationController?.popViewController(animated: true)
+                self.dismiss(animated: true, completion: nil)
             default:
                 break
             }

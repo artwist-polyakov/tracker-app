@@ -62,3 +62,7 @@ unpin = "Détacher";
 pin = "Épingler";
 edit = "Éditer";
 filter = "Filtre";
+filter.allTrackers = "Tous les traceurs";
+filter.todayTrackers = "Traceurs pour aujourd'hui";
+filter.completed = "Terminé";
+filter.uncompleted = "Non terminé";

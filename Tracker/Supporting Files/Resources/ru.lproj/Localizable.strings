@@ -62,6 +62,9 @@ unpin = "Открепить";
 pin = "Закрепить";
 edit = "Редактировать";
 filter = "Фильтры";
-
+filter.allTrackers = "Все трекеры";
+filter.todayTrackers = "Трекеры на сегодня";
+filter.completed = "Завершенные";
+filter.uncompleted = "Не завершенные";
 
 

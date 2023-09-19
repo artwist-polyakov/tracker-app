@@ -26,10 +26,20 @@ final class DataStore {
         do {
             container = try NSPersistentContainer.load(name: modelName, model: model, url: storeURL)
             context = container.newBackgroundContext()
+            
+//            let fetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
+//            let executions = try context.fetch(fetchRequest)
+//            print("----- Все выполнения (Executions) -----")
+//            for execution in executions {
+//                print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
+//            }
+            
         } catch let error as NSError {
             print("Произошла ошибка при инициализации dataStore: \(error.localizedDescription)")
             throw StoreError.failedToLoadPersistentContainer(error)
         }
+        
+        
     }
     
     private func performSync<R>(_ action: (NSManagedObjectContext) -> Result<R, Error>) throws -> R {
@@ -215,29 +225,34 @@ extension DataStore: ExecutionsDataStore {
     }
     
     private func attachExecution(trackerId: UUID, date: Date) {
-        let newExecution = ExecutionsCoreData(context: context)
-        newExecution.date = date
-        newExecution.trackerId = trackerId
-        
-        do {
-            try context.save()
-            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
-        } catch let error as NSError {
-            print("Ошибка при сохранении выполнения: \(error.localizedDescription)")
-        }
-    }
-    
-    private func detachExecution(byObjectId objectId: NSManagedObjectID) {
-        if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
-            context.delete(objectToDelete)
-            do {
+        try? performSync { context in
+            Result {
+                let newExecution = ExecutionsCoreData(context: context)
+                newExecution.date = date
+                newExecution.trackerId = trackerId
+                let trackerFetchRequest: NSFetchRequest<TrackersCoreData> = TrackersCoreData.fetchRequest()
+                trackerFetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSUUID)
+                if let tracker = try context.fetch(trackerFetchRequest).first {
+                    newExecution.executionToTrackers = tracker
+                }
                 try context.save()
-            } catch let error as NSError {
-                print("Ошибка при удалении выполнения: \(error.localizedDescription)")
             }
         }
     }
-    
-    
+
+    private func detachExecution(byObjectId objectId: NSManagedObjectID) {
+        try? performSync { context in
+            Result {
+                if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
+                    if let relatedTracker = objectToDelete.executionToTrackers {
+                        if let executionsSet = relatedTracker.value(forKey: "trackerToExecutions") as? NSMutableSet {
+                            executionsSet.remove(objectToDelete)
+                        }
+                    }
+                    context.delete(objectToDelete)
+                    try context.save()
+                }
+            }
+        }
+    }
 }

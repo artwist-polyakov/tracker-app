@@ -62,3 +62,9 @@ unpin = "Loslösen";
 pin = "Anheften";
 edit = "Bearbeiten";
 filter = "Filter";
+filter.allTrackers = "Alle Tracker";
+filter.todayTrackers = "Tracker für heute";
+filter.completed = "Abgeschlossen";
+filter.uncompleted = "Nicht abgeschlossen";
+
+

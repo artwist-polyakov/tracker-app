@@ -8,10 +8,6 @@ final class TrackersCollectionsCompanionInteractor {
         companion?.addTracker(tracker: tracker, categoryId: categoryId, categoryTitle: categoryTitle)
     }
     
-    func giveMeAnyCategory() -> TrackerCategory? {
-        return companion?.giveMeAnyCategory()
-    }
-    
     func giveMeCategoryById(id: UUID) -> TrackerCategory? {
         return companion?.giveMeCategoryById(id: id)
     }
