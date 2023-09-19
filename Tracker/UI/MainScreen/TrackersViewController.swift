@@ -184,12 +184,13 @@ final class TrackersViewController: UIViewController {
     @objc func handleLongPress(gestureReconizer: UILongPressGestureRecognizer) {
         if gestureReconizer.state == UIGestureRecognizer.State.began {
             showDeleteDataAlert()
-            
         }
     }
     
     @objc func filterButtonTapped () {
+        
         let currentPredicate = collectionCompanion?.getCurrentPredicate()
+        print("Текущий предикат \(currentPredicate)")
         let filterViewController = FiltersTrackerViewController(filterSelected: currentPredicate)
         filterViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: filterViewController)
@@ -314,12 +315,15 @@ extension TrackersViewController: FilterDelegate {
         if type != .defaultPredicate {
             collectionCompanion?.typedText = ""
             searchField.text = ""
+            
         }
         if type == .todayTrackers {
             datePicker.date = Date()
             collectionCompanion?.selectedDate = SimpleDate(date:Date()).date
         } else if type == .allTrackers {
-            
+            collectionCompanion?.typedText = ""
+            searchField.text = ""
+            collectionCompanion?.setPredicate(predicate: type)
         } else {
             collectionCompanion?.setPredicate(predicate: type)
         }
