@@ -66,5 +66,6 @@ filter.allTrackers = "Все трекеры";
 filter.todayTrackers = "Трекеры на сегодня";
 filter.completed = "Завершенные";
 filter.uncompleted = "Не завершенные";
-
+stats.nothingShow = "Анализировать пока нечего";
+stats.completedTrackers = "Завершенные трекеры";
 

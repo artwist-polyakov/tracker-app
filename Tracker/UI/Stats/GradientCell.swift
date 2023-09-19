@@ -73,22 +73,22 @@ class GradientCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let borderPath = UIBezierPath(roundedRect: contentContainer.bounds, cornerRadius: 16)
-        let lineWidth: CGFloat = 2
+        let lineWidth: CGFloat = 1
+        let insetBounds = contentContainer.bounds.insetBy(dx: lineWidth / 2, dy: lineWidth / 2)
+        
+        let borderPath = UIBezierPath(roundedRect: insetBounds, cornerRadius: 16)
         borderPath.lineWidth = lineWidth
         
         let borderLayer = CAShapeLayer()
         borderLayer.path = borderPath.cgPath
         borderLayer.fillColor = nil
-        borderLayer.strokeColor = UIColor.black.cgColor // Just a placeholder, because we will mask it
+        borderLayer.strokeColor = UIColor.black.cgColor
         borderLayer.lineWidth = lineWidth
         borderLayer.lineJoin = .round
         
-        gradientLayer.frame = CGRect(x: -lineWidth,
-                                     y: -lineWidth,
-                                     width: contentContainer.bounds.width + 2 * lineWidth,
-                                     height: contentContainer.bounds.height + 2 * lineWidth)
+        gradientLayer.frame = contentContainer.bounds.insetBy(dx: -lineWidth / 2, dy: -lineWidth / 2)
         
         gradientLayer.mask = borderLayer
     }
+
 }

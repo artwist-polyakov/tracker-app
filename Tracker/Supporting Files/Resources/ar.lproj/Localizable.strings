@@ -66,3 +66,5 @@ filter.allTrackers = "جميع المتتبعين";
 filter.todayTrackers = "المتتبعين لليوم";
 filter.completed = "مكتمل";
 filter.uncompleted = "غير مكتمل";
+stats.nothingShow = "لا شيء للتحليل حتى الآن";
+stats.completedTrackers = "المتعقبون المكتملون";

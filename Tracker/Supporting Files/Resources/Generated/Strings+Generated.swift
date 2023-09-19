@@ -126,6 +126,12 @@ internal enum L10n {
     /// Sat
     internal static let short = L10n.tr("Localizable", "saturday.short", fallback: "Sat")
   }
+  internal enum Stats {
+    /// Completed trackers
+    internal static let completedTrackers = L10n.tr("Localizable", "stats.completedTrackers", fallback: "Completed trackers")
+    /// Here is nothing to analize
+    internal static let nothingShow = L10n.tr("Localizable", "stats.nothingShow", fallback: "Here is nothing to analize")
+  }
   internal enum Sunday {
     /// Sun
     internal static let short = L10n.tr("Localizable", "sunday.short", fallback: "Sun")

@@ -66,3 +66,5 @@ filter.allTrackers = "All trackers";
 filter.todayTrackers = "Today trackers";
 filter.completed = "Completed";
 filter.uncompleted = "Uncompleted";
+stats.nothingShow = "Here is nothing to analize";
+stats.completedTrackers = "Completed trackers";

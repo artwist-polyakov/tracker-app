@@ -9,8 +9,8 @@ final class StatisticResultsStorage {
     
     func refresh() {
         print("StatisticResultsStorage refresh")
-        let stats = [companion?.howManyCompletedTrackers()]
-        let titles = ["Завершенные трекеры"]
+        let stats = [companion?.howManyCompletedTrackers(), companion?.howManyCompletedTrackers()]
+        let titles = [L10n.Stats.completedTrackers, L10n.Stats.completedTrackers]
         if companion?.haveStats() ?? false {
             statisticResults = []
             for (pos, res) in stats.enumerated() {
