@@ -1,6 +1,3 @@
-import Foundation
-import UIKit
-
 import UIKit
 
 class GradientCell: UITableViewCell {
@@ -19,11 +16,14 @@ class GradientCell: UITableViewCell {
         return label
     }()
     
-    static let cellHeight: CGFloat = 90
+    private let contentContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         setupUI()
     }
     
@@ -33,58 +33,42 @@ class GradientCell: UITableViewCell {
     
     private func setupUI() {
         backgroundColor = .clear
+        selectionStyle = .none
         
-        // Добавляем подконтейнер для градиента
-        let gradientContainer = UIView(frame: bounds)
-        gradientContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(gradientContainer)
+        contentView.addSubview(contentContainer)
         
-        // Создаём градиент
+        contentContainer.addSubview(valueLabel)
+        contentContainer.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            contentContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            contentContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            contentContainer.topAnchor.constraint(equalTo: contentView.topAnchor),
+            contentContainer.heightAnchor.constraint(equalToConstant: 90),
+            
+            valueLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor, constant: 12),
+            valueLabel.topAnchor.constraint(equalTo: contentContainer.topAnchor, constant: 12),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor, constant: 12),
+            titleLabel.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor, constant: -12),
+        ])
+        
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = bounds
+        gradientLayer.frame = CGRect(x: 0, y: 89, width: contentView.frame.width, height: 1)
         gradientLayer.colors = [UIColor(red: 0/255, green: 123/255, blue: 250/255, alpha: 1).cgColor,
                                 UIColor(red: 70/255, green: 230/255, blue: 157/255, alpha: 1).cgColor,
                                 UIColor(red: 253/255, green: 76/255, blue: 73/255, alpha: 1).cgColor]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
         
-        gradientContainer.layer.addSublayer(gradientLayer)
-        
-        // Ограничиваем ширину градиентного слоя
-        gradientLayer.frame.size.height = 1
-        gradientLayer.frame.origin.y = bounds.height - 1
-        
-        addSubview(valueLabel)
-        addSubview(titleLabel)
-        
-        NSLayoutConstraint.activate([
-            valueLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            valueLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-            
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
-            
-            gradientContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            gradientContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            gradientContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
-            gradientContainer.heightAnchor.constraint(equalToConstant: 1)
-        ])
+        contentContainer.layer.addSublayer(gradientLayer)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         // Обновляем frame градиентного слоя, когда layoutSubviews вызывается
-        if let gradientLayer = (subviews.first { $0 is UIView } as? UIView)?.layer.sublayers?.first as? CAGradientLayer {
-            gradientLayer.frame.size.width = bounds.width
+        if let gradientLayer = contentContainer.layer.sublayers?.first as? CAGradientLayer {
+            gradientLayer.frame = CGRect(x: 0, y: contentContainer.frame.height - 1, width: contentContainer.frame.width, height: 1)
         }
     }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return CGSize(width: size.width, height: 90)
-    }
-    
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 90)
-    }
 }
-

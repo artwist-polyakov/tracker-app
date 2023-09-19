@@ -70,6 +70,7 @@ final class StatsViewController: UIViewController {
         table.isScrollEnabled = true
         view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.separatorStyle = .none
         NSLayoutConstraint.activate([
             table.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 77),
             table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
