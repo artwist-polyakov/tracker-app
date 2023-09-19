@@ -22,6 +22,8 @@ class GradientCell: UITableViewCell {
         return view
     }()
     
+    private var gradientLayer: CAGradientLayer!
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -53,22 +55,40 @@ class GradientCell: UITableViewCell {
             titleLabel.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor, constant: -12),
         ])
         
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(x: 0, y: 89, width: contentView.frame.width, height: 1)
-        gradientLayer.colors = [UIColor(red: 0/255, green: 123/255, blue: 250/255, alpha: 1).cgColor,
-                                UIColor(red: 70/255, green: 230/255, blue: 157/255, alpha: 1).cgColor,
-                                UIColor(red: 253/255, green: 76/255, blue: 73/255, alpha: 1).cgColor]
+        gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            UIColor(red: 0/255, green: 123/255, blue: 250/255, alpha: 1).cgColor,
+            UIColor(red: 70/255, green: 230/255, blue: 157/255, alpha: 1).cgColor,
+            UIColor(red: 253/255, green: 76/255, blue: 73/255, alpha: 1).cgColor
+        ]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
         
         contentContainer.layer.addSublayer(gradientLayer)
+        contentContainer.layer.cornerRadius = 16
+        contentContainer.clipsToBounds = true
+        contentView.layoutIfNeeded()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Обновляем frame градиентного слоя, когда layoutSubviews вызывается
-        if let gradientLayer = contentContainer.layer.sublayers?.first as? CAGradientLayer {
-            gradientLayer.frame = CGRect(x: 0, y: contentContainer.frame.height - 1, width: contentContainer.frame.width, height: 1)
-        }
+        
+        let borderPath = UIBezierPath(roundedRect: contentContainer.bounds, cornerRadius: 16)
+        let lineWidth: CGFloat = 2
+        borderPath.lineWidth = lineWidth
+        
+        let borderLayer = CAShapeLayer()
+        borderLayer.path = borderPath.cgPath
+        borderLayer.fillColor = nil
+        borderLayer.strokeColor = UIColor.black.cgColor // Just a placeholder, because we will mask it
+        borderLayer.lineWidth = lineWidth
+        borderLayer.lineJoin = .round
+        
+        gradientLayer.frame = CGRect(x: -lineWidth,
+                                     y: -lineWidth,
+                                     width: contentContainer.bounds.width + 2 * lineWidth,
+                                     height: contentContainer.bounds.height + 2 * lineWidth)
+        
+        gradientLayer.mask = borderLayer
     }
 }
