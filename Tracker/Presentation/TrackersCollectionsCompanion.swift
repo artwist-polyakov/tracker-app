@@ -60,11 +60,6 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         try? dataProvider?.editTracker(tracker)
     }
     
-    
-    func giveMeAnyCategory() -> TrackerCategory? {
-        return dataProvider?.giveMeAnyCategory()
-    }
-    
     func clearAllCoreData() {
         dataProvider?.clearAllCoreData()
     }
