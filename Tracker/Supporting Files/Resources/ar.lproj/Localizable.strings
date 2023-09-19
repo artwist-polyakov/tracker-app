@@ -62,3 +62,7 @@ unpin = "إلغاء التثبيت";
 pin = "ثبت";
 edit = "تعديل";
 filter = "تصفية";
+filter.allTrackers = "جميع المتتبعين";
+filter.todayTrackers = "المتتبعين لليوم";
+filter.completed = "مكتمل";
+filter.uncompleted = "غير مكتمل";

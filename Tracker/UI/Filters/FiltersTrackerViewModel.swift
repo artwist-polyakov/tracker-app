@@ -19,10 +19,10 @@ enum FilterNavigationState {
 final class FiltersTrackerViewModel: FiltersViewModelDelegate {
     
     private var cases: [PredicateElement] = [
-        PredicateElement(title: "Все трекеры", predicate: .allTrackers, isOn: false),
-        PredicateElement(title: "Трекеры на сегодня", predicate: .todayTrackers, isOn: false),
-        PredicateElement(title: "Завершенные", predicate: .completedTrackers, isOn: false),
-        PredicateElement(title: "Не завершенные", predicate: .uncompletedTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.allTrackers, predicate: .allTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.todayTrackers, predicate: .todayTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.completed, predicate: .completedTrackers, isOn: false),
+        PredicateElement(title: L10n.Filter.uncompleted, predicate: .uncompletedTrackers, isOn: false),
     ]
     
     var stateClosure: () -> Void = {}

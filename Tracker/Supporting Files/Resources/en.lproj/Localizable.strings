@@ -62,3 +62,7 @@ unpin = "Unpin";
 pin = "Pin";
 edit = "Edit";
 filter = "Filter";
+filter.allTrackers = "All trackers";
+filter.todayTrackers = "Today trackers";
+filter.completed = "Completed";
+filter.uncompleted = "Uncompleted";

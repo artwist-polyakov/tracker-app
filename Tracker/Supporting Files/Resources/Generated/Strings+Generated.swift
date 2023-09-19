@@ -86,6 +86,16 @@ internal enum L10n {
     /// Every day
     internal static let day = L10n.tr("Localizable", "every.day", fallback: "Every day")
   }
+  internal enum Filter {
+    /// All trackers
+    internal static let allTrackers = L10n.tr("Localizable", "filter.allTrackers", fallback: "All trackers")
+    /// Completed
+    internal static let completed = L10n.tr("Localizable", "filter.completed", fallback: "Completed")
+    /// Today trackers
+    internal static let todayTrackers = L10n.tr("Localizable", "filter.todayTrackers", fallback: "Today trackers")
+    /// Uncompleted
+    internal static let uncompleted = L10n.tr("Localizable", "filter.uncompleted", fallback: "Uncompleted")
+  }
   internal enum Friday {
     /// Fri
     internal static let short = L10n.tr("Localizable", "friday.short", fallback: "Fri")
