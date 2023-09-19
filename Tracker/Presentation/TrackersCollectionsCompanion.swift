@@ -99,6 +99,14 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         return selectedPredicate
     }
     
+    func howManyCompletedTrackers() -> Int {
+        return dataProvider?.howManyCompletedTrackers() ?? 0
+    }
+    
+    func haveStats() -> Bool {
+        return dataProvider?.haveStats() ?? false
+    }
+    
     
     
     // MARK: - UICollectionViewDataSource

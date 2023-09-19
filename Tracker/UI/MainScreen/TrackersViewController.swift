@@ -7,6 +7,7 @@ final class TrackersViewController: UIViewController {
     var collectionPresenter: TrackersCollectionsPresenter!
     var collectionCompanion: TrackersCollectionsCompanion?
     private var isSearchFocused: Bool  = false
+    private let statStorage = StatisticResultsStorage.shared
     
     let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -25,9 +26,7 @@ final class TrackersViewController: UIViewController {
     
     let questionLabel: UILabel = {
         let label = UILabel()
-        label.text = NSLocalizedString("emptyState.title",
-                                       value: "Нет значения",
-                                       comment: "Сообщение при пустом экране")
+        label.text = L10n.EmptyState.title
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         return label
     }()
@@ -88,6 +87,10 @@ final class TrackersViewController: UIViewController {
         
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
+        if let companion = collectionCompanion {
+            print("Вызываю конфигуратор компаньона")
+            statStorage.configure(companion)
+        }
         collectionPresenter.selectedDate = self.datePicker.date
         view.backgroundColor = UIColor(named: "TrackerWhite")
         searchField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)

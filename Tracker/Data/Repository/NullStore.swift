@@ -3,6 +3,10 @@ import CoreData
 final class NullStore {}
 
 extension NullStore: TrackersDataStore {
+    func haveStats() -> Bool {
+        return false
+    }
+    
     func edit(_ record: Tracker) throws {
     }
     
@@ -26,6 +30,10 @@ extension NullStore: CategoriesDataStore {
 }
 
 extension NullStore: ExecutionsDataStore {
+    func howManyCompletedTrackers() -> Int {
+        return 0
+    }
+    
     func interactWith(_ record: UUID, _ date: SimpleDate) throws {}
 }
 

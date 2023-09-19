@@ -55,6 +55,8 @@ protocol TrackersDataProviderProtocol {
     func interactWithTrackerPinning(_ tracker: TrackersRecord) throws
     func categoryConnectedToTracker(trackerId: UUID) -> TrackerCategory?
     func setPredicate(predicate: TrackerPredicateType)
+    func howManyCompletedTrackers() -> Int
+    func haveStats() -> Bool
 }
 
 extension TrackersDataProviderProtocol {
@@ -256,6 +258,15 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
 }
 
 extension TrackersDataProvider: TrackersDataProviderProtocol {
+    func haveStats() -> Bool {
+        return trackersDataStore.haveStats()
+    }
+    
+    
+    func howManyCompletedTrackers() -> Int {
+        executionsDataStore.howManyCompletedTrackers()
+    }
+    
     func setPredicate(predicate: TrackerPredicateType) {
         currentPredicateType = predicate
     }

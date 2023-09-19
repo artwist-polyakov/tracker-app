@@ -63,6 +63,12 @@ final class DataStore {
 
 // MARK: - TrackersDataStore
 extension DataStore: TrackersDataStore {
+    func haveStats() -> Bool {
+        let fetchRequest: NSFetchRequest<TrackersCoreData> = TrackersCoreData.fetchRequest()
+        let count = try? context.count(for: fetchRequest)
+        return (count ?? .zero) > 0
+    }
+    
     func chageCategory(for trackerId: UUID, to category: CategoriesCoreData) throws {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
         fetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSUUID)
@@ -204,6 +210,12 @@ extension DataStore: CategoriesDataStore {
 }
 
 extension DataStore: ExecutionsDataStore {
+    func howManyCompletedTrackers() -> Int {
+        let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
+        let count = try? context.count(for: fetchRequest)
+        return count ?? .zero
+    }
+    
     func interactWith(_ record: UUID, _ date: SimpleDate) throws {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date.date as NSDate, #keyPath(ExecutionsCoreData.trackerId), record as NSUUID)
