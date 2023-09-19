@@ -43,6 +43,11 @@ final class StatsViewController: UIViewController {
         }
     }
     
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        table.reloadData()
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         storage.refresh() { [weak self] in
@@ -89,7 +94,6 @@ final class StatsViewController: UIViewController {
             table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
-        table.reloadData()
         guard let data = storage.statisticResults else { table.isHidden = true ; return }
         print(data)
         if data.count > 0 {
@@ -98,7 +102,10 @@ final class StatsViewController: UIViewController {
         } else {
             table.isHidden = true
         }
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         DispatchQueue.main.async {
             self.table.reloadData()
         }
