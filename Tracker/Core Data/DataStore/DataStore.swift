@@ -242,6 +242,12 @@ extension DataStore: ExecutionsDataStore {
     
     private func detachExecution(byObjectId objectId: NSManagedObjectID) {
         if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
+            
+            if let relatedTracker = objectToDelete.executionToTrackers {
+                if let executionsSet = relatedTracker.value(forKey: "trackerToExecutions") as? NSMutableSet {
+                    executionsSet.remove(objectToDelete)
+                }
+            }
             context.delete(objectToDelete)
             do {
                 try context.save()

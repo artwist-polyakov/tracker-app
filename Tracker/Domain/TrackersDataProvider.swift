@@ -244,7 +244,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
             return NSPredicate(format: "ANY trackerToExecutions.date == %@", selectedDate.date as NSDate)
 
         case .uncompletedTrackers:
-            return NSPredicate(format: "NONE trackerToExecutions.date == %@", selectedDate.date as NSDate)
+            return NSPredicate(format: "(SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count == 0) OR (trackerToExecutions.@count == 0)", selectedDate.date as NSDate)
         }
     }
     
