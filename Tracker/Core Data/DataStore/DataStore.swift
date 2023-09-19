@@ -26,13 +26,13 @@ final class DataStore {
         do {
             container = try NSPersistentContainer.load(name: modelName, model: model, url: storeURL)
             context = container.newBackgroundContext()
-//            
-//            let fetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
-//            let executions = try context.fetch(fetchRequest)
-//            print("----- Все выполнения (Executions) -----")
-//            for execution in executions {
-//                print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
-//            }
+            
+            let fetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
+            let executions = try context.fetch(fetchRequest)
+            print("----- Все выполнения (Executions) -----")
+            for execution in executions {
+                print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
+            }
             
         } catch let error as NSError {
             print("Произошла ошибка при инициализации dataStore: \(error.localizedDescription)")
@@ -228,11 +228,13 @@ extension DataStore: ExecutionsDataStore {
         let newExecution = ExecutionsCoreData(context: context)
         newExecution.date = date
         newExecution.trackerId = trackerId
-        
+        let trackerFetchRequest: NSFetchRequest<TrackersCoreData> = TrackersCoreData.fetchRequest()
+        trackerFetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSUUID)
+        if let tracker = try? context.fetch(trackerFetchRequest).first {
+            newExecution.executionToTrackers = tracker
+        }
         do {
             try context.save()
-            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = ExecutionsCoreData.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(ExecutionsCoreData.date), date as NSDate, #keyPath(ExecutionsCoreData.trackerId), trackerId as NSUUID)
         } catch let error as NSError {
             print("Ошибка при сохранении выполнения: \(error.localizedDescription)")
         }

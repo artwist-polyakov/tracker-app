@@ -241,10 +241,10 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                                #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
                                #keyPath(TrackersCoreData.shedule))
         case .completedTrackers:
-            return NSPredicate(format: "ANY trackerToExecutions.date == %@", Date() as NSDate)
+            return NSPredicate(format: "ANY trackerToExecutions.date == %@", selectedDate.date as NSDate)
 
         case .uncompletedTrackers:
-            return NSPredicate(format: "NONE trackerToExecutions.date == %@", Date() as NSDate)
+            return NSPredicate(format: "NONE trackerToExecutions.date == %@", selectedDate.date as NSDate)
         }
     }
     
