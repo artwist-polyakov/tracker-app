@@ -7,7 +7,7 @@ final class StatisticResultsStorage {
     
     var statisticResults: [StatisticResult]? = nil
     
-    func refresh() {
+    func refresh(_ completion: (() -> Void)? = nil) {
         print("StatisticResultsStorage refresh")
         let stats = [companion?.howManyCompletedTrackers(), companion?.howManyCompletedTrackers()]
         let titles = [L10n.Stats.completedTrackers, L10n.Stats.completedTrackers]
@@ -20,6 +20,8 @@ final class StatisticResultsStorage {
             }
         }
         print("окончание конфигруации \(statisticResults)")
+        guard let completion = completion else { return }
+        completion()
     }
     
     func configure(_ companion: TrackersCollectionsCompanion) {

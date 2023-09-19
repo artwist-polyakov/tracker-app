@@ -26,20 +26,31 @@ final class StatsViewController: UIViewController {
     
     private var storage = StatisticResultsStorage.shared
     
-    // Вызов конструктора суперкласса с nil параметрами.
     init() { // Объявление инициализатора.
         super.init(nibName: nil, bundle: nil)
     }
     
-    // Объявление обязательного инициализатора, который требуется, если вы используете Storyboards или XIBs. В этом случае он не реализован и вызовет ошибку выполнения.
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        storage.refresh() { [weak self] in
+            DispatchQueue.main.async {
+                self?.table.reloadData()
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        storage.refresh() { [weak self] in
+            DispatchQueue.main.async {
+                self?.table.reloadData()
+            }
+        }
         view.backgroundColor = UIColor(named: "TrackerWhite")
-        storage.refresh()
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
         view.addSubview(titleLabel)
@@ -70,6 +81,7 @@ final class StatsViewController: UIViewController {
         table.isScrollEnabled = true
         view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.backgroundColor = .clear
         table.separatorStyle = .none
         NSLayoutConstraint.activate([
             table.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 77),
@@ -86,6 +98,10 @@ final class StatsViewController: UIViewController {
         } else {
             table.isHidden = true
         }
+        
+        DispatchQueue.main.async {
+            self.table.reloadData()
+        }
     }
 }
 
@@ -99,7 +115,13 @@ extension StatsViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = table.dequeueReusableCell(withIdentifier: "GradientCell", for: indexPath) as! GradientCell
         cell.valueLabel.text =  storage.statisticResults?[indexPath.row].result
         cell.titleLabel.text = storage.statisticResults?[indexPath.row].title
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.layoutIfNeeded()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

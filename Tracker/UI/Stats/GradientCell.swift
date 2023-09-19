@@ -34,6 +34,8 @@ class GradientCell: UITableViewCell {
     }
     
     private func setupUI() {
+        contentView.layoutIfNeeded()
+        contentView.setNeedsLayout()
         backgroundColor = .clear
         selectionStyle = .none
         
