@@ -29,12 +29,6 @@ final class DataStore: DataStoreProtocol {
             container = try NSPersistentContainer.load(name: modelName, model: model, url: storeURL)
             context = container.newBackgroundContext()
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-//            let fetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
-//            let executions = try context.fetch(fetchRequest)
-//            print("----- Все выполнения (Executions) -----")
-//            for execution in executions {
-//                print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
-//            }
             
         } catch let error as NSError {
             print("Произошла ошибка при инициализации dataStore: \(error.localizedDescription)")
@@ -201,19 +195,19 @@ extension DataStore: TrackersDataStore {
         try performSync { context in
             Result {
                 
-                
-                // Если удаляемый объект является TrackersCoreData
-                if let tracker = record as? TrackersCoreData {
-                    // Получите все связанные объекты ExecutionsCoreData
-                    if let executions = tracker.trackerToExecutions as? Set<ExecutionsCoreData> {
-                        // Удалите каждый из них
-                        for execution in executions {
-                            context.delete(execution)
-                        }
-                    }
-                    // Сохраните контекст после удаления связанных объектов
-                    try context.save()
-                }
+//
+//                // Если удаляемый объект является TrackersCoreData
+//                if let tracker = record as? TrackersCoreData {
+//                    // Получите все связанные объекты ExecutionsCoreData
+//                    if let executions = tracker.trackerToExecutions as? Set<ExecutionsCoreData> {
+//                        // Удалите каждый из них
+//                        for execution in executions {
+//                            context.delete(execution)
+//                        }
+//                    }
+//                    // Сохраните контекст после удаления связанных объектов
+//                    try context.save()
+//                }
                 
                 // Удаление объекта
                 context.delete(record)

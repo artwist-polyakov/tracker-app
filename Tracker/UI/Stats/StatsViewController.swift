@@ -37,7 +37,6 @@ final class StatsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         storage.refresh() { [weak self] in
-            print("обновил storage в методе viewWillAppear")
             DispatchQueue.main.async {
                 self?.table.reloadData()
             }
@@ -97,7 +96,6 @@ final class StatsViewController: UIViewController {
         ])
         guard let data = storage.statisticResults else {
             table.isHidden = true ; return }
-        print(data)
         if data.count > 0 {
             table.isHidden = false
             nothingImage.isHidden = true
@@ -114,7 +112,6 @@ final class StatsViewController: UIViewController {
         
         guard let data = storage.statisticResults else {
             table.isHidden = true ; return }
-        print(data)
         if data.count > 0 {
             table.isHidden = false
             nothingImage.isHidden = true
