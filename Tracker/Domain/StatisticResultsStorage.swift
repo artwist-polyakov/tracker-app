@@ -18,6 +18,8 @@ final class StatisticResultsStorage {
                     statisticResults?.append(StatisticResult(title: titles[pos], result: String(validRes)))
                 }
             }
+        } else {
+            statisticResults = []
         }
         print("окончание конфигруации \(statisticResults)")
         guard let completion = completion else { return }

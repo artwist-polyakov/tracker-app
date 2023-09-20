@@ -37,6 +37,7 @@ final class StatsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         storage.refresh() { [weak self] in
+            print("обновил storage в методе viewWillAppear")
             DispatchQueue.main.async {
                 self?.table.reloadData()
             }
@@ -94,19 +95,39 @@ final class StatsViewController: UIViewController {
             table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
-        guard let data = storage.statisticResults else { table.isHidden = true ; return }
+        guard let data = storage.statisticResults else {
+            table.isHidden = true ; return }
         print(data)
         if data.count > 0 {
+            table.isHidden = false
             nothingImage.isHidden = true
             nothingLabel.isHidden = true
         } else {
             table.isHidden = true
+            nothingImage.isHidden = false
+            nothingLabel.isHidden = false
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        guard let data = storage.statisticResults else {
+            table.isHidden = true ; return }
+        print(data)
+        if data.count > 0 {
+            table.isHidden = false
+            nothingImage.isHidden = true
+            nothingLabel.isHidden = true
+        } else {
+            table.isHidden = true
+            nothingImage.isHidden = false
+            nothingLabel.isHidden = false
+        }
+
+        
         DispatchQueue.main.async {
+            print("обновил таблицу в методе viewWillAppear")
             self.table.reloadData()
         }
     }

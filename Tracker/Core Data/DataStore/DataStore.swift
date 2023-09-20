@@ -65,7 +65,9 @@ final class DataStore {
 extension DataStore: TrackersDataStore {
     func haveStats() -> Bool {
         let fetchRequest: NSFetchRequest<TrackersCoreData> = TrackersCoreData.fetchRequest()
+        print("проверяю на наличие статистики")
         let count = try? context.count(for: fetchRequest)
+        print(count ?? -1)
         return (count ?? .zero) > 0
     }
     
