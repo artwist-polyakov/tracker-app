@@ -154,7 +154,6 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
         delegate?.didUpdate(generateUdate())
     }
     
-    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
             
@@ -220,33 +219,31 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
 
     private func giveTrackersPredicate(kind: TrackerPredicateType = .defaultPredicate) -> NSPredicate {
+        let schedulePredicate = NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
+                                            #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
+                                            #keyPath(TrackersCoreData.shedule))
+
         switch kind {
         case .defaultPredicate:
             if typedText.isEmpty {
-                return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
-                                   #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
-                                   #keyPath(TrackersCoreData.shedule))
+                return schedulePredicate
             } else {
-                return NSPredicate(format: "((%K CONTAINS %@) OR (%K == '')) AND (%K CONTAINS[cd] %@)",
-                                   #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
-                                   #keyPath(TrackersCoreData.shedule),
-                                   #keyPath(TrackersCoreData.title), typedText)
+                let titlePredicate = NSPredicate(format: "%K CONTAINS[cd] %@", #keyPath(TrackersCoreData.title), typedText)
+                return NSCompoundPredicate(andPredicateWithSubpredicates: [schedulePredicate, titlePredicate])
             }
         case .allTrackers:
-            return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
-                               #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
-                               #keyPath(TrackersCoreData.shedule))
+            return schedulePredicate
         case .todayTrackers:
-            return NSPredicate(format: "(%K CONTAINS %@) OR (%K == '')",
-                               #keyPath(TrackersCoreData.shedule), String(selectedDate.weekDayNum),
-                               #keyPath(TrackersCoreData.shedule))
+            return schedulePredicate
         case .completedTrackers:
-            return NSPredicate(format: "ANY trackerToExecutions.date == %@", selectedDate.date as NSDate)
-
+            let completedPredicate = NSPredicate(format: "(SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count > 0)", selectedDate.date as NSDate)
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [schedulePredicate, completedPredicate])
         case .uncompletedTrackers:
-            return NSPredicate(format: "(SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count == 0) OR (trackerToExecutions.@count == 0)", selectedDate.date as NSDate)
+            let uncompletedPredicate = NSPredicate(format: "(SUBQUERY(trackerToExecutions, $execution, $execution.date == %@).@count == 0) OR (trackerToExecutions.@count == 0)", selectedDate.date as NSDate)
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [schedulePredicate, uncompletedPredicate])
         }
     }
+
     
     private func reloadData() {
         trackersFetchedResultsController.fetchRequest.predicate = giveTrackersPredicate(kind: currentPredicateType)
@@ -334,7 +331,16 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     private func trackerIndexPathById(_ id: UUID) -> IndexPath? {
         let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id as NSUUID)
+        
+        // Ваш основной предикат
+        let mainPredicate = giveTrackersPredicate(kind: currentPredicateType)
+        
+        // Дополнительный предикат для проверки id
+        let idPredicate = NSPredicate(format: "id == %@", id as NSUUID)
+        
+        // Объединение предикатов
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [mainPredicate, idPredicate])
+        
         fetchRequest.fetchLimit = 1
         do {
             let trackers = try context.fetch(fetchRequest)
@@ -349,17 +355,14 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         }
     }
     
-    
     func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws {
         try executionsDataStore.interactWith(trackerId, date)
-        if currentPredicateType == .completedTrackers || currentPredicateType == .uncompletedTrackers {
+        guard let indexPath = trackerIndexPathById(trackerId) else {
             reloadData()
             delegate?.reloadData()
-        } else {
-            guard let indexPath = trackerIndexPathById(trackerId) else {delegate?.reloadData();return}
-            delegate?.reloadItems(at: [indexPath])
+            return
         }
-    }
+        delegate?.reloadItems(at: [indexPath])}
     
     func deleteObject(at indexPath: IndexPath) throws {
         let record = trackersFetchedResultsController.object(at: indexPath)
