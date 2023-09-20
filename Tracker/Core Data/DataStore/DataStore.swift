@@ -303,6 +303,7 @@ extension DataStore: ExecutionsDataStore {
                 trackerFetchRequest.predicate = NSPredicate(format: "id == %@", trackerId as NSUUID)
                 if let tracker = try context.fetch(trackerFetchRequest).first {
                     newExecution.executionToTrackers = tracker
+                    tracker.lastUpdate = Date()
                 }
                 try context.save()
             }
@@ -314,6 +315,7 @@ extension DataStore: ExecutionsDataStore {
             Result {
                 if let objectToDelete = context.object(with: objectId) as? ExecutionsCoreData {
                     if let relatedTracker = objectToDelete.executionToTrackers {
+                        relatedTracker.lastUpdate = Date()
                         if let executionsSet = relatedTracker.value(forKey: "trackerToExecutions") as? NSMutableSet {
                             executionsSet.remove(objectToDelete)
                         }
