@@ -359,13 +359,6 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     
     func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws {
         try executionsDataStore.interactWith(trackerId, date)
-        guard let indexPath = trackerIndexPathById(trackerId) else {
-//            reloadData()
-//            print("Я в гарде")
-//            delegate?.reloadData()
-            return
-        }
-        delegate?.reloadItems(at: [indexPath])
     }
     
     func deleteObject(at indexPath: IndexPath) throws {
