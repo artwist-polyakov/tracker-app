@@ -68,3 +68,4 @@ filter.completed = "Terminé";
 filter.uncompleted = "Non terminé";
 stats.nothingShow = "Rien à analyser pour le moment";
 stats.completedTrackers = "Trackers terminés";
+stats.bestStrike = "Meilleure période";

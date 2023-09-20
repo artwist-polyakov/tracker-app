@@ -68,3 +68,4 @@ filter.completed = "مكتمل";
 filter.uncompleted = "غير مكتمل";
 stats.nothingShow = "لا شيء للتحليل حتى الآن";
 stats.completedTrackers = "المتعقبون المكتملون";
+stats.bestStrike = "أفضل فترة";

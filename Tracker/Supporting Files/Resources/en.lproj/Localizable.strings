@@ -68,3 +68,4 @@ filter.completed = "Completed";
 filter.uncompleted = "Uncompleted";
 stats.nothingShow = "Here is nothing to analize";
 stats.completedTrackers = "Completed trackers";
+stats.bestStrike = "Best strike of days";

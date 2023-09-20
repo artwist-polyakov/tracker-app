@@ -127,6 +127,8 @@ internal enum L10n {
     internal static let short = L10n.tr("Localizable", "saturday.short", fallback: "Sat")
   }
   internal enum Stats {
+    /// Best strike of days
+    internal static let bestStrike = L10n.tr("Localizable", "stats.bestStrike", fallback: "Best strike of days")
     /// Completed trackers
     internal static let completedTrackers = L10n.tr("Localizable", "stats.completedTrackers", fallback: "Completed trackers")
     /// Here is nothing to analize

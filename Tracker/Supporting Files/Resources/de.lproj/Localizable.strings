@@ -68,4 +68,5 @@ filter.completed = "Abgeschlossen";
 filter.uncompleted = "Nicht abgeschlossen";
 stats.nothingShow = "Noch nichts zu analysieren";
 stats.completedTrackers = "Abgeschlossene Tracker";
+stats.bestStrike = "Bester Lauf";
 

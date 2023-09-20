@@ -9,7 +9,7 @@ final class StatisticResultsStorage {
     
     func refresh(_ completion: (() -> Void)? = nil) {
         let stats = [companion?.howManyCompletedTrackers(), companion?.mostLongSeries()]
-        let titles = [L10n.Stats.completedTrackers, L10n.Stats.completedTrackers]
+        let titles = [L10n.Stats.completedTrackers, L10n.Stats.bestStrike]
         if companion?.haveStats() ?? false {
             statisticResults = []
             for (pos, res) in stats.enumerated() {

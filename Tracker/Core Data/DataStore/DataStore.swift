@@ -229,36 +229,30 @@ extension DataStore: ExecutionsDataStore {
         
         do {
             try controller.performFetch()
-            
             guard let fetchedObjects = controller.fetchedObjects else {
                 return 0
             }
             
-            var maxSeries = fetchedObjects.count > 0 ? 1 : 0
-            var currentSeries = maxSeries
+            var maxSeries = 0
+            var currentSeries = 0
             var previuosDate =  Date()
-            for i in 0..<fetchedObjects.count - 1 {
-                print("i = \(i)")
-                print(currentSeries)
+            for i in 0...fetchedObjects.count - 1 {
                 guard let date = fetchedObjects[i].date
                 else {
                     return maxSeries}
-                if i == 0 {
-                    continue
-                } else if abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) < 1 {
-                    continue
-                } else if abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) == 1 {
-                    currentSeries += 1
-                } else {
-                    if currentSeries > maxSeries {
-                        maxSeries = currentSeries
-                    }
-                    currentSeries = 1
+                print(currentSeries)
+                if currentSeries > maxSeries {
+                    maxSeries = currentSeries
                 }
+                print("\(previuosDate) \(date)")
+                if i != 0 && abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) > 1 {
+                    print("\(previuosDate) \(date)")
+                    currentSeries = 0
+                } else if  i != 0 && abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) == 0 {
+                    currentSeries -= 1
+                }
+                currentSeries += 1
                 previuosDate = date
-            }
-            if currentSeries > maxSeries {
-                maxSeries = currentSeries
             }
             return maxSeries
         } catch {

@@ -68,4 +68,4 @@ filter.completed = "已完成";
 filter.uncompleted = "未完成";
 stats.nothingShow = "目前沒有可分析的資料";
 stats.completedTrackers = "已完成的追踪器";
-
+stats.bestStrike = "最佳時期";
