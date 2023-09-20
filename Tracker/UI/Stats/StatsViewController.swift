@@ -127,7 +127,6 @@ final class StatsViewController: UIViewController {
 
         
         DispatchQueue.main.async {
-            print("обновил таблицу в методе viewWillAppear")
             self.table.reloadData()
         }
     }

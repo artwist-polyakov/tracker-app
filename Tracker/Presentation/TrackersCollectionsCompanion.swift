@@ -86,8 +86,8 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
     }
     
     
-    func interactWithExecution(trackerId: UUID, date: SimpleDate, indexPath: IndexPath) {
-        try? dataProvider?.interactWith(trackerId, date, indexPath: indexPath)
+    func interactWithExecution(trackerId: UUID, date: SimpleDate) {
+        try? dataProvider?.interactWith(trackerId, date)
     }
     
     func setPredicate(predicate: TrackerPredicateType) {
@@ -198,20 +198,20 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
                 quantityText: L10n.daysStrike(days),
                 hasMark: isDone
             )
-        }
-        
-        cell.onFunctionButtonTapped = { [weak self] in
-            let selectdate = self?.selectedDate ?? SimpleDate(date: Date()).date
-            guard let id = self?.dataProvider?.object(at: indexPath)?.trackerId
-            else {return}
-            if selectdate <= SimpleDate(date:Date()).date {
-                self?.analyticsService.report(event: "click", params: ["screen": "Main","item":"track"])
-                self?.interactWithExecution(trackerId: id, date: SimpleDate(date: selectdate), indexPath: indexPath)
-            } else {
-                guard let vc = self?.viewController else {return}
-                vc.showFutureDateAlert()
+            
+            cell.onFunctionButtonTapped = { [weak self] in
+                let selectdate = self?.selectedDate ?? SimpleDate(date: Date()).date
+                if selectdate <= SimpleDate(date:Date()).date {
+                    self?.analyticsService.report(event: "click", params: ["screen": "Main","item":"track"])
+                    self?.interactWithExecution(trackerId: tracker.trackerId, date: SimpleDate(date: selectdate))
+                } else {
+                    guard let vc = self?.viewController else {return}
+                    vc.showFutureDateAlert()
+                }
             }
         }
+        
+        
         return cell
     }
     
@@ -282,7 +282,6 @@ extension TrackersCollectionsCompanion: TrackersDataProviderDelegate {
               let cv = vc.collectionView
         else {return}
         cv.performBatchUpdates {
-            print("ОШИБКА update: \(update)")
             
             cv.deleteSections(update.deletedSections)
             cv.insertSections(update.insertedSections)

@@ -41,7 +41,7 @@ protocol TrackersDataProviderProtocol {
     func addCategory(_ category: TrackerCategory, isAutomatic:Bool) throws
     func addTracker(_ tracker: Tracker, categoryId: UUID, categoryTitle: String) throws
     func editTracker(_ tracker: Tracker) throws
-    func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws
+    func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws
     func deleteObject(at indexPath: IndexPath) throws
     func setDate (date: SimpleDate)
     func setQuery (query: String)
@@ -327,12 +327,31 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
         try trackersDataStore.edit(tracker)
     }
     
-    func interactWith(_ trackerId: UUID, _ date: SimpleDate, indexPath: IndexPath) throws {
+    private func trackerIndexPathById(_ id: UUID) -> IndexPath? {
+        let fetchRequest = NSFetchRequest<TrackersCoreData>(entityName: "TrackersCoreData")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as NSUUID)
+        fetchRequest.fetchLimit = 1
+        do {
+            let trackers = try context.fetch(fetchRequest)
+            guard let tracker = trackers.first,
+                  let indexPath = trackersFetchedResultsController.indexPath(forObject: tracker)
+            else {
+                return nil
+            }
+            return indexPath
+        } catch _ as NSError {
+            return nil
+        }
+    }
+    
+    
+    func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws {
         try executionsDataStore.interactWith(trackerId, date)
         if currentPredicateType == .completedTrackers || currentPredicateType == .uncompletedTrackers {
             reloadData()
             delegate?.reloadData()
         } else {
+            guard let indexPath = trackerIndexPathById(trackerId) else {delegate?.reloadData();return}
             delegate?.reloadItems(at: [indexPath])
         }
     }

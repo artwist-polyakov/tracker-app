@@ -88,7 +88,6 @@ final class TrackersViewController: UIViewController {
         collectionPresenter = TrackersCollectionsPresenter(vc: self)
         collectionCompanion = TrackersCollectionsCompanion(vc: self, delegate: collectionPresenter)
         if let companion = collectionCompanion {
-            print("Вызываю конфигуратор компаньона")
             statStorage.configure(companion)
         }
         collectionPresenter.selectedDate = self.datePicker.date

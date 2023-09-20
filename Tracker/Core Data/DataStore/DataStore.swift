@@ -78,9 +78,7 @@ final class DataStore: DataStoreProtocol {
 extension DataStore: TrackersDataStore {
     func haveStats() -> Bool {
         let fetchRequest: NSFetchRequest<TrackersCoreData> = TrackersCoreData.fetchRequest()
-        print("проверяю на наличие статистики")
         let count = try? context.count(for: fetchRequest)
-        print(count ?? -1)
         return (count ?? .zero) > 0
     }
     
@@ -203,29 +201,6 @@ extension DataStore: TrackersDataStore {
         try performSync { context in
             Result {
                 
-                // Логирование содержимого всех CategoriesCoreData
-                var categoriesFetchRequest: NSFetchRequest<CategoriesCoreData> = CategoriesCoreData.fetchRequest()
-                var allCategories = try context.fetch(categoriesFetchRequest)
-                print("----- Все категории (CategoriesCoreData) -----")
-                for category in allCategories {
-                    print("ID: \(category.id ?? UUID()), Title: \(category.title ?? "")")
-                }
-                
-                // Логирование содержимого всех TrackersCoreData
-                var trackersFetchRequest: NSFetchRequest<TrackersCoreData> = TrackersCoreData.fetchRequest()
-                var allTrackers = try context.fetch(trackersFetchRequest)
-                print("----- Все трекеры (TrackersCoreData) -----")
-                for tracker in allTrackers {
-                    print("ID: \(tracker.id ?? UUID()), Title: \(tracker.title ?? "")")
-                }
-                
-                // Логирование содержимого всех ExecutionsCoreData
-                var executionsFetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
-                var allExecutions = try context.fetch(executionsFetchRequest)
-                print("----- Все выполнения (ExecutionsCoreData) -----")
-                for execution in allExecutions {
-                    print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
-                }
                 
                 // Если удаляемый объект является TrackersCoreData
                 if let tracker = record as? TrackersCoreData {
@@ -246,29 +221,6 @@ extension DataStore: TrackersDataStore {
                 // Сохранение изменений
                 try context.save()
                 
-                // Логирование содержимого всех CategoriesCoreData
-                categoriesFetchRequest = CategoriesCoreData.fetchRequest()
-                allCategories = try context.fetch(categoriesFetchRequest)
-                print("----- Все категории (CategoriesCoreData) -----")
-                for category in allCategories {
-                    print("ID: \(category.id ?? UUID()), Title: \(category.title ?? "")")
-                }
-                
-                // Логирование содержимого всех TrackersCoreData
-                trackersFetchRequest = TrackersCoreData.fetchRequest()
-                allTrackers = try context.fetch(trackersFetchRequest)
-                print("----- Все трекеры (TrackersCoreData) -----")
-                for tracker in allTrackers {
-                    print("ID: \(tracker.id ?? UUID()), Title: \(tracker.title ?? "")")
-                }
-                
-                // Логирование содержимого всех ExecutionsCoreData
-                executionsFetchRequest = ExecutionsCoreData.fetchRequest()
-                allExecutions = try context.fetch(executionsFetchRequest)
-                print("----- Все выполнения (ExecutionsCoreData) -----")
-                for execution in allExecutions {
-                    print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
-                }
             }
         }
     }
