@@ -43,11 +43,6 @@ final class StatsViewController: UIViewController {
         }
     }
     
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        table.reloadData()
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         storage.refresh() { [weak self] in

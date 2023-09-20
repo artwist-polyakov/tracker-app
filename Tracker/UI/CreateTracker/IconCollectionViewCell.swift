@@ -69,7 +69,6 @@ final class IconCollectionViewCell: UITableViewCell, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedEmoji = icons[indexPath.row]
-//        selectedIndexPath = indexPath
         delegate?.didSetTrackerIcon(selectedEmoji)
     }
     
