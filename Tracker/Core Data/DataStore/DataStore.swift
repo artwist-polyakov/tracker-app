@@ -1,8 +1,10 @@
 import Foundation
 import CoreData
 
+protocol DataStoreProtocol: TrackersDataStore, CategoriesDataStore, ExecutionsDataStore {}
+
 // MARK: - DataStore
-final class DataStore {
+final class DataStore: DataStoreProtocol {
     
     private let modelName = "Trackers"
     private let storeURL = NSPersistentContainer
@@ -26,7 +28,7 @@ final class DataStore {
         do {
             container = try NSPersistentContainer.load(name: modelName, model: model, url: storeURL)
             context = container.newBackgroundContext()
-            
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 //            let fetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
 //            let executions = try context.fetch(fetchRequest)
 //            print("----- Все выполнения (Executions) -----")
@@ -45,9 +47,20 @@ final class DataStore {
     private func performSync<R>(_ action: (NSManagedObjectContext) -> Result<R, Error>) throws -> R {
         let context = self.context
         var result: Result<R, Error>!
-        context.performAndWait { result = action(context) }
+        
+        context.performAndWait {
+            result = action(context)
+        }
+        
+        if case .failure(let error) = result {
+            print("Ошибка при выполнении действия в контексте: \(error.localizedDescription)")
+            throw error
+        }
+        
         return try result.get()
     }
+
+
     
     private func cleanUpReferencesToPersistentStores() {
         context.performAndWait {
@@ -189,8 +202,73 @@ extension DataStore: TrackersDataStore {
     func delete(_ record: NSManagedObject) throws {
         try performSync { context in
             Result {
+                
+                // Логирование содержимого всех CategoriesCoreData
+                var categoriesFetchRequest: NSFetchRequest<CategoriesCoreData> = CategoriesCoreData.fetchRequest()
+                var allCategories = try context.fetch(categoriesFetchRequest)
+                print("----- Все категории (CategoriesCoreData) -----")
+                for category in allCategories {
+                    print("ID: \(category.id ?? UUID()), Title: \(category.title ?? "")")
+                }
+                
+                // Логирование содержимого всех TrackersCoreData
+                var trackersFetchRequest: NSFetchRequest<TrackersCoreData> = TrackersCoreData.fetchRequest()
+                var allTrackers = try context.fetch(trackersFetchRequest)
+                print("----- Все трекеры (TrackersCoreData) -----")
+                for tracker in allTrackers {
+                    print("ID: \(tracker.id ?? UUID()), Title: \(tracker.title ?? "")")
+                }
+                
+                // Логирование содержимого всех ExecutionsCoreData
+                var executionsFetchRequest: NSFetchRequest<ExecutionsCoreData> = ExecutionsCoreData.fetchRequest()
+                var allExecutions = try context.fetch(executionsFetchRequest)
+                print("----- Все выполнения (ExecutionsCoreData) -----")
+                for execution in allExecutions {
+                    print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
+                }
+                
+                // Если удаляемый объект является TrackersCoreData
+                if let tracker = record as? TrackersCoreData {
+                    // Получите все связанные объекты ExecutionsCoreData
+                    if let executions = tracker.trackerToExecutions as? Set<ExecutionsCoreData> {
+                        // Удалите каждый из них
+                        for execution in executions {
+                            context.delete(execution)
+                        }
+                    }
+                    // Сохраните контекст после удаления связанных объектов
+                    try context.save()
+                }
+                
+                // Удаление объекта
                 context.delete(record)
+                
+                // Сохранение изменений
                 try context.save()
+                
+                // Логирование содержимого всех CategoriesCoreData
+                categoriesFetchRequest = CategoriesCoreData.fetchRequest()
+                allCategories = try context.fetch(categoriesFetchRequest)
+                print("----- Все категории (CategoriesCoreData) -----")
+                for category in allCategories {
+                    print("ID: \(category.id ?? UUID()), Title: \(category.title ?? "")")
+                }
+                
+                // Логирование содержимого всех TrackersCoreData
+                trackersFetchRequest = TrackersCoreData.fetchRequest()
+                allTrackers = try context.fetch(trackersFetchRequest)
+                print("----- Все трекеры (TrackersCoreData) -----")
+                for tracker in allTrackers {
+                    print("ID: \(tracker.id ?? UUID()), Title: \(tracker.title ?? "")")
+                }
+                
+                // Логирование содержимого всех ExecutionsCoreData
+                executionsFetchRequest = ExecutionsCoreData.fetchRequest()
+                allExecutions = try context.fetch(executionsFetchRequest)
+                print("----- Все выполнения (ExecutionsCoreData) -----")
+                for execution in allExecutions {
+                    print("ID Трекера: \(execution.trackerId), Дата: \(String(describing: execution.date))")
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 import CoreData
 
-final class NullStore {}
+final class NullStore:DataStoreProtocol {}
 
 extension NullStore: TrackersDataStore {
     func haveStats() -> Bool {
