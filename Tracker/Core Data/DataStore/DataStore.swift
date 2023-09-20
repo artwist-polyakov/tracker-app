@@ -194,27 +194,11 @@ extension DataStore: TrackersDataStore {
     func delete(_ record: NSManagedObject) throws {
         try performSync { context in
             Result {
-                
-//
-//                // Если удаляемый объект является TrackersCoreData
-//                if let tracker = record as? TrackersCoreData {
-//                    // Получите все связанные объекты ExecutionsCoreData
-//                    if let executions = tracker.trackerToExecutions as? Set<ExecutionsCoreData> {
-//                        // Удалите каждый из них
-//                        for execution in executions {
-//                            context.delete(execution)
-//                        }
-//                    }
-//                    // Сохраните контекст после удаления связанных объектов
-//                    try context.save()
-//                }
-                
                 // Удаление объекта
                 context.delete(record)
                 
                 // Сохранение изменений
                 try context.save()
-                
             }
         }
     }
