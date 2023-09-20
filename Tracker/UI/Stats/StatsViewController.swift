@@ -118,8 +118,8 @@ final class StatsViewController: UIViewController {
         }
 
         
-        DispatchQueue.main.async {
-            self.table.reloadData()
+        DispatchQueue.main.async {[weak self] in
+            self?.table.reloadData()
         }
     }
 }
