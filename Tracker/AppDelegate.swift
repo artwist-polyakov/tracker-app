@@ -4,29 +4,18 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    lazy var trackersDataStore: TrackersDataStore = {
+    lazy var dataStore: DataStoreProtocol = {
         do {
-            return try DataStore() as TrackersDataStore
+            return try DataStore()
         } catch {
-            return NullStore() as TrackersDataStore
+            print("Ошибка при создании DataStore: \(error)")
+            return NullStore()
         }
     }()
     
-    lazy var categoriesDataStore: CategoriesDataStore = {
-        do {
-            return try DataStore() as CategoriesDataStore
-        } catch {
-            return NullStore() as CategoriesDataStore
-        }
-    }()
-    
-    lazy var executionsDataStore: ExecutionsDataStore = {
-        do {
-            return try DataStore() as ExecutionsDataStore
-        } catch {
-            return NullStore() as ExecutionsDataStore
-        }
-    }()
+    lazy var trackersDataStore: TrackersDataStore = dataStore
+    lazy var categoriesDataStore: CategoriesDataStore = dataStore
+    lazy var executionsDataStore: ExecutionsDataStore = dataStore
     
     
     lazy var persistentContainer: NSPersistentContainer = {
@@ -52,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        AnalyticsService.activate()
         return true
     }
     

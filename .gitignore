@@ -14,3 +14,9 @@ xcuserdata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
+
+### Swiftgen ###
+swiftgen.yml
+
+### Tests ###
+testMainScreen.1.png

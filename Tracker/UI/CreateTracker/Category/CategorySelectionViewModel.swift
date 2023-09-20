@@ -6,7 +6,7 @@ enum categoriesResultState {
     case showResult(categories: [TrackerCategory], update: [Int]? = nil)
 }
 
-enum categoriesNavigationState {
+enum CategoriesNavigationState {
     case removeCategory(_ category: TrackerCategory)
     case addCategory
     case editcategory(_ category: TrackerCategory)
@@ -24,7 +24,7 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
             stateClosure()
         }
     }
-    private(set) var navigationState: categoriesNavigationState? = nil {
+    private(set) var navigationState: CategoriesNavigationState? = nil {
         didSet {
             navigationClosure()
         }
@@ -36,7 +36,7 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     private let interactor = TrackersCollectionsCompanionInteractor.shared
     
     func refreshState() {
-        categories = interactor.giveMeAllCategories() ?? []
+        categories = interactor.giveMeAllCategories(filterType: .manual) ?? []
         if categories.isEmpty {
             state = .emptyResult
         } else {
@@ -45,8 +45,9 @@ final class CategorySelectionViewModel: CategorySelectionViewModelDelegate {
     }
     
     func setNewCategorySelected() {
-        let pos = howManyCategories()
-        navigationState = .categorySelected(pos-1)
+        let pos = howManyCategories() - 1
+        navigationState = .categorySelected(pos)
+        currentSelectionPos = pos
     }
     
     func setCategorySelected(category: TrackerCategory) {

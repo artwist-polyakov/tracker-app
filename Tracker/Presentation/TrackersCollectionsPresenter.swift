@@ -59,6 +59,10 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
             notifyObservers()
         }
     }
+    var trackerIsPinnedToFlush: Bool = false
+    var isEditing: Bool = false
+    var editingId: UUID? = nil
+    
     var trackerColorToFlush: Int? {
         didSet {
             notifyObservers()
@@ -86,6 +90,19 @@ final class TrackersCollectionsPresenter: TrackersCollectionsCompanionDelegate {
 }
 
 extension TrackersCollectionsPresenter: TrackerTypeDelegate {
+    func didSetPinned() {
+        self.trackerIsPinnedToFlush = true
+    }
+    
+    func markToEdit(id: UUID) {
+        self.isEditing = true
+        editingId = id
+    }
+    
+    func giveMeCategoryById(id: UUID) -> TrackerCategory? {
+        return interactor?.giveMeCategoryById(id: id)
+    }
+    
     func giveMeSelectedDays() -> [Int] {
         return trackerSheduleToFlush.compactMap { Int(String($0)) }
     }
@@ -142,6 +159,9 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
         trackerColorToFlush = nil
         trackerCategoryToFlush = nil
         trackerCategorynameToFlush = nil
+        isEditing = false
+        editingId = nil
+        trackerIsPinnedToFlush = false
     }
     
     func realizeAllFlushProperties() {
@@ -159,13 +179,19 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
             icon: Mappers.iconToIntMapper(trackerIcon),
             plannedDaysOfWeek: trackerSheduleToFlush)
         
-        let tracker = Tracker(categoryId: trackseCategory,
+        let tracker = Tracker(id: editingId ?? UUID(),
+                              categoryId: trackseCategory,
                               color: trackerColor,
                               title: trackerTitle,
                               icon: Mappers.iconToIntMapper(trackerIcon),
-                              isPlannedFor: trackerSheduleToFlush)
+                              isPlannedFor: trackerSheduleToFlush,
+                              isPinned: trackerIsPinnedToFlush)
         
-        interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
+        if isEditing {
+            interactor?.editTracker(saveVersion: tracker)
+        } else {
+            interactor?.addTracker(tracker: tracker, categoryId: trackseCategory, categoryTitle: trackerCategoryName )
+        }
         
         clearAllFlushProperties()
         guard let vc = viewController,
@@ -175,15 +201,15 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
     }
     
     func isReadyToFlush() -> Bool {
-        if trackerTypeToFlush == .notSet {
+        guard let trackerTitleToFlush = trackerTitleToFlush else { return false }
+        if trackerTypeToFlush == .notSet || trackerTitleToFlush.isEmpty {
             return false
         } else if trackerTypeToFlush == .irregularEvent {
-            return trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerColorToFlush != nil
+            return trackerIconToFlush != nil && trackerColorToFlush != nil
         } else {
-            return trackerTypeToFlush != .notSet && trackerTitleToFlush != nil && trackerIconToFlush != nil && trackerSheduleToFlush != "" && trackerColorToFlush != nil
+            return trackerTypeToFlush != .notSet && trackerIconToFlush != nil && trackerSheduleToFlush != "" && trackerColorToFlush != nil
         }
     }
-    
     
     private func notifyObservers(){
         if isReadyToFlush() {
@@ -198,6 +224,5 @@ extension TrackersCollectionsPresenter: TrackerTypeDelegate {
                 userInfo: ["GO": false ])
         }
     }
-    
-    
 }
+

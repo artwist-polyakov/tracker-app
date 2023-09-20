@@ -10,6 +10,7 @@ protocol TrackersRecord {
     var shedule: String { get }
     var daysDone: Int { get }
     var isChecked: Bool { get }
+    var isPinned: Bool { get }
 }
 
 struct TrackersRecordImpl: TrackersRecord {
@@ -22,6 +23,7 @@ struct TrackersRecordImpl: TrackersRecord {
     let shedule: String
     let daysDone: Int
     let isChecked: Bool
+    let isPinned: Bool
     
     init?(from coreDataObject: TrackersCoreData, daysDone: Int, isChecked: Bool) {
         guard
@@ -40,6 +42,7 @@ struct TrackersRecordImpl: TrackersRecord {
         self.shedule = coreDataObject.shedule ?? ""
         self.daysDone = daysDone
         self.isChecked = isChecked
+        self.isPinned = coreDataObject.isPinned
     }
 }
 

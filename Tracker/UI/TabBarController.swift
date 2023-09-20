@@ -20,13 +20,13 @@ final class TabBarController: UITabBarController {
         
         // присваиваем вью контроллерам иконки для таб бара
         statsViewController.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: L10n.stats,
             image: UIImage(named: "Stats"),
             selectedImage: nil
         )
         
         trackersViewController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: L10n.trackers,
             image: UIImage(named: "Trackers"),
             selectedImage: nil
         )

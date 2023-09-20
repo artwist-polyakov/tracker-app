@@ -15,7 +15,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     var viewModelDelegate: CategorySelectionViewModelDelegate? = nil
     private let warningLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 27 символов"
+        label.text = L10n.Trackers.Category.warning
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textColor = UIColor(named: "TrackerRed")
         label.textAlignment = .center
@@ -29,7 +29,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
             switch pageType {
             case .create:
                 nameField.attributedPlaceholder = NSAttributedString(
-                    string: "Введите название категории",
+                    string: L10n.Trackers.Category.enterName,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
                 )
             case .edit(let cat):
@@ -45,7 +45,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     private let addButton: UIButton = {
         let button = UIButton()
         
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(L10n.Trackers.Category.addButton, for: .normal)
         button.backgroundColor = UIColor(named: "TrackerBlack")
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
@@ -100,7 +100,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         switch pageType {
         case .create:
             nameField.attributedPlaceholder = NSAttributedString(
-                string: "Введите название трекера",
+                string: L10n.Trackers.Create.inputPlaceholder,
                 attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
             )
         case .edit(let cat):
@@ -116,7 +116,7 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         }
         
         
-        addButton.setTitle("Готово", for: .normal)
+        addButton.setTitle(L10n.ready, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
         addButton.layer.cornerRadius = 16
@@ -164,16 +164,15 @@ class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         
         if isRightToLeft {
             nameField.textAlignment = .right
-            nameField.leftView = clearButton
-            nameField.leftViewMode = .never
-            nameField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: nameField.frame.height))
-            nameField.rightViewMode = .always
-            
+            nameField.rightView = clearButton
+            nameField.rightViewMode = .whileEditing
+            nameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: nameField.frame.height))
+            nameField.leftViewMode = .always
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         } else {
             nameField.textAlignment = .left
             nameField.rightView = clearButton
-            nameField.rightViewMode = .never
+            nameField.rightViewMode = .whileEditing
             nameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: nameField.frame.height))
             nameField.leftViewMode = .always
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
@@ -245,9 +244,9 @@ enum SingleCategoryPageType {
     var title: String {
         switch self {
         case .create:
-            return "Новая категория"
+            return L10n.Trackers.Category.newCategory
         case .edit:
-            return "Редактирование категории"
+            return L10n.Trackers.Category.editCategory
         }
     }
     

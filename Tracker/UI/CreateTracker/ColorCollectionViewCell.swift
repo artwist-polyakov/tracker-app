@@ -7,6 +7,12 @@ final class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource
     var collectionView: UICollectionView
     let colors: [UIColor] = (1...QUANTITY.COLLECTIONS_CELLS.rawValue).compactMap { UIColor(named: "\($0)") }
     
+    var selectedIndexPath: IndexPath? = nil {
+        didSet {
+            collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        }
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
@@ -43,6 +49,7 @@ final class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource
         cell.backgroundColor = .clear
         cell.cellWidth = floor((collectionView.frame.width - (numberOfColumns - 1)) / numberOfColumns)
         cell.colorView.backgroundColor = colors[indexPath.row]
+        cell.isSelectedColor = selectedIndexPath == indexPath
         return cell
     }
     
@@ -58,6 +65,7 @@ final class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) as? ColorCell {
             cell.isSelectedColor = true
+            selectedIndexPath = indexPath
             delegate?.didSetTrackerColorToFlush(indexPath.row)
         }
     }
@@ -72,7 +80,7 @@ final class ColorCollectionViewCell: UITableViewCell, UICollectionViewDataSource
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath) as! SupplementaryView
-            headerView.titleLabel.text = "Цвет"
+            headerView.titleLabel.text = L10n.Trackers.Create.colors
             return headerView
         default:
             return UICollectionReusableView()

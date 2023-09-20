@@ -12,7 +12,7 @@ final class ScheduleViewController: UIViewController {
     // Элементы UI
     let doneButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(L10n.ready, for: .normal)
         button.backgroundColor = UIColor(named: "TrackerBlack")
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
@@ -33,7 +33,7 @@ final class ScheduleViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
-        self.title = "Расписание"
+        self.title = L10n.Trackers.shedule
         completionTurnOff = { [weak self] it in
             self?.daysChecked.remove(it)
         }
@@ -41,9 +41,6 @@ final class ScheduleViewController: UIViewController {
         completionTurnOn = { [weak self] it in
             self?.daysChecked.insert(it)
         }
-        
-        
-        
         
         setupUI()
         layoutUI()
@@ -53,6 +50,7 @@ final class ScheduleViewController: UIViewController {
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.register(SheduleTableViewCell.self, forCellReuseIdentifier: "MenuCell")
+        tableView.reloadData()
     }
     
     // MARK: - UI Setup
@@ -106,7 +104,6 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
             cell.separatorView.isHidden = false
         }
         roundCornersForCell(cell, in: tableView, at: indexPath)
-        
         if daysChecked.contains(content[indexPath.row]) {
             cell.switchControl.isOn = true
         } else {

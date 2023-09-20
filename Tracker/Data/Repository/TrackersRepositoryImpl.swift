@@ -17,21 +17,24 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                 color: 1,
                 title: "Тестовый трекер 123",
                 icon: 1,
-                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
+                isPinned: false
                ),
         
         Tracker(categoryId: categories[0].id,
                 color: 1,
                 title: "Тестовый трекер 123",
                 icon: 1,
-                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
+                isPinned: false
                ),
         
         Tracker(categoryId: categories[0].id,
                 color: 1,
                 title: "Тестовый трекер 123",
                 icon: 1,
-                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum)
+                isPlannedFor: String(SimpleDate(date: Date()).weekDayNum),
+                isPinned: false
                )
     ]
     
@@ -75,8 +78,8 @@ final class TrackersRepositoryImpl: TrackersRepositoryProtocol {
                                  color: color,
                                  title: trackerName,
                                  icon: icon,
-                                 isPlannedFor: plannedDaysOfWeek)
-        
+                                 isPlannedFor: plannedDaysOfWeek,
+                                 isPinned: false)
         trackers.append(newTracker)
     }
     

@@ -8,10 +8,6 @@ final class TrackersCollectionsCompanionInteractor {
         companion?.addTracker(tracker: tracker, categoryId: categoryId, categoryTitle: categoryTitle)
     }
     
-    func giveMeAnyCategory() -> TrackerCategory? {
-        return companion?.giveMeAnyCategory()
-    }
-    
     func giveMeCategoryById(id: UUID) -> TrackerCategory? {
         return companion?.giveMeCategoryById(id: id)
     }
@@ -20,8 +16,8 @@ final class TrackersCollectionsCompanionInteractor {
         companion?.clearAllCoreData()
     }
     
-    func giveMeAllCategories() -> [TrackerCategory]? {
-        return companion?.giveMeAllCategories()
+    func giveMeAllCategories(filterType: CategoryFilterType) -> [TrackerCategory]? {
+        return companion?.giveMeAllCategories(filterType: filterType)
     }
     
     func addCategory(name: String) {
@@ -38,6 +34,10 @@ final class TrackersCollectionsCompanionInteractor {
 
         let newCategory = TrackerCategory(id: category.id, categoryTitle: newName)
         companion?.editCategory(category: newCategory)
+    }
+    
+    func editTracker(saveVersion newTracker: Tracker) {
+        companion?.editTracker(newTracker)
     }
     
     

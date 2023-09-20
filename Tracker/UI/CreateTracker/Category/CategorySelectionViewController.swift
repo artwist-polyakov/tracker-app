@@ -10,7 +10,7 @@ final class CategorySelectionViewController: UIViewController {
     
     let questionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Привычки и события можно\nобъединить по смыслу"
+        label.text = L10n.Trackers.Category.emptyState
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -28,7 +28,7 @@ final class CategorySelectionViewController: UIViewController {
     // Элементы UI
     let addButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(L10n.Trackers.Category.addButton, for: .normal)
         button.backgroundColor = UIColor(named: "TrackerBlack")
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
@@ -59,7 +59,7 @@ final class CategorySelectionViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
-        self.title = "Категория"
+        self.title = L10n.Trackers.category
         setupUI()
         layoutUI()
         bind()
@@ -220,11 +220,11 @@ extension CategorySelectionViewController: UITableViewDataSource, UITableViewDel
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
-            let editAction = UIAction(title: "Редактировать", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
+            let editAction = UIAction(title: L10n.edit, image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { action in
                 self.viewModel.handleNavigation(action: .edit(pos: indexPath.row))
             }
             
-            let deleteAction = UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) {action in
+            let deleteAction = UIAction(title: L10n.delete, image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive, state: .off) {action in
                 self.viewModel.handleNavigation(action: .remove(pos: indexPath.row))
             }
             

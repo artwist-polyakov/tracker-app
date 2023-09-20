@@ -15,10 +15,18 @@ final class CreateTrackerViewController: UIViewController {
         }
     }
     private var isTextFieldFocused: Bool = false
+    private var isEditScreen: Bool = false {
+        didSet {
+            menuTableView.reloadData()
+        }
+    }
+    private var daysCount: Int = 0
+    private var selectedColorPath: IndexPath? = nil
+    private var selectedEmojiPath: IndexPath? = nil
     // Элементы UI
     let warningLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
+        label.text = L10n.Trackers.Search.warning
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textColor = UIColor(named: "TrackerRed")
         label.textAlignment = .center
@@ -50,7 +58,6 @@ final class CreateTrackerViewController: UIViewController {
         self.view.backgroundColor = UIColor(named: "TrackerWhite")
         self.navigationItem.hidesBackButton = true
         self.navigationItem.hidesSearchBarWhenScrolling = false
-
         setupUI()
         layoutUI()
         menuTableView.reloadData()
@@ -78,16 +85,17 @@ final class CreateTrackerViewController: UIViewController {
             else { return }
             checkCreateButtonReady()
         }
-        
+        checkCreateButtonReady()
     }
+
     
     // MARK: - UI Setup
     private func setupUI() {
         // Настройка UITextField
-        trackerNameField.placeholder = "Имя трекера"
+        trackerNameField.placeholder = L10n.Trackers.Create.inputName
         trackerNameField.backgroundColor = UIColor(named: "TrackerBackground")
         trackerNameField.attributedPlaceholder = NSAttributedString(
-            string: "Введите название трекера",
+            string: L10n.Trackers.Create.inputPlaceholder,
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "TrackerGray")!]
         )
         trackerNameField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -104,14 +112,13 @@ final class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
-            
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
-                MenuItem(title: "Создать расписание", subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
+                MenuItem(title: L10n.Trackers.Create.chooseCategory, subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory),
+                MenuItem(title: L10n.Trackers.Create.chooseShedule, subtitle: Mappers.sortedStringOfSetWeekdays(shedule), action: handleCreateSchedule)
             ]
         case .irregularEvent:
             menuItems = [
-                MenuItem(title: "Выбрать категорию", subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory)
+                MenuItem(title: L10n.Trackers.Create.chooseCategory, subtitle: delegate?.giveMeSelectedCategory()?.categoryTitle ?? "", action: handleSelectCategory)
             ]
         case .notSet:
             menuItems = []
@@ -119,6 +126,7 @@ final class CreateTrackerViewController: UIViewController {
         menuTableView.dataSource = self
         menuTableView.delegate = self
         menuTableView.isScrollEnabled = false
+        menuTableView.register(DaysCountLabel.self, forCellReuseIdentifier: "DaysCountLabel")
         menuTableView.register(MenuTableViewCell.self, forCellReuseIdentifier: "MenuCell")
         menuTableView.register(IconCollectionViewCell.self, forCellReuseIdentifier: "IconCollectionViewCell")
         menuTableView.register(ColorCollectionViewCell.self, forCellReuseIdentifier: "ColorCollectionViewCell")
@@ -129,7 +137,7 @@ final class CreateTrackerViewController: UIViewController {
         cancelButton.backgroundColor = UIColor(named: "TrackerWhite")
         cancelButton.layer.borderColor = UIColor(named: "TrackerRed")?.cgColor
         cancelButton.layer.borderWidth = 1
-        cancelButton.setTitle("Отмена", for: .normal)
+        cancelButton.setTitle(L10n.cancel, for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cancelButton.setTitleColor(UIColor(named: "TrackerRed"), for: .normal)
         cancelButton.layer.cornerRadius = 16
@@ -137,7 +145,7 @@ final class CreateTrackerViewController: UIViewController {
         view.addSubview(cancelButton)
         
         // Настройка createButton
-        createButton.setTitle("Создать", for: .normal)
+        createButton.setTitle(isEditScreen ? L10n.save : L10n.create, for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.backgroundColor = UIColor(named: "TrackerGray")
         createButton.setTitleColor(UIColor(named: "TrackerWhite"), for: .normal)
@@ -188,18 +196,21 @@ final class CreateTrackerViewController: UIViewController {
         ])
         
         menuTableView.backgroundColor = UIColor(named: "TrackerWhite")
-        menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+//        menuTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+//        menuTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         menuTableView.translatesAutoresizingMaskIntoConstraints = false
         menuTableView.separatorStyle = .none
         
         NSLayoutConstraint.activate([
-            menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: 20),
+            menuTableView.topAnchor.constraint(equalTo: trackerNameField.bottomAnchor, constant: isEditScreen ? 0 : 20),
             menuTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             menuTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             menuTableView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -16)
         ])
-        
+    }
+    
+    private func shift() -> Int {
+        isEditScreen ? 1 : 0
     }
     
     private func configureForLocale() {
@@ -207,15 +218,15 @@ final class CreateTrackerViewController: UIViewController {
         
         if isRightToLeft {
             trackerNameField.textAlignment = .right
-            trackerNameField.leftView = clearButton
-            trackerNameField.leftViewMode = .never
-            trackerNameField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
-            trackerNameField.rightViewMode = .always
+            trackerNameField.rightView = clearButton
+            trackerNameField.rightViewMode = .whileEditing
+            trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
+            trackerNameField.leftViewMode = .always
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         } else {
             trackerNameField.textAlignment = .left
             trackerNameField.rightView = clearButton
-            trackerNameField.rightViewMode = .never
+            trackerNameField.rightViewMode = .whileEditing
             trackerNameField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: trackerNameField.frame.height))
             trackerNameField.leftViewMode = .always
             clearButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16)
@@ -233,19 +244,17 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     func changeSheduleMenuSubtitle(){
-        menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+        menuTableView.reloadRows(at: [IndexPath(row: 1, section: 0 + shift())], with: .automatic)
     }
     
     func changeCategoryMenuSubtitle(){
-        menuTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        menuTableView.reloadRows(at: [IndexPath(row: 0, section: 0 + shift())], with: .automatic)
     }
     
     @objc func dismissKeyboard() {
         trackerNameField.resignFirstResponder()
         isTextFieldFocused = false
     }
-    
-    
     
     // MARK: - Actions
     private func handleSelectCategory() {
@@ -255,11 +264,11 @@ final class CreateTrackerViewController: UIViewController {
             guard let self = self else { return }
             guard let category = category else {
                 self.menuItems[0].subtitle = ""
-                self.menuItems[0].title = "Выбрать категорию"
+                self.menuItems[0].title = L10n.Trackers.Create.chooseCategory
                 return }
             self.delegate?.didSelectTrackerCategory(category)
             self.menuItems[0].subtitle = category.categoryTitle
-            self.menuItems[0].title = "Категория"
+            self.menuItems[0].title = L10n.Trackers.Create.choosenCategory
             self.changeCategoryMenuSubtitle()
         }
         self.navigationController?.pushViewController(categoryVC, animated: true)
@@ -274,7 +283,6 @@ final class CreateTrackerViewController: UIViewController {
             weekdaysDictionary[$0.lowercased()]?[1] ?? 0 < weekdaysDictionary[$1.lowercased()]?[1] ?? 0 })
         scheduleVC.completionDone = {
             var toFlush: [Int] = []
-            print(scheduleVC.daysChecked)
             for day in scheduleVC.daysChecked {
                 if let records = weekdaysDictionary[day.lowercased()] {
                     toFlush.append(records[0])
@@ -285,7 +293,9 @@ final class CreateTrackerViewController: UIViewController {
             let newSubtitle = Mappers.sortedStringOfSetWeekdays(self.shedule)
             self.menuItems[1].subtitle = newSubtitle
             if toFlush.count > 0 {
-                self.menuItems[1].title = "Расписание"
+                self.menuItems[1].title = L10n.Trackers.Create.choosenShedule
+            } else {
+                self.menuItems[1].title = L10n.Trackers.Create.chooseShedule
             }
             self.changeSheduleMenuSubtitle()
         }
@@ -300,7 +310,6 @@ final class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .always
             if textField.text?.count ?? 0 <= 38 {
                 warningLabel.isHidden = true
-                delegate?.didSetTrackerTitle(textField.text ?? "")
             } else {
                 warningLabel.isHidden = false
             }
@@ -309,6 +318,7 @@ final class CreateTrackerViewController: UIViewController {
             textField.rightViewMode = .never
             warningLabel.isHidden = true
         }
+        delegate?.didSetTrackerTitle(textField.text ?? "")
     }
     
     @objc func clearTextField() {
@@ -330,37 +340,77 @@ final class CreateTrackerViewController: UIViewController {
         guard let type = selectedTrackerType else { return }
         switch type {
         case .habit:
-            self.title = "Новая привычка"
+            self.title = L10n.Trackers.Category.newHabit
         case .irregularEvent:
-            self.title = "Новое нерегулярное событие"
+            self.title = L10n.Trackers.Category.newIrregular
         case .notSet:
-            self.title = "Неизвестный лейбл"
+            self.title = L10n.Trackers.Category.newUnknown
         }
     }
     
+    func configureToEditTracker(_ tracker: Tracker, daysDone: Int) {
+        createButton.titleLabel?.text = L10n.save
+        switch tracker.isPlannedFor.isEmpty {
+        case true:
+            self.selectedTrackerType = .irregularEvent
+        case false:
+            self.selectedTrackerType = .habit
+            
+            var toFlush: [Int] = []
+            tracker.isPlannedFor.forEach {
+                
+                if let number = Int(String($0)) {
+                    shedule.insert(Mappers.intToDaynameMapper(number).capitalized)
+                            toFlush.append(number)
+                        }
+            }
+            self.delegate?.didSetShedulleToFlush(toFlush)
+        }
+        delegate?.didSelectTrackerType(self.selectedTrackerType ?? .notSet)
+        self.title = L10n.Habit.editing
+        trackerNameField.text = tracker.title
+        trackerNameField.textColor = UIColor(named: "TrackerBlack")
+        trackerNameField.rightViewMode = .always
+        if trackerNameField.text?.count ?? 0 <= 38 {
+            warningLabel.isHidden = true
+            delegate?.didSetTrackerTitle(trackerNameField.text ?? "")
+        } else {
+            warningLabel.isHidden = false
+        }
+        
+        guard let category = delegate?.giveMeCategoryById(id: tracker.categoryId) else { return }
+        self.delegate?.didSelectTrackerCategory(category)
+        self.delegate?.didSetTrackerIcon(Mappers.intToIconMapper(tracker.icon))
+        self.selectedEmojiPath = IndexPath(item: tracker.icon-1, section: 0)
+        self.delegate?.didSetTrackerColorToFlush(tracker.color-1)
+        self.selectedColorPath = IndexPath(item: tracker.color-1, section: 0)
+        if tracker.isPinned {
+            self.delegate?.didSetPinned()
+        }
+        self.isEditScreen = true
+        self.daysCount = daysDone
+        self.delegate?.markToEdit(id: tracker.id)
+    }
 }
 
 // MARK: UITableViewDataSource, UITableViewDelegate
 extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0:
+        case 0 + shift():
             return menuItems.count
-        case 1, 2:
-            return 1
         default:
-            return 0
+            return 1
         }
     }
     
-    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section{
-        case 0:
+        case 0 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! MenuTableViewCell
             let menuItem = menuItems[indexPath.row]
             cell.titleLabel.text = menuItem.title
@@ -381,47 +431,60 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             }
             roundCornersForCell(cell, in: tableView, at: indexPath)
             return cell
-        case 1:
+        case 1 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "IconCollectionViewCell", for: indexPath) as! IconCollectionViewCell
+            if let selected = selectedEmojiPath {
+                cell.selectedIndexPath = selected
+            }
             cell.delegate = self.delegate
             return cell
-        case 2:
+        case 2 + shift():
             let cell = tableView.dequeueReusableCell(withIdentifier: "ColorCollectionViewCell", for: indexPath) as! ColorCollectionViewCell
+            if let selected = selectedColorPath {
+                cell.selectedIndexPath = selected
+            }
             cell.delegate = self.delegate
             return cell
-            
         default:
-            return UITableViewCell()
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DaysCountLabel", for: indexPath) as! DaysCountLabel
+            cell.configure(days: daysCount, isActive: isEditScreen)
+            return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if selectedTrackerType == .irregularEvent && indexPath.row == 1 {
-            return
-        }
         menuItems[indexPath.row].action()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case .zero:
+        case 0 + shift():
             return MenuTableViewCell.cellHeight
-        case 1, 2:
+        case 1 + shift(), 2 + shift():
             var collectionCellWidth: CGFloat {
                 let width = view.frame.width
                 return ceil(width / 6)
             }
             return 3*(collectionCellWidth+2) // высота для коллекций
         default:
-            return .zero
+            return 24
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section > .zero {
+        switch section {
+        case 1 + shift(),2 + shift():
             return 12
+        default:
+            return 0
         }
-        return .zero
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        switch section {
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -444,8 +507,6 @@ extension CreateTrackerViewController: UITableViewDataSource, UITableViewDelegat
             cell.roundCorners([.bottomLeft, .bottomRight], radius: 16)
         }
     }
-    
-    
 }
 
 extension CreateTrackerViewController: UIGestureRecognizerDelegate {
