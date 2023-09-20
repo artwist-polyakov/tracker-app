@@ -155,6 +155,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        
         switch type {
             
         case .delete:
@@ -183,6 +184,7 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
                 insertedIndexes.append(indexPath)
             }
         case .update:
+            print("update")
             if let indexPath = indexPath {
                 updatedIndexes.append(indexPath)
             }
@@ -358,11 +360,13 @@ extension TrackersDataProvider: TrackersDataProviderProtocol {
     func interactWith(_ trackerId: UUID, _ date: SimpleDate) throws {
         try executionsDataStore.interactWith(trackerId, date)
         guard let indexPath = trackerIndexPathById(trackerId) else {
-            reloadData()
-            delegate?.reloadData()
+//            reloadData()
+//            print("Я в гарде")
+//            delegate?.reloadData()
             return
         }
-        delegate?.reloadItems(at: [indexPath])}
+        delegate?.reloadItems(at: [indexPath])
+    }
     
     func deleteObject(at indexPath: IndexPath) throws {
         let record = trackersFetchedResultsController.object(at: indexPath)
