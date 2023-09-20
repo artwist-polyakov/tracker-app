@@ -8,7 +8,7 @@ final class StatisticResultsStorage {
     var statisticResults: [StatisticResult]? = nil
     
     func refresh(_ completion: (() -> Void)? = nil) {
-        let stats = [companion?.howManyCompletedTrackers(), companion?.howManyCompletedTrackers()]
+        let stats = [companion?.howManyCompletedTrackers(), companion?.mostLongSeries()]
         let titles = [L10n.Stats.completedTrackers, L10n.Stats.completedTrackers]
         if companion?.haveStats() ?? false {
             statisticResults = []

@@ -220,6 +220,53 @@ extension DataStore: CategoriesDataStore {
 }
 
 extension DataStore: ExecutionsDataStore {
+    func mostLongSeries() -> Int {
+        let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        do {
+            try controller.performFetch()
+            
+            guard let fetchedObjects = controller.fetchedObjects else {
+                return 0
+            }
+            
+            var maxSeries = fetchedObjects.count > 0 ? 1 : 0
+            var currentSeries = maxSeries
+            var previuosDate =  Date()
+            for i in 0..<fetchedObjects.count - 1 {
+                print("i = \(i)")
+                print(currentSeries)
+                guard let date = fetchedObjects[i].date
+                else {
+                    return maxSeries}
+                if i == 0 {
+                    continue
+                } else if abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) < 1 {
+                    continue
+                } else if abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) == 1 {
+                    currentSeries += 1
+                } else {
+                    if currentSeries > maxSeries {
+                        maxSeries = currentSeries
+                    }
+                    currentSeries = 1
+                }
+                previuosDate = date
+            }
+            if currentSeries > maxSeries {
+                maxSeries = currentSeries
+            }
+            return maxSeries
+        } catch {
+            print("Ошибка при извлечении уникальных дат: \(error)")
+            return 0
+        }
+    }
+    
     func howManyCompletedTrackers() -> Int {
         let fetchRequest = NSFetchRequest<ExecutionsCoreData>(entityName: "ExecutionsCoreData")
         let count = try? context.count(for: fetchRequest)

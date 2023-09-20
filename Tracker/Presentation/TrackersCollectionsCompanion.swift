@@ -107,6 +107,11 @@ final class TrackersCollectionsCompanion: NSObject, UICollectionViewDataSource, 
         return dataProvider?.haveStats() ?? false
     }
     
+    func mostLongSeries() -> Int {
+        guard let series = dataProvider?.mostLongSeries() else {return 0}
+        return series
+    }
+    
     
     
     // MARK: - UICollectionViewDataSource

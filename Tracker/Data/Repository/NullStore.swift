@@ -30,6 +30,10 @@ extension NullStore: CategoriesDataStore {
 }
 
 extension NullStore: ExecutionsDataStore {
+    func mostLongSeries() -> Int {
+        return 0
+    }
+    
     func howManyCompletedTrackers() -> Int {
         return 0
     }

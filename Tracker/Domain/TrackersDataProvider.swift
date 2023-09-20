@@ -57,6 +57,7 @@ protocol TrackersDataProviderProtocol {
     func setPredicate(predicate: TrackerPredicateType)
     func howManyCompletedTrackers() -> Int
     func haveStats() -> Bool
+    func mostLongSeries() -> Int
 }
 
 extension TrackersDataProviderProtocol {
@@ -258,6 +259,10 @@ extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
 }
 
 extension TrackersDataProvider: TrackersDataProviderProtocol {
+    func mostLongSeries() -> Int {
+        return executionsDataStore.mostLongSeries()
+    }
+    
     func haveStats() -> Bool {
         return trackersDataStore.haveStats()
     }
