@@ -236,25 +236,29 @@ extension DataStore: ExecutionsDataStore {
             var maxSeries = 0
             var currentSeries = 0
             var previuosDate =  Date()
-            for i in 0...fetchedObjects.count - 1 {
-                guard let date = fetchedObjects[i].date
-                else {
-                    return maxSeries}
-                print(currentSeries)
-                if currentSeries > maxSeries {
-                    maxSeries = currentSeries
-                }
-                print("\(previuosDate) \(date)")
-                if i != 0 && abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) > 1 {
+            if fetchedObjects.count >= 1 {
+                for i in 0...fetchedObjects.count - 1 {
+                    guard let date = fetchedObjects[i].date
+                    else {
+                        return maxSeries}
+                    print(currentSeries)
+                    if currentSeries > maxSeries {
+                        maxSeries = currentSeries
+                    }
                     print("\(previuosDate) \(date)")
-                    currentSeries = 0
-                } else if  i != 0 && abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) == 0 {
-                    currentSeries -= 1
+                    if i != 0 && abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) > 1 {
+                        print("\(previuosDate) \(date)")
+                        currentSeries = 0
+                    } else if  i != 0 && abs(Calendar.current.dateComponents([.day], from: previuosDate, to: date).day!) == 0 {
+                        currentSeries -= 1
+                    }
+                    currentSeries += 1
+                    previuosDate = date
                 }
-                currentSeries += 1
-                previuosDate = date
+                return maxSeries
+            } else {
+                return 0
             }
-            return maxSeries
         } catch {
             print("Ошибка при извлечении уникальных дат: \(error)")
             return 0
